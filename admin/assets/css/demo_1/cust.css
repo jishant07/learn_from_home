@@ -1,0 +1,59 @@
+
+.live-scrollbar{
+	position: relative;
+	max-height: 280px;	
+}
+
+.tableimg{
+  width: 100px !important;
+  height: auto !important;
+  border-radius: 0 !important;
+}
+.discussionstudent img{
+  width: 30px !important;
+  height: 30px !important;
+}
+.discussionstudent .text-body{
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/*side chat-bar */
+.chat-iframe {
+  width: 100%;
+  height: 100vh;
+  border: none;
+  background: #ffffff; }
+
+.sidenav {
+  height: 100%;
+  /* 100% Full-height */
+  width: 0;
+  /* 0 width - change this with JavaScript */
+  position: fixed;
+  /* Stay in place */
+  z-index: 9999;
+  /* Stay on top */
+  top: 0;
+  /* Stay at the top */
+  right: -1px;
+  border-left: 1px solid #cccccc;
+  overflow: hidden;
+  /* Disable horizontal scroll */
+  transition: 0.5s;
+  /* 0.5 second transition effect to slide in the sidenav */ }
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+  text-decoration: none;
+  color: #545454; }
+  .sidenav .closebtn:hover {
+    text-decoration: none;
+    color: #FF4860; }
+
+/*side chat-bar */

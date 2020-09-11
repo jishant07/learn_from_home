@@ -1,0 +1,34 @@
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+.leftfl{float:left !important;}
+.m10{padding-top:110px !important;text-align:center}
+
+.sortable1, .sortable2,.sortable3,,sortno {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    margin-right: 100px;
+    background: #fff;
+    padding: 5px;
+    width: 200px;
+    border: 1px solid #ccc;
+}
+.sortable2{padding: 0; !important}
+.sortable1 li, .sortable2 li, .sortable3 li, .sortno li {
+    color:black;
+    cursor: move;
+    margin: 5px;
+    padding: 5px;
+    font-size: 1.2em;
+    width: 250px;
+    background: none;
+    background-color: #eee;
+}
+.sortable3 li {cursor: pointer;}
+.sortno{width:50px;}
+.sortno li {width:0;}
+#sortable li {height: 34px !important;
+    padding-top: 0px !important;
+}

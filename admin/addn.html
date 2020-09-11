@@ -1,0 +1,73 @@
+<form method='post' id='frmuploadimage'  autocomplete=off>
+	<div id='uploadimagesection'>
+		<div class='mdiv1'><h2>Step 3</h2></div>
+		<div class='mdiv2'>
+			<div id='showquestionimg' class='divpadd bold'><label>Question : <?php if(isset($_SESSION['qcount'])) echo $_SESSION['qcount']+1; else echo '1'?></label></div> 
+			<div>Submit pic or doc</div>
+			<div class='m10'>
+				Question: <input type='text' name='uoloadimagequestion' id='uoloadimagequestion' class='textbox'/>
+			</div>
+			<div class='mdiv1'>
+				Answer
+			</div>
+			<div class='mdiv2' id='multipleanswerchoice'>
+				<div class='clrboth m10' id='multipleans1'> 
+					<div class='left anspadd'>answer </div> <div class='left'><input type="radio" id="ansimage" name="answerpics" value="image"> </div>	<div class='left anspadd'>image </div>			
+				</div>
+				<div class='clrboth m10' id='multipleans2'> 
+					<div class='left anspadd'>answer </div> <div class='left'><input type="radio" id="ansdoc" name="answerpics" value="doc"> </div>	<div class='left anspadd'>doc </div>			
+				</div>				
+			</div>			
+			<div class=''>
+				<div>
+				<div class='labeldiv right asmark' style='width:75%'> 	<div class='left anspadd'>assign marks</div> <div class='left anspadd'><input type='text' name='picsmarks' id='picsmarks' maxlength=2 size=2 onkeyup="return checkMarks(this.value,this.id)" onkeypress="if( isNaN( String.fromCharCode(event.keyCode) )) return false;"></div> </div>
+				<div class='left anspadd'>
+				<input type='button' id='createpicquestion' class='button' value='Create question'></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</form>
+		
+<form class="forms-sample">  
+  <div class="form-group">
+	<div class="row">
+		<div class="col-6">
+			<label class="d-inline-block mt-2 mr-2">Marks</label>
+			<input type="text" class="form-control d-inline-block wd-80" name='picsmarks' id='picsmarks' maxlength=2 size=2 onkeyup="return checkMarks(this.value,this.id)" onkeypress="if( isNaN( String.fromCharCode(event.keyCode) )) return false;">
+		</div>		
+	</div>
+  </div>
+  <div class="form-group">
+	<label>Submit pic or doc</label>
+	<input type="text" class="form-control" placeholder="Title" name='uoloadimagequestion' id='uoloadimagequestion'>
+  </div>
+  <div class="form-group">
+	<label>Discription</label>
+	<textarea class="form-control" placeholder="Discription" rows="5" id='discription' name='discription'></textarea>
+  </div>
+  <div class="form-group">
+	<label>Upload Referance Document</label>
+	<input type="file" name="refdoc" class="file-upload-default">
+	<div class="input-group col-xs-12">
+	  <input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Document">
+	  <span class="input-group-append">
+		<button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+	  </span>
+	</div>
+  </div>
+  <hr>
+  <div class="form-check form-check-flat form-check-primary">
+	<label class="form-check-label">
+	  <input type="checkbox" class="form-check-input">
+	  Student can upload document
+	</label>
+  </div>
+  
+  
+  <button type="submit" class="btn btn-success mr-2 mt-2" id='createpicquestion'>Save</button>
+  <button type="button" class="btn btn-primary btn-icon mt-2" data-toggle="tooltip" data-placement="top" title="Delete" onclick="showSwal('passing-parameter-execute-cancel')">
+	  <i data-feather="x"></i>
+  </button>
+</form>
+    
