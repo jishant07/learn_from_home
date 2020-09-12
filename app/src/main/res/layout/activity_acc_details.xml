@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".StudentActivity.AccountUpdate">
+
+    <RelativeLayout
+        android:id="@+id/header_relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/account_back"
+            android:layout_width="25sp"
+            android:layout_height="wrap_content"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:src="@drawable/back"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/accounttxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@id/account_back"
+            android:text="ACCOUNT DETAILS"
+            android:textColor="@color/accent_black"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/namearea"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/border_rounded"
+        android:backgroundTint="@color/light_background"
+        android:gravity="top"
+        android:inputType="text|textMultiLine"
+        android:paddingStart="30dp"
+        android:paddingTop="16dp"
+        android:text="Enter Old Password "
+        android:textColor="@color/text_dark_white"
+        android:textStyle="bold"
+        tools:ignore="Autofill,HardcodedText,LabelFor,RtlSymmetry" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/gray_text" />
+
+    <EditText
+        android:id="@+id/namearea1"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/border_rounded"
+        android:backgroundTint="@color/light_background"
+        android:gravity="top"
+        android:inputType="text|textMultiLine"
+        android:paddingStart="30dp"
+        android:paddingTop="16dp"
+        android:text="Enter New Password "
+        android:textColor="@color/text_dark_white"
+        android:textStyle="bold"
+        tools:ignore="Autofill,HardcodedText,LabelFor,RtlSymmetry" />
+
+
+    <EditText
+        android:id="@+id/namearea2"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/border_rounded"
+        android:backgroundTint="@color/light_background"
+        android:gravity="top"
+        android:inputType="text|textMultiLine"
+        android:paddingStart="30dp"
+        android:paddingTop="16dp"
+        android:text="Re-Enter New Password "
+        android:textColor="@color/text_dark_white"
+        android:textStyle="bold"
+        tools:ignore="Autofill,HardcodedText,LabelFor,RtlSymmetry" />
+
+
+    <Button
+        android:id="@+id/submit_task"
+        android:layout_width="match_parent"
+        android:layout_height="55sp"
+        android:layout_marginStart="16sp"
+        android:layout_marginTop="20sp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20sp"
+        android:background="@drawable/border_rounded"
+        android:backgroundTint="@color/accent_pink"
+        android:fontFamily="@font/opensans_regular"
+        android:text="SAVE"
+        android:textColor="@color/light_background"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText" />
+
+</LinearLayout>

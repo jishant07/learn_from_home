@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".StudentActivity.ClassroomDiscussion">
+
+    <LinearLayout
+        android:id="@+id/linear_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/header_relative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/discussion_back"
+                android:layout_width="25sp"
+                android:layout_height="wrap_content"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:src="@drawable/back"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/discussion_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@id/discussion_back"
+                android:text="CLASSROOM DISCUSSION"
+                android:textColor="@color/accent_black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="6dp">
+
+            <EditText
+                android:id="@+id/search_discussion"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginEnd="7dp"
+                android:layout_toStartOf="@id/discussion_img"
+                android:background="@drawable/border_rounded"
+                android:backgroundTint="@color/light_background"
+                android:drawableEnd="@drawable/search"
+                android:hint="@string/search"
+                android:inputType="text"
+                android:paddingStart="18dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="28dp"
+                android:paddingBottom="8dp"
+                android:textColor="@color/accent_black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:ignore="Autofill,LabelFor" />
+
+            <ImageView
+                android:id="@+id/discussion_img"
+                android:layout_width="45dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/documents_o"
+                tools:ignore="ContentDescription" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/class_discussion_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_body"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/create_discussion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="end"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:backgroundTint="@color/accent_pink"
+        android:src="@drawable/add_task" />
+
+</RelativeLayout>

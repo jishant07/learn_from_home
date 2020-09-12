@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/listbody"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="@color/light_background"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="Subject"
+            android:textColor="@color/accent_pink"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText,InefficientWeight" />
+
+        <TextView
+            android:id="@+id/header1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="Details"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText,InefficientWeight,
+                NestedWeights,SmallSp" />
+
+        <TextView
+            android:id="@+id/header2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="Class"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText,InefficientWeight,
+                NestedWeights,SmallSp" />
+
+
+        <ImageView
+            android:id="@+id/header4_img"
+            android:layout_width="20dp"
+            android:layout_weight="0.2"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/exo_icon_fastforward"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+
+    </LinearLayout>
+</LinearLayout>

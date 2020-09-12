@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".StudentActivity.PinLogin">
+
+    <LinearLayout
+        android:id="@+id/body_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:src="@drawable/logo"
+            tools:ignore="ContentDescription" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_img"
+            android:layout_width="wrap_content"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/live1"
+            app:civ_border_color="@color/accent_green"
+            app:civ_border_width="2dp" />
+
+
+        <TextView
+            android:id="@+id/welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="WELCOME"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/studentname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="13dp"
+            android:text="Student Name"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:padding="6dp">
+
+            <EditText
+                android:id="@+id/pin1"
+                android:layout_width="5dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.25"
+                android:background="@drawable/border_rounded"
+                android:backgroundTint="@color/light_background"
+                android:gravity="center"
+                android:hint="1"
+                android:inputType="text"
+                android:textColor="@color/accent_black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:ignore="Autofill,HardcodedText,RtlSymmetry" />
+
+            <EditText
+                android:id="@+id/pin2"
+                android:layout_width="05dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="0.25"
+                android:background="@drawable/border_rounded"
+                android:backgroundTint="@color/light_background"
+                android:gravity="center"
+                android:hint="2"
+                android:inputType="text"
+                android:textColor="@color/accent_black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:ignore="Autofill,HardcodedText,RtlSymmetry" />
+
+            <EditText
+                android:id="@+id/pin3"
+                android:layout_width="5dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="0.25"
+                android:background="@drawable/border_rounded"
+                android:backgroundTint="@color/light_background"
+                android:gravity="center"
+                android:hint="3"
+                android:inputType="text"
+                android:textColor="@color/accent_black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:ignore="Autofill,HardcodedText,RtlSymmetry" />
+
+            <EditText
+                android:id="@+id/pin4"
+                android:layout_width="5dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="0.25"
+                android:background="@drawable/border_rounded"
+                android:backgroundTint="@color/light_background"
+                android:gravity="center"
+                android:hint="4"
+                android:inputType="text"
+                android:textColor="@color/accent_black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:ignore="Autofill,HardcodedText,RtlSymmetry" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnlogin"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="25dp"
+            android:background="@drawable/border_rounded"
+            android:backgroundTint="#FF3D57"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/opensans_bold"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:text="LOGIN"
+            android:textColor="@color/whitebg"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:fontFamily="@font/opensans_light"
+            android:text="Forgot PIN"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:fontFamily="@font/opensans_light"
+            android:text="USE ANOTHER ACCOUNT"
+            android:textColor="@color/accent_pink"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/byamuze"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:padding="03dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/byamuze"
+        tools:ignore="ContentDescription" />
+</RelativeLayout>

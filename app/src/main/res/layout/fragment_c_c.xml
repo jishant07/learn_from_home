@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context=".Fragment.CCFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="6dp">
+
+        <EditText
+            android:id="@+id/search_chat"
+            android:layout_width="match_parent"
+            android:layout_height="60sp"
+            android:background="@drawable/border_rounded"
+            android:backgroundTint="@color/light_background"
+            android:drawableEnd="@drawable/search"
+            android:hint="@string/search"
+            android:inputType="text"
+            android:paddingStart="18dp"
+            android:paddingTop="14dp"
+            android:paddingEnd="28dp"
+            android:paddingBottom="15dp"
+            android:textColor="@color/accent_black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="Autofill,LabelFor" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/attendance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/present_msg"
+            android:layout_width="20dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="10sp"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/border_rounded"
+            android:backgroundTint="@color/accent_green1"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/student_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="5dp"
+            android:layout_toEndOf="@id/present_msg"
+            android:gravity="center"
+            android:text="Present (45)"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/absent_msg"
+            android:layout_width="20dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="10sp"
+            android:layout_marginTop="1dp"
+            android:layout_toEndOf="@id/student_txt"
+            android:background="@drawable/border_rounded"
+            android:backgroundTint="@color/accent_pink"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/absent_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@id/absent_msg"
+            android:gravity="center"
+            android:text="Absent (15)"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="8dp" />
+
+</LinearLayout>

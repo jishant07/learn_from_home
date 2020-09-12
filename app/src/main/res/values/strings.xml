@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">LearnFHome</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dummydesc">Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem..</string>
+    <string name="dummydesc1">Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum..</string>
+    <string name="dummydesc2">Lorem Ipsum Lorem Ipsum </string>
+    <string name="coming_soon">Coming Soon!!</string>
+    <string name="live_chat">LIVE CHAT</string>
+    <string name="better_on_web">Better on Web</string>
+    <string name="go_offline">Go Offline</string>
+    <string name="qna">QNA</string>
+    <string name="raised_hand">Raised Hand</string>
+    <string name="answered">Answered</string>
+    <string name="settings">Settings</string>
+    <string name="profile">Profile</string>
+    <string name="id_no">ID NO</string>
+    <string name="title">Title</string>
+    <string name="opensans">OpenSans</string>
+    <string name="todays_task">TODAYS TASK</string>
+    <string name="see_all">See all</string>
+    <string name="view_previous_assignments">View Previous Assignments</string>
+    <string name="view_previous_exams">View Previous Exams</string>
+    <string name="dumpText">Lorem Ipsum no inet dolor amet ipsum lorem</string>
+    <string name="dumpText1">Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem</string>
+    <string name="dumpText2">Lorem Ipsum dolor sit amet, consectetur ad ferm entum, arcu a suscipit</string>
+    <string name="search">SEARCH</string>
+    <string name="last_exam_score">Last Exam Score</string>
+    <string name="chat_avatar">Chat Avatar</string>
+    <string name="live">LIVE</string>
+    <string name="documents">DOCUMENTS</string>
+    <string name="formulaes">FORMULAES</string>
+    <string name="subject">SUBJECT</string>
+    <string name="byTeacher"><![CDATA[By <b>Sneha Sharma</b> on <b>History</b>]]></string>
+</resources>

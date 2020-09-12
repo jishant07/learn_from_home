@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/navigation_home"
+        android:title="PROFILE"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/navigation_task"
+        android:title="ACCOUNT DETAIL"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/navigation_live"
+        android:title="WATCHLIST"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/navigation_chat"
+        android:title="LOGOUT"
+        tools:ignore="HardcodedText" />
+</menu>

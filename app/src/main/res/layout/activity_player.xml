@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context=".PlayerActivity">
+
+    <RelativeLayout
+        android:id="@+id/header_relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="15dp"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/player_back"
+            android:layout_width="25sp"
+            android:layout_height="22dp"
+            android:layout_centerVertical="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:src="@drawable/back"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/playertxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="13dp"
+            android:layout_toEndOf="@id/player_back"
+            android:text="PLAYER"
+            android:textColor="@color/accent_black"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/viewplayer"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@id/header_relative">
+
+        <RelativeLayout
+            android:id="@+id/frame_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/background"
+            android:gravity="center"
+            tools:ignore="UselessParent">
+
+            <TextView
+                android:id="@+id/live__body_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/dumpText"
+                android:textSize="17sp"
+                android:textColor="@color/accent_black"
+                android:visibility="gone" />
+
+            <com.google.android.exoplayer2.ui.PlayerView
+                android:id="@+id/player_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:theme="@style/LoaderTheme"
+                android:visibility="visible"
+                app:show_buffering="always"
+                app:use_controller="false" />
+
+            <RelativeLayout
+                android:id="@+id/controls_options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/exitactivity"
+                    android:layout_width="25dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/back"
+                    android:text="Exit Activity"
+                    android:visibility="gone"
+                    tools:ignore="ContentDescription,HardcodedText" />
+
+                <ImageView
+                    android:id="@+id/exitfullscreen"
+                    android:layout_width="25dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ccancel"
+                    android:text="Exit Full Screen"
+                    android:visibility="gone"
+                    tools:ignore="ContentDescription,HardcodedText" />
+
+                <include
+                    android:id="@+id/controls_seek"
+                    layout="@layout/custom_seekbar_control"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true" />
+
+                <include
+                    android:id="@+id/controls"
+                    layout="@layout/custom_controls"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/header_player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewplayer"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/teacherTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center|left"
+            android:orientation="vertical"
+            tools:ignore="ObsoleteLayoutParam,RtlHardcoded">
+
+            <TextView
+                android:id="@+id/teacher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="TEACHER"
+                android:textColor="@color/accent_pink"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/teacherName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="sans-serif"
+                android:maxLines="3"
+                android:paddingLeft="5dp"
+                android:text="@string/dumpText"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/byTeacherN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="2dp"
+                android:text="By Teacher Name on Science"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:textStyle="normal"
+                android:visibility="visible"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/tDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:fontFamily="sans-serif"
+                android:maxLines="3"
+                android:paddingLeft="5dp"
+                android:text="@string/dummydesc"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:visibility="gone"
+                tools:ignore="HardcodedText,RtlSymmetry,SmallSp" />
+
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/spinner"
+            android:spinnerMode="dropdown"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_player">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/linear_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                tools:ignore="DisableBaselineAlignment">
+
+                <LinearLayout
+                    android:id="@+id/watchlist_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.25"
+                    android:background="@drawable/border_rounded"
+                    android:backgroundTint="@color/light_background"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/watchlist_image"
+                        android:layout_width="24dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/add_watchlist"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/watchlist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center"
+                        android:lines="2"
+                        android:text="Watchlist"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText,SmallSp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/document_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.25"
+                    android:background="@drawable/border_rounded"
+                    android:backgroundTint="@color/light_background"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/document"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/documentst"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center"
+                        android:lines="2"
+                        android:text="Documents"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText,SmallSp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/student_watch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.25"
+                    android:background="@drawable/border_rounded"
+                    android:backgroundTint="@color/light_background"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/student_watching"
+                        tools:ignore="ContentDescription,NestedWeights" />
+
+                    <TextView
+                        android:id="@+id/studentwc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text=""
+                        android:textColor="@color/accent_pink"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+                    <TextView
+                        android:id="@+id/studentw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:gravity="center"
+                        android:lines="2"
+                        android:text="Student Watching"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="normal"
+                        tools:ignore="HardcodedText,SmallSp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ask_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.25"
+                    android:background="@drawable/border_rounded"
+                    android:backgroundTint="@color/light_background"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/askimg"
+                        android:layout_width="24dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/askquestions"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/askquest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:gravity="center"
+                        android:lines="2"
+                        android:text="Ask Question"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="normal"
+                        tools:ignore="HardcodedText,SmallSp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/subject_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="5dp"
+                android:paddingStart="8dp"
+                android:text="@string/subject"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:ignore="RtlSymmetry" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/subject_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4sp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/background"
+                android:visibility="gone" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_player_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/player_edit_linear"
+        android:layout_below="@id/scroll_player"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="8dp"
+        android:nestedScrollingEnabled="true"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/player_edit_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="25sp"
+        android:layout_marginEnd="5dp"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/pchat_edittxt"
+            android:layout_width="340dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:autofillHints="Hii"
+            android:hint="Type here..."
+            android:padding="10dp"
+            android:textColor="@color/text_dark_white"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,TextFields" />
+
+        <ImageView
+            android:id="@+id/pchat_send"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_toEndOf="@id/pchat_edittxt"
+            android:src="@drawable/send"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+</RelativeLayout>

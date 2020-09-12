@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/navigation_timetable"
+        android:icon="@drawable/timetable2"
+        android:title="Time Table"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/navigation_videos"
+        android:icon="@drawable/myvideos"
+        android:title="My Videos"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/navigation_live"
+        android:icon="@drawable/live"
+        android:title="Go Online"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/navigation_chat"
+        android:icon="@drawable/chat"
+        android:title="Chats"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/navigation_activity"
+        android:icon="@drawable/myactivity"
+        android:title="Activity"
+        tools:ignore="HardcodedText" />
+
+
+</menu>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".Login">
+
+    <ImageView
+        android:id="@+id/lfhimg"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="65dp"
+        android:layout_marginEnd="30dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logo"
+        tools:ignore="ContentDescription" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lfhimg"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="18dp"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="22sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="22sp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_bold"
+                    android:gravity="center"
+                    android:text="Login below to get started"
+                    android:textColor="#414141"
+                    android:textFontWeight="600"
+                    android:textSize="18sp"
+                    android:textStyle="normal"
+                    tools:ignore="HardcodedText" />
+
+                <EditText
+                    android:id="@+id/eUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="17dp"
+                    android:background="@drawable/border_rounded"
+                    android:backgroundTint="#F5F5F5"
+                    android:fontFamily="@font/opensans_light"
+                    android:hint="USERNAME"
+                    android:inputType="text"
+                    android:paddingStart="24dp"
+                    android:textColor="#777777"
+                    android:textSize="15sp"
+                    tools:ignore="Autofill,HardcodedText" />
+
+                <EditText
+                    android:id="@+id/ePassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/border_rounded"
+                    android:backgroundTint="#F5F5F5"
+                    android:fontFamily="@font/opensans_light"
+                    android:hint="PASSWORD"
+                    android:inputType="textPassword"
+                    android:paddingStart="24dp"
+                    android:textColor="#777777"
+                    android:textSize="15sp"
+                    tools:ignore="Autofill,HardcodedText" />
+
+                <Button
+                    android:id="@+id/btnsignin"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/border_rounded"
+                    android:backgroundTint="#FF3D57"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/opensans_bold"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:text="LOGIN"
+                    android:textColor="@color/whitebg"
+                    android:textSize="23sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/forgotpassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="35dp"
+                    android:fontFamily="@font/opensans_light"
+                    android:text="Forgot Password"
+                    android:textColor="#333333"
+                    android:textSize="18sp"
+                    android:textStyle="normal"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/byamuze"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:padding="03dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/byamuze"
+        tools:ignore="ContentDescription" />
+</RelativeLayout>

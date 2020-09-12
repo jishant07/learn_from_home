@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/listbody"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:id="@+id/head_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="Video"
+            android:textColor="@color/accent_pink"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText,InefficientWeight" />
+
+        <TextView
+            android:id="@+id/head_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="Details"
+            android:textColor="@color/accent_black"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText,InefficientWeight,
+                NestedWeights,SmallSp" />
+
+        <TextView
+            android:id="@+id/head_class"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="Class"
+            android:textColor="@color/accent_black"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText,InefficientWeight,
+                NestedWeights,SmallSp" />
+
+        <TextView
+            android:id="@+id/head_subject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="Subject"
+            android:textColor="@color/accent_black"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText,InefficientWeight,
+                NestedWeights,SmallSp" />
+
+        <TextView
+            android:id="@+id/head_chapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="Chapter"
+            android:textColor="@color/accent_black"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText,InefficientWeight,
+                NestedWeights,SmallSp" />
+
+    </LinearLayout>
+</LinearLayout>

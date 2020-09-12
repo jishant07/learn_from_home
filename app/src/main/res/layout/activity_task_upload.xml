@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".TaskUpload">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp">
+
+        <LinearLayout
+            android:id="@+id/linear_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/title_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
+                    android:padding="5dp"
+                    android:text="1."
+                    android:textColor="@color/accent_pink"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5sp"
+                    android:layout_marginEnd="5dp"
+                    android:padding="1dp"
+                    android:text="Lorem Ipsum Lorem Ipsum Lorem Ipsum"
+                    android:textColor="@color/accent_black"
+                    android:textSize="20sp"
+                    android:textStyle="normal"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/subject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="39sp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/light_background"
+                    android:padding="3dp"
+                    android:text="Science"
+                    android:textColor="@color/accent_pink"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/submission"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="18sp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/light_background"
+                    android:padding="3dp"
+                    android:text="Not yet Submitted"
+                    android:textColor="@color/accent_black"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="14sp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
+                    android:layout_marginEnd="10dp"
+                    android:padding="1dp"
+                    android:text="@string/dummydesc1"
+                    android:textColor="@color/accent_black"
+                    android:textSize="13sp"
+                    android:textStyle="normal"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="23dp"
+                android:background="@color/light_background"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <ImageView
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:src="@drawable/document" />
+
+                <TextView
+                    android:id="@+id/documents_task"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:padding="1dp"
+                    android:text="Documents"
+                    android:textColor="@color/accent_pink"
+                    android:textSize="13sp"
+                    android:textStyle="normal"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="23dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="YOUR ANSWER :"
+                    android:textColor="@color/accent_pink"
+                    android:textSize="23sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <EditText
+                    android:id="@+id/textarea"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@drawable/edit_text_rounded"
+                    android:backgroundTint="@color/light_background"
+                    android:gravity="top"
+                    android:inputType="text|textMultiLine"
+                    android:paddingStart="8dp"
+                    android:paddingTop="5dp"
+                    android:text="Your Answer "
+                    android:textColor="@color/accent_black"
+                    tools:ignore="HardcodedText,RtlSymmetry" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginEnd="15sp"
+                    android:background="@drawable/edit_text_rounded"
+                    android:backgroundTint="#F2F2F2"
+                    android:orientation="horizontal"
+                    android:padding="7dp"
+                    tools:ignore="HardcodedText">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_weight="0.25"
+                        android:src="@drawable/documents" />
+
+                    <TextView
+                        android:id="@+id/document_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10sp"
+                        android:layout_weight="0.7"
+                        android:text="DOCUMENT NAME"
+                        android:textColor="@color/accent_black" />
+
+                    <ImageView
+                        android:id="@+id/cross_image"
+                        android:layout_width="24dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="15dp"
+                        android:layout_weight="0.6"
+                        android:padding="1dp"
+                        android:src="@drawable/cancelsubmit" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/upload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="15sp"
+                    android:layout_marginEnd="15sp"
+                    android:background="@color/light_background"
+                    android:orientation="horizontal"
+                    android:padding="6dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/documents_o" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10sp"
+                        android:text="UPLOAD DOCUMENT"
+                        android:textColor="@color/accent_black"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/submit_task"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linear_body"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="16sp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16sp"
+            android:background="@drawable/edit_text_rounded"
+            android:backgroundTint="@color/accent_pink"
+            android:text="SUBMIT ANSWER"
+            android:textColor="@color/light_background"
+            android:textSize="18sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText" />
+
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>

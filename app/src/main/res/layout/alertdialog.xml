@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="CREATE A NEW DISCUSSION"
+        android:textColor="@color/accent_pink"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/create_discuss"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/edit_text_rounded"
+        android:backgroundTint="@color/light_background"
+        android:gravity="top"
+        android:inputType="text|textMultiLine"
+        android:paddingStart="14dp"
+        android:paddingTop="15dp"
+        android:text="Description "
+        android:textColor="@color/text_dark_white"
+        android:textStyle="bold"
+        android:visibility="visible"
+        tools:ignore="Autofill,HardcodedText,LabelFor,RtlSymmetry" />
+
+
+    <Button
+        android:id="@+id/submit_discuss"
+        android:layout_width="match_parent"
+        android:layout_height="55sp"
+        android:layout_marginStart="25sp"
+        android:layout_marginTop="25sp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25sp"
+        android:background="@drawable/border_rounded"
+        android:backgroundTint="@color/accent_pink"
+        android:fontFamily="@font/opensans_regular"
+        android:text="SAVE"
+        android:textColor="@color/light_background"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText" />
+    <!--    <RelativeLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="15dp">-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/cancel_alert"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="40sp"-->
+    <!--            android:layout_marginStart="16dp"-->
+    <!--            android:layout_marginBottom="15dp"-->
+    <!--            android:background="@drawable/square_shape"-->
+    <!--            android:backgroundTint="@color/accent_pink"-->
+    <!--            android:gravity="center"-->
+    <!--            android:text="@string/Cancel"-->
+    <!--            android:textColor="@color/white"-->
+    <!--            android:textSize="15sp"-->
+    <!--            android:textStyle="bold" />-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/ok_alert"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="40sp"-->
+    <!--            android:layout_alignParentEnd="true"-->
+    <!--            android:layout_marginEnd="20sp"-->
+    <!--            android:layout_marginBottom="15dp"-->
+    <!--            android:background="@drawable/square_shape"-->
+    <!--            android:backgroundTint="@color/accent_pink"-->
+    <!--            android:gravity="center"-->
+    <!--            android:text="Add"-->
+    <!--            android:textColor="@color/white"-->
+    <!--            android:textSize="15sp"-->
+    <!--            android:textStyle="bold"-->
+    <!--            tools:ignore="HardcodedText" />-->
+    <!--    </RelativeLayout>-->
+</LinearLayout>
