@@ -10,7 +10,6 @@ import android.view.View
 import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.PDF.PDFViewer
 import com.amuze.learnfromhome.R
-import kotlinx.android.synthetic.main.activity_task_upload.*
 import kotlinx.android.synthetic.main.activity_task_upload2.*
 
 class NTaskUpload : AppCompatActivity() {
