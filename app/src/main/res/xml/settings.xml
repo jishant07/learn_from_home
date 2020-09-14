@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="User Profile" />
+    <Preference
+        android:key="firstname"
+        android:title="Name" />
+
+    <Preference
+        android:key="gender"
+        android:title="Gender" />
+
+    <Preference
+        android:key="address"
+        android:title="Address" />
+
+    <Preference
+        android:key="branch"
+        android:title="Branch" />
+
+    <Preference
+        android:key="class"
+        android:title="Your Class" />
+
+    <Preference
+        android:key="phone"
+        android:title="Phone No" />
+
+    <Preference
+        android:key="email"
+        android:title="Your Email" />
+
+    <Preference
+        android:key="signout"
+        android:title="Sign-Out" />
+
+</PreferenceScreen>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="detail_thumb_width">224dp</dimen>
+    <dimen name="detail_thumb_height">274dp</dimen>
+    <dimen name="details_description_subtitle_bottom_margin" >8dp</dimen>
+</resources>

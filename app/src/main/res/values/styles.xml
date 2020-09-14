@@ -1,0 +1,34 @@
+<resources>
+
+    <style name="AppTheme" parent="@style/Theme.Leanback" />
+    <style name="Widget.Example.Leanback.GuidanceIconStyle" parent="Widget.Leanback.GuidanceIconStyle">
+        <item name="android:background">@color/icon_background</item>
+    </style>
+
+    <style name="Widget.Example.Leanback.FirstStepGuidanceIconStyle" parent="Widget.Leanback.GuidanceIconStyle">
+        <item name="android:background">@color/border</item>
+    </style>
+    <style name="Theme.Example.Leanback.GuidedStep" parent="Theme.Leanback.GuidedStep">
+        <item name="guidanceIconStyle">@style/Widget.Example.Leanback.GuidanceIconStyle</item>
+    </style>
+
+    <style name="Theme.Example.Leanback.GuidedStep.First">
+        <item name="guidanceIconStyle">@style/Widget.Example.Leanback.FirstStepGuidanceIconStyle
+        </item>
+    </style>
+
+    <style name="LeanbackPreferences" parent="Theme.Leanback">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Leanback</item>
+        <item name="android:preferenceStyle">@style/LeanbackPreferences</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:colorPrimary">@color/fastlane_background</item>
+    </style>
+
+    <style name="TvHorizontalGridView" parent="Widget.Leanback.Row.HorizontalGridView">
+        <item name="horizontalMargin">25dp</item>
+        <item name="verticalMargin">25dp</item>
+    </style>
+
+</resources>
