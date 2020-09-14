@@ -198,7 +198,7 @@ open class SearchFragment : SearchSupportFragment(), SearchSupportFragment.Searc
     }
 
     fun focusOnSearch() {
-        Objects.requireNonNull(view)?.findViewById<SearchOrbView>(R.id.lb_search_bar)
+        Objects.requireNonNull(view)?.findViewById<SearchBar>(R.id.lb_search_bar)
             ?.requestFocus()
     }
 
