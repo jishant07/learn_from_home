@@ -89,6 +89,13 @@ class HomeFragment : Fragment() {
         recyclerView4 = rootView.findViewById(R.id.ebooks_recycler_view)
         prefs = HomeFragment.context.getSharedPreferences("lfh", Context.MODE_PRIVATE)
         editor = prefs.edit()!!
+        home_body.visibility = View.GONE
+        loadgif.visibility = View.VISIBLE
+        Glide.with(activity!!)
+            .asGif()
+            .load(R.drawable.giftry)
+            .into(loadgif)
+
         assignment_linear.setOnClickListener {
             HomeFragment.context.startActivity(Intent(activity, Assignment::class.java))
         }
@@ -500,6 +507,8 @@ class HomeFragment : Fragment() {
     private fun addEbooks(list: List<Ebooks>) {
         ebookList.clear()
         ebookList.addAll(list)
+        home_body.visibility = View.VISIBLE
+        loadgif.visibility = View.GONE
         sadapter3.notifyDataSetChanged()
     }
 
