@@ -20,6 +20,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.amuze.learnfromhome.HomePage
+import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
 import com.android.volley.Request
@@ -225,7 +226,7 @@ class CreateTask : AppCompatActivity() {
                 val queue = Volley.newRequestQueue(applicationContext)
                 val url =
                     "https://flowrow.com/lfh/appapi.php?action=list-gen&" +
-                            "category=addtask&emp_code=ST0001&classid=1&title=${
+                            "category=addtask&emp_code=${Utils.userId}&classid=1&title=${
                                 namearea.text.toString().trim()
                             }&" +
                             "description=${

@@ -22,7 +22,6 @@ class VModel : ViewModel() {
     private lateinit var vMap: HashMap<String, String>
     private val service1 = Utils.retrofit1.create(WebApi::class.java)
     private lateinit var discussFlag: String
-    private lateinit var ask_id: String
     private lateinit var cAsk_id: String
     private lateinit var sAsk_id: String
     private lateinit var chatMsg: String
@@ -31,6 +30,8 @@ class VModel : ViewModel() {
     private lateinit var video_id: String
     private lateinit var markFlag: String
     private lateinit var durationFlag: String
+    private lateinit var sAssignID: String
+    private lateinit var sAssignType: String
     private val TAG = "VModel"
 
     private val loginData: MutableLiveData<String> by lazy {
@@ -349,6 +350,17 @@ class VModel : ViewModel() {
         }
     }
 
+    fun getSingleAssignment(string: String, string1: String) = liveData(Dispatchers.IO) {
+        sAssignID = string
+        sAssignType = string1
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = getSAssignment()))
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occured!"))
+        }
+    }
+
     fun getSCWatchingData(string: String, string1: String, string2: String) =
         liveData(Dispatchers.IO) {
             video_id = string
@@ -521,5 +533,14 @@ class VModel : ViewModel() {
         video_id,
         markFlag,
         durationFlag
+    )
+
+    private suspend fun getSAssignment() = service1.getSAssignment(
+        "list-gen",
+        "assignment-single",
+        "1",
+        "ST0001",
+        sAssignID,
+        sAssignType
     )
 }

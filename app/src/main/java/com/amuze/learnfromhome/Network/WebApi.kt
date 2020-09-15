@@ -4,6 +4,7 @@ package com.amuze.learnfromhome.Network
 
 import com.amuze.learnfromhome.Modal.*
 import com.amuze.learnfromhome.Modal.Assignments.MAssignment
+import com.amuze.learnfromhome.Modal.Assignments.SingleAssign
 import com.amuze.learnfromhome.Modal.Classroom.ClassroomData
 import retrofit2.Response
 import retrofit2.http.*
@@ -207,4 +208,13 @@ interface WebApi {
         @Query("duration") duration: String
     ): Response<SCWatching>
 
+    @GET("appapi.php?")
+    suspend fun getSAssignment(
+        @Query("action") action: String,
+        @Query("category") category: String,
+        @Query("classid") classid: String,
+        @Query("emp_code") empcode: String,
+        @Query("id") id: String,
+        @Query("type") type: String
+    ): Response<SingleAssign>
 }

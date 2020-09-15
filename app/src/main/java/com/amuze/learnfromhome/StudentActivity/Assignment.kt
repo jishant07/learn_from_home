@@ -26,6 +26,9 @@ import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
 import kotlinx.android.synthetic.main.activity_assignment.*
 import kotlinx.android.synthetic.main.assignment_item.view.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class Assignment : AppCompatActivity() {
 
@@ -37,6 +40,7 @@ class Assignment : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private var aList: ArrayList<NAssignments> = ArrayList()
+    private var nList: ArrayList<NAssignments> = ArrayList()
     private lateinit var sadapter: CustomAdapter
     private lateinit var vModel: VModel
     private val TAG = "AssignmentPage"
@@ -148,6 +152,8 @@ class Assignment : AppCompatActivity() {
                 val intent = Intent(context, NTaskUpload::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.putExtra("flag", "normal")
+                intent.putExtra("id",slist[position].id)
+                intent.putExtra("type",slist[position].type)
                 intent.putExtra("title", slist[position].question)
                 intent.putExtra("desc", slist[position].closedate)
                 intent.putExtra("subj", slist[position].subject_name)
@@ -167,8 +173,17 @@ class Assignment : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun loadAssignment(list: List<NAssignments>) {
+        aList.clear()
+        nList.clear()
+        nList.addAll(list)
         aList.addAll(list)
+        val current = Calendar.getInstance()
+        val dayFormat = SimpleDateFormat("yyyy-MM-dd")
+        val dateString = dayFormat.format(current.time)
+        val filtered = nList.filter { it.opendate == dateString }
+        Log.d(TAG, "loadAssignment:$filtered:::$dateString")
         sadapter.notifyDataSetChanged()
     }
 

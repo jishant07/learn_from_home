@@ -3,26 +3,29 @@ package com.amuze.learnfromhome.Modal.Assignments
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class NAssignments(
+data class SingleAssign(
     @SerializedName("id")
     @Expose
     var id: String,
     @SerializedName("question")
     @Expose
-    var question: String,
+    var questn: String,
     @SerializedName("subject_name")
     @Expose
-    var subject_name: String,
+    var sname: String,
     @SerializedName("freestatus")
     @Expose
-    var freestatus: String,
+    var fstatus: String,
     @SerializedName("opendate")
     @Expose
-    var opendate: String,
+    var odate: String,
     @SerializedName("closedate")
     @Expose
-    var closedate: String,
-    @SerializedName("type")
+    var cdate: String,
+    @SerializedName("document")
     @Expose
-    var type: String
+    var doc: String,
+    @SerializedName("uploadflag")
+    @Expose
+    var uflag: String
 )

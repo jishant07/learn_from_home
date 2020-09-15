@@ -12,7 +12,7 @@ import java.util.*
 
 open class Utils {
     companion object {
-        var retrofit1 = Retrofit.Builder()
+        var retrofit1: Retrofit = Retrofit.Builder()
             .baseUrl("https://flowrow.com/lfh/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
