@@ -109,9 +109,9 @@ class NTaskUpload : AppCompatActivity() {
             intent.type = "application/pdf"
             startActivityForResult(intent, 1)
         }
-        submit_answer.setOnClickListener {
-            uploadFile()
-        }
+//        submit_answer.setOnClickListener {
+//            uploadFile()
+//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
