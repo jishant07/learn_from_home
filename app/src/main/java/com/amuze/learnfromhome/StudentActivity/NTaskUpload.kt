@@ -1,4 +1,4 @@
-@file:Suppress("PackageName")
+@file:Suppress("PackageName", "PrivatePropertyName", "unused")
 
 package com.amuze.learnfromhome.StudentActivity
 
@@ -34,6 +34,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.InputStream
 import java.util.*
@@ -108,6 +109,9 @@ class NTaskUpload : AppCompatActivity() {
             intent.type = "application/pdf"
             startActivityForResult(intent, 1)
         }
+        submit_answer.setOnClickListener {
+            uploadFile()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -115,11 +119,10 @@ class NTaskUpload : AppCompatActivity() {
             // Get the Uri of the selected file
             val uri: Uri? = data.data
             val uriString: String = uri!!.path!!
-            val myFile = File(uriString)
+            //val myFile = File(uriString)
             getFileData(uri)
             //val path: String = getFilePathFromURI(uri)
             val fileName = getFileName(applicationContext, uri)
-            createMultipartBody(fileName!!)
             Log.d("uri", "$uriString:::$fileName")
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -160,6 +163,7 @@ class NTaskUpload : AppCompatActivity() {
                         return returnCursor.getString(nameIndex)
                     }
                     string = returnCursor.getString(nameIndex)
+                    mStringPath = returnCursor.getString(nameIndex)
                     Log.d("cursor", string)
                     return string
                 }
@@ -250,9 +254,16 @@ class NTaskUpload : AppCompatActivity() {
         }
     }
 
-    /**
-     * return multipart part request body
-     */
+    private fun uploadFile() {
+        Log.d(TAG, "uploadFile:called")
+        try {
+            val multipartBody = createMultipartBody(mStringPath)
+            Log.d(TAG, "uploadFile:$multipartBody")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private fun createMultipartBody(filePath: String): MultipartBody.Part? {
         Log.d(TAG, "createMultipartBody:called")
         val file = File(filePath)
@@ -260,12 +271,9 @@ class NTaskUpload : AppCompatActivity() {
         return MultipartBody.Part.createFormData("file_name", file.name, requestBody)
     }
 
-    /**
-     * Create request body for image resource
-     */
     private fun createRequestForImage(file: File): RequestBody {
         Log.d(TAG, "createRequestForImage:called")
-        return RequestBody.create("application/pdf".toMediaTypeOrNull(), file)
+        return file.asRequestBody("application/pdf".toMediaTypeOrNull())
     }
 
     override fun onBackPressed() {
