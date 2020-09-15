@@ -184,37 +184,38 @@ class NTaskUpload : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun loadSingleAssign(string: String, string1: String) {
-        vModel.getSingleAssignment(string, string1).observe(this@NTaskUpload, Observer {
-            it?.let { resource ->
-                when (resource.status) {
-                    Status.SUCCESS -> {
-                        try {
-                            Log.d(TAG, "loadSingleAssign:${it.data!!.body()}")
-                            flag.text = it.data.body()!!.sname
-                            utitle.text = it.data.body()!!.questn
-                            udesc.text = "Submit before ${it.data.body()!!.cdate}"
-                            refer_doc.setOnClickListener {
-                                val intent = Intent(applicationContext, PDFViewer::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                intent.putExtra(
-                                    "url",
-                                    "https://www.flowrow.com/lfh/uploads/my_books/9904History-Class.pdf"
-                                )
-                                startActivity(intent)
+        vModel.getSingleAssignment(string, string1)
+            .observe(this@NTaskUpload, Observer {
+                it?.let { resource ->
+                    when (resource.status) {
+                        Status.SUCCESS -> {
+                            try {
+                                Log.d(TAG, "loadSingleAssign:${it.data!!.body()}")
+                                flag.text = it.data.body()!!.sname
+                                utitle.text = it.data.body()!!.questn
+                                udesc.text = "Submit before ${it.data.body()!!.cdate}"
+                                refer_doc.setOnClickListener {
+                                    val intent = Intent(applicationContext, PDFViewer::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    intent.putExtra(
+                                        "url",
+                                        "https://www.flowrow.com/lfh/uploads/my_books/9904History-Class.pdf"
+                                    )
+                                    startActivity(intent)
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
                             }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+                        }
+                        Status.ERROR -> {
+                            Log.d(TAG, "loadSingleAssign:${it.message}")
+                        }
+                        Status.LOADING -> {
+                            Log.d(TAG, "loadSingleAssign:${it.status}")
                         }
                     }
-                    Status.ERROR -> {
-                        Log.d(TAG, "loadSingleAssign:${it.message}")
-                    }
-                    Status.LOADING -> {
-                        Log.d(TAG, "loadSingleAssign:${it.status}")
-                    }
                 }
-            }
-        })
+            })
     }
 
     private fun submitAssignment(string: String, string1: String) {
