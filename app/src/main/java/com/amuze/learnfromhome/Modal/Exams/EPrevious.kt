@@ -1,5 +1,6 @@
-package com.amuze.learnfromhome.Modal
+package com.amuze.learnfromhome.Modal.Exams
 
+import com.amuze.learnfromhome.Modal.QDetails
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 

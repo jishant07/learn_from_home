@@ -29,7 +29,7 @@ class PDFWeb : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_p_d_f_web)
         //progressBar = findViewById(R.id.progressBar)
-        wurl = intent.getStringExtra("url")!!
+        wurl = "https://flowrow.com/lfh/admin/login.php"
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -40,26 +40,25 @@ class PDFWeb : AppCompatActivity() {
 //        )
 //            .show()
         progressDialog = ProgressDialog(this);
-        progressDialog.setTitle("PDF");
-        progressDialog.setMessage("Loading...");
-        progressDialog.isIndeterminate = false;
-        progressDialog.setCancelable(false);
+        progressDialog.setTitle("Please wait until the page loads...")
+        progressDialog.setMessage("Loading...")
+        progressDialog.isIndeterminate = false
+        progressDialog.setCancelable(false)
         //progressDialog.show()
         webView.settings.setSupportZoom(true)
-        webView.settings.builtInZoomControls = true
+        //webView.settings.builtInZoomControls = true
         webView.settings.javaScriptEnabled = true
         webView.settings.defaultZoom = WebSettings.ZoomDensity.FAR
         webView.webViewClient = WebViewClient()
 //        webView.webViewClient = object : WebViewClient() {
 //            override fun onPageFinished(view: WebView, url: String) {
 //                super.onPageFinished(view, url)
-//                progressBar.visibility = View.GONE
 //            }
 //        }
-        webView.loadUrl("https://docs.google.com/gview?embedded=true&url=$wurl")
+        webView.loadUrl(wurl)
     }
 
-    inner class WebViewClient : android.webkit.WebViewClient() {
+    open inner class WebViewClient : android.webkit.WebViewClient() {
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
             super.onPageStarted(view, url, favicon)
             progressDialog.show()
@@ -74,14 +73,27 @@ class PDFWeb : AppCompatActivity() {
             super.onPageFinished(view, url)
             progressDialog.dismiss()
         }
+
+        override fun onLoadResource(view: WebView?, url: String?) {
+            super.onLoadResource(view, url)
+            try {
+                view!!.loadUrl("javascript:var footer = document.getElementsByClassName(\"footer d-flex flex-column flex-md-row align-items-center justify-content-between\");" +
+                        " footer[0].parentNode.removeChild(footer[0]);")
+//                view!!.loadUrl("jQuery:(function() { " +
+//                        "$(\"footer d-flex flex-column flex-md-row align-items-center justify-content-between\").remove();" +
+//                        "})()")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         Log.d("onBack_EPr", "called")
-        val intent = Intent(applicationContext, HomePage::class.java)
-        startActivity(intent)
-        finish()
+//        val intent = Intent(applicationContext, HomePage::class.java)
+//        startActivity(intent)
+//        finish()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

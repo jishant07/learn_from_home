@@ -20,12 +20,13 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amuze.learnfromhome.HomePage
-import com.amuze.learnfromhome.Modal.EPrev
-import com.amuze.learnfromhome.Modal.EPrevious
+import com.amuze.learnfromhome.Modal.Exams.EPrev
+import com.amuze.learnfromhome.Modal.Exams.EPrevious
 import com.amuze.learnfromhome.Modal.QDetails
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
 import kotlinx.android.synthetic.main.activity_exam_prev.*
+import kotlinx.android.synthetic.main.exam_item.view.*
 import kotlinx.android.synthetic.main.exam_prev_item.view.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -90,7 +91,7 @@ class ExamPrev : AppCompatActivity() {
             val linearLayoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             recyclerView.layoutManager = linearLayoutManager
-            sAdapter = CustomAdapter1(ePrevList)
+            sAdapter = CustomAdapter1(ePrevList, applicationContext)
             recyclerView.adapter = sAdapter
             sAdapter.notifyDataSetChanged()
         }
@@ -140,7 +141,7 @@ class ExamPrev : AppCompatActivity() {
         }
     }
 
-    class CustomAdapter1(private val sList: ArrayList<QDetails>) :
+    class CustomAdapter1(private val sList: ArrayList<QDetails>, val context: Context) :
         RecyclerView.Adapter<CustomAdapter1.ViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -150,6 +151,14 @@ class ExamPrev : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.itemView.exam_body.setOnClickListener {
+                val intent = Intent(context, NTaskUpload::class.java)
+                intent.putExtra("id", sList[position].id)
+                intent.putExtra("type", sList[position].qtype)
+                intent.putExtra("flag", "prev")
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(intent)
+            }
             holder.bindItems(sList[position])
         }
 

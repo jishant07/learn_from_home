@@ -6,11 +6,13 @@ import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
@@ -35,6 +37,7 @@ class Login : AppCompatActivity() {
     private var hashmap: HashMap<String, String> = HashMap()
     lateinit var prefs: SharedPreferences
 
+    @RequiresApi(Build.VERSION_CODES.P)
     @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +45,6 @@ class Login : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
         prefs = getSharedPreferences("lfh", MODE_PRIVATE)
-
         val button = findViewById<Button>(R.id.btnsignin)
         requestStoragePermission()
         button.setOnClickListener {
@@ -108,6 +110,7 @@ class Login : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     private fun requestStoragePermission() {
         val list: ArrayList<String> = ArrayList()
         when {
@@ -144,6 +147,15 @@ class Login : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
             -> {
                 list.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        }
+        when {
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.FOREGROUND_SERVICE
+            ) != PackageManager.PERMISSION_GRANTED
+            -> {
+                list.add(Manifest.permission.FOREGROUND_SERVICE)
             }
         }
 

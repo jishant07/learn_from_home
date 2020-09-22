@@ -6,6 +6,12 @@ import com.amuze.learnfromhome.Modal.*
 import com.amuze.learnfromhome.Modal.Assignments.MAssignment
 import com.amuze.learnfromhome.Modal.Assignments.SingleAssign
 import com.amuze.learnfromhome.Modal.Classroom.ClassroomData
+import com.amuze.learnfromhome.Modal.Exams.EPrev
+import com.amuze.learnfromhome.Modal.Exams.EPrevious
+import com.amuze.learnfromhome.Modal.Exams.Exams
+import com.amuze.learnfromhome.Modal.Exams.SingleExams
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -217,4 +223,39 @@ interface WebApi {
         @Query("id") id: String,
         @Query("type") type: String
     ): Response<SingleAssign>
+
+    @Multipart
+    @POST("appapi.php?")
+    suspend fun getAssignmentSubmit(
+        @Query("action") action: String,
+        @Query("category") category: String,
+        @Query("classid") classid: String,
+        @Query("emp_code") empcode: String,
+        @Query("id") id: String,
+        @Query("type") type: String,
+        @Part body: MultipartBody.Part,
+        @Query("answer") ans: String
+    ): Response<SMessage>
+
+    @GET("appapi.php?")
+    suspend fun getAssignmentSubmitNew(
+        @Query("action") action: String,
+        @Query("category") category: String,
+        @Query("classid") classid: String,
+        @Query("emp_code") empcode: String,
+        @Query("id") id: String,
+        @Query("type") type: String,
+        @Query("file") body: ByteArray,
+        @Query("answer") ans: String
+    ): Response<SMessage>
+
+    @GET("appapi.php?")
+    suspend fun getSingleExams(
+        @Query("action") action: String,
+        @Query("category") category: String,
+        @Query("classid") classid: String,
+        @Query("emp_code") empcode: String,
+        @Query("id") id: String,
+        @Query("type") type: String
+    ):Response<SingleExams>
 }

@@ -65,6 +65,7 @@ dependencies {
         }
     }
     implementation "com.folioreader:folioreader:0.5.4"
+    implementation 'net.gotev:uploadservice:2.1'
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:viewmodel:1.1.1"

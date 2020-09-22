@@ -25,7 +25,6 @@ import com.amuze.learnfromhome.ViewModel.VModel
 import kotlinx.android.synthetic.main.activity_exam_page.*
 import kotlinx.android.synthetic.main.activity_exam_page.headd_subtitle
 import kotlinx.android.synthetic.main.activity_exam_page.headd_title
-import kotlinx.android.synthetic.main.assignment_item.view.*
 import kotlinx.android.synthetic.main.exam_header.view.*
 import kotlinx.android.synthetic.main.exam_item.view.*
 import kotlin.Exception
@@ -190,6 +189,8 @@ class ExamPage : AppCompatActivity() {
                 intent.putExtra("flag", "prev")
                 intent.putExtra("title", sList[position].question)
                 intent.putExtra("desc", sList[position].answer)
+                intent.putExtra("id",sList[position].id)
+                intent.putExtra("type",sList[position].qtype)
                 intent.putExtra("subj", "Marathi")
                 context.startActivity(intent)
 

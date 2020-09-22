@@ -69,7 +69,7 @@
                         android:id="@+id/corrct_img"
                         android:layout_width="33dp"
                         android:layout_height="28dp"
-                        android:src="@drawable/assignment_submit" />
+                        android:src="@drawable/cancelsubmit" />
 
                     <TextView
                         android:id="@+id/correct_txt"
@@ -79,7 +79,7 @@
                         android:layout_marginTop="1dp"
                         android:padding="1dp"
                         android:text="Your Answer is Correct"
-                        android:textColor="@color/accent_green"
+                        android:textColor="@color/black"
                         android:textSize="17sp"
                         android:textStyle="bold"
                         tools:ignore="HardcodedText" />
@@ -132,6 +132,7 @@
                 android:textColor="@color/accent_black"
                 android:textSize="16sp"
                 android:textStyle="normal"
+                android:visibility="gone"
                 tools:ignore="HardcodedText" />
 
             <LinearLayout
@@ -190,6 +191,7 @@
                 android:textColor="@color/accent_black"
                 android:textSize="16sp"
                 android:textStyle="normal"
+                android:visibility="gone"
                 tools:ignore="HardcodedText" />
 
             <EditText
@@ -239,7 +241,7 @@
                         android:layout_marginStart="3dp"
                         android:layout_marginTop="1dp"
                         android:padding="1dp"
-                        android:text="Uploaded. Document"
+                        android:text="Upload. Document"
                         android:textColor="@color/whitebg"
                         android:textSize="13sp"
                         android:textStyle="bold"
@@ -255,6 +257,7 @@
                     android:layout_gravity="end"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="20dp"
+                    android:visibility="gone"
                     android:src="@drawable/delete_document"
                     tools:ignore="ContentDescription" />
             </RelativeLayout>
@@ -272,6 +275,7 @@
                 android:paddingStart="15dp"
                 android:paddingTop="8dp"
                 android:paddingEnd="15dp"
+                android:visibility="gone"
                 android:paddingBottom="8dp">
 
                 <ImageView

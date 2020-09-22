@@ -15,6 +15,7 @@ import com.android.volley.*
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.coroutines.*
+import okhttp3.MultipartBody
 
 class VModel : ViewModel() {
 
@@ -374,6 +375,32 @@ class VModel : ViewModel() {
             }
         }
 
+    fun getSAssignData(string: String, string1: String, part: MultipartBody.Part, string2: String) =
+        liveData(Dispatchers.IO) {
+            submitid = string
+            assigntype = string1
+            multipartFile = part
+            answer = string2
+            emit(Resource.loading(data = null))
+            try {
+                emit(Resource.success(data = getSubmitAssign()))
+            } catch (exception: Exception) {
+                emit(Resource.error(data = null, message = exception.message ?: "Error Occured!"))
+            }
+        }
+
+    fun getSExams(string: String, string1: String) =
+        liveData(Dispatchers.IO) {
+            examid = string
+            examtype = string1
+            emit(Resource.loading(data = null))
+            try {
+                emit(Resource.success(data = getSingleExamData()))
+            } catch (exception: Exception) {
+                emit(Resource.error(data = null, message = exception.message ?: "Error Occured!"))
+            }
+        }
+
     private suspend fun getSTask() = service1.getTask(
         "list-gen",
         "tasks",
@@ -543,4 +570,33 @@ class VModel : ViewModel() {
         sAssignID,
         sAssignType
     )
+
+    private suspend fun getSubmitAssign() = service1.getAssignmentSubmit(
+        "list-gen",
+        "assignment-single",
+        "1",
+        "ST0001",
+        submitid,
+        assigntype,
+        multipartFile,
+        answer
+    )
+
+    private suspend fun getSingleExamData() = service1.getSingleExams(
+        "list-gen",
+        "exam-single",
+        "1",
+        "ST0001",
+        examid,
+        examtype
+    )
+
+    companion object {
+        private lateinit var examid: String
+        private lateinit var examtype: String
+        private lateinit var submitid: String
+        private lateinit var assigntype: String
+        private lateinit var multipartFile: MultipartBody.Part
+        private lateinit var answer: String
+    }
 }

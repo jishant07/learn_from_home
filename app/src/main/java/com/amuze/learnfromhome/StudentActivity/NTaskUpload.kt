@@ -1,4 +1,4 @@
-@file:Suppress("PackageName", "PrivatePropertyName", "unused")
+@file:Suppress("PackageName", "PrivatePropertyName", "unused", "UNUSED_VARIABLE")
 
 package com.amuze.learnfromhome.StudentActivity
 
@@ -17,12 +17,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.amuze.learnfromhome.HomePage
+import com.amuze.learnfromhome.Modal.FileUtils.FilePath.getFileName
+import com.amuze.learnfromhome.Modal.FileUtils.UploadFileBody
+import com.amuze.learnfromhome.Network.MultipartRequestVolley
 import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.Network.Utils
+import com.amuze.learnfromhome.Network.WebApi
 import com.amuze.learnfromhome.PDF.PDFViewer
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
+import com.android.volley.AuthFailureError
 import com.android.volley.Request
+import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -31,20 +37,20 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
 import java.io.InputStream
 import java.util.*
+import kotlin.collections.HashMap
 
-class NTaskUpload : AppCompatActivity() {
+class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
 
     private lateinit var intentString: String
     private lateinit var vModel: VModel
     private val STORAGE_PERMISSION_CODE = 123
     private lateinit var mStringPath: String
+    private lateinit var uriFile: Uri
+    private lateinit var byteArrray: ByteArray
+    private val boundary = "apiclient-" + System.currentTimeMillis()
+    private val mimeType = "multipart/form-data;boundary=$boundary"
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,25 +71,18 @@ class NTaskUpload : AppCompatActivity() {
         when (intent.getStringExtra("flag")) {
             "prev" -> {
                 intentString = "prev"
-                ytextarea.visibility = View.GONE
+                ytextarea.visibility = View.VISIBLE
                 delete_doc.visibility = View.GONE
-                upload_linear.visibility = View.GONE
-                submit_answer.visibility = View.GONE
-                upload_body.visibility = View.GONE
-                correct_txt.text = "Your Answer is Correct"
-                correct_marks.text = "4 marks"
-                flag.text = subj
-                utitle.text = title
-                udesc.text = desc
-                refer_doc.setOnClickListener {
-                    val intent = Intent(applicationContext, PDFViewer::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    intent.putExtra(
-                        "url",
-                        "https://www.flowrow.com/lfh/uploads/my_books/9904History-Class.pdf"
-                    )
-                    startActivity(intent)
-                }
+                //upload_linear.visibility = View.GONE
+                submit_answer.visibility = View.VISIBLE
+                utitle.visibility = View.VISIBLE
+                udesc.visibility = View.VISIBLE
+                flag.visibility = View.VISIBLE
+                upload_body.visibility = View.VISIBLE
+                getSingleExams(
+                    intent.getStringExtra("id")!!,
+                    intent.getStringExtra("type")!!.toString()
+                )
             }
             else -> {
                 intentString = "normal"
@@ -98,10 +97,17 @@ class NTaskUpload : AppCompatActivity() {
             }
         }
         submit_answer.setOnClickListener {
-            submitAssignment(
-                intent.getStringExtra("id")!!,
-                intent.getStringExtra("type")!!.toString()
-            )
+            when (intentString) {
+                "prev" -> {
+                    Log.d(TAG, "onCreate:prev")
+                }
+                else -> {
+                    uploadPdf(
+                        intent.getStringExtra("id")!!,
+                        intent.getStringExtra("type")!!.toString()
+                    )
+                }
+            }
         }
         upload_relative.setOnClickListener {
             val intent = Intent()
@@ -109,9 +115,6 @@ class NTaskUpload : AppCompatActivity() {
             intent.type = "application/pdf"
             startActivityForResult(intent, 1)
         }
-//        submit_answer.setOnClickListener {
-//            uploadFile()
-//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -119,25 +122,23 @@ class NTaskUpload : AppCompatActivity() {
             // Get the Uri of the selected file
             val uri: Uri? = data.data
             val uriString: String = uri!!.path!!
-            //val myFile = File(uriString)
-            getFileData(uri)
-            //val path: String = getFilePathFromURI(uri)
+            uriFile = uri
+            try {
+                val inputStream: InputStream? = applicationContext.contentResolver.openInputStream(
+                    uri
+                )
+                val bytesArray = ByteArray(inputStream!!.available())
+                inputStream.read(bytesArray)
+                inputStream.close()
+                byteArrray = bytesArray
+                Log.d("bytes", bytesArray.toString())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             val fileName = getFileName(applicationContext, uri)
             Log.d("uri", "$uriString:::$fileName")
         }
         super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    private fun getFileData(uri: Uri) {
-        try {
-            val inputStream: InputStream? = applicationContext.contentResolver.openInputStream(uri)
-            val bytesArray = ByteArray(inputStream!!.available())
-            inputStream.read(bytesArray)
-            inputStream.close()
-            Log.d("bytes", bytesArray.toString())
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
     }
 
     @SuppressLint("Recycle")
@@ -218,6 +219,49 @@ class NTaskUpload : AppCompatActivity() {
             })
     }
 
+    @SuppressLint("SetTextI18n")
+    private fun getSingleExams(string: String, string1: String) {
+        vModel.getSExams(string, string1)
+            .observe(this@NTaskUpload, Observer {
+                it?.let { resource ->
+                    when (resource.status) {
+                        Status.SUCCESS -> {
+                            Log.d(TAG, "getSingleExams:${it.data!!.body()!!}")
+                            when (it.data.body()!!.uploadflg) {
+                                "1" -> {
+                                    correct_txt.text = "Submit your Answer"
+                                }
+                                else -> {
+                                    correct_txt.text = "You've submitted your Answer"
+                                }
+                            }
+                            correct_marks.text = "${it.data.body()!!.marks} marks"
+                            flag.text = it.data.body()!!.question
+                            val colData = it.data.body()!!.cols1
+                            val colData1 = it.data.body()!!.cols2
+                            utitle.visibility = View.GONE
+                            udesc.visibility = View.GONE
+                            refer_doc.setOnClickListener {
+                                val intent = Intent(applicationContext, PDFViewer::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                intent.putExtra(
+                                    "url",
+                                    "https://www.flowrow.com/lfh/uploads/my_books/9904History-Class.pdf"
+                                )
+                                startActivity(intent)
+                            }
+                        }
+                        Status.ERROR -> {
+                            Log.d(TAG, "getSingleExams:${it.message}")
+                        }
+                        Status.LOADING -> {
+                            Log.d(TAG, "getSingleExams:${it.status}")
+                        }
+                    }
+                }
+            })
+    }
+
     private fun submitAssignment(string: String, string1: String) {
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.IO) {
@@ -255,26 +299,50 @@ class NTaskUpload : AppCompatActivity() {
         }
     }
 
-    private fun uploadFile() {
-        Log.d(TAG, "uploadFile:called")
+    private fun uploadPdf(string: String, string1: String) {
         try {
-            val multipartBody = createMultipartBody(mStringPath)
-            Log.d(TAG, "uploadFile:$multipartBody")
+            CoroutineScope(Dispatchers.Main).launch {
+                withContext(Dispatchers.IO) {
+                    val volleyMultipartRequest: MultipartRequestVolley =
+                        object : MultipartRequestVolley(
+                            Method.GET, UPLOAD_URL,
+                            mListener = Response.Listener { response ->
+                                //val jsonObject = JSONObject(response.data.toString())
+                                Log.d(TAG, "uploadPdf:S${response}")
+                            },
+                            mErrorListener = Response.ErrorListener { error: VolleyError? ->
+                                Log.d(TAG, "uploadPdf:E$error")
+                            }
+                        ) {
+                            override val byteData: HashMap<String, DataPart>?
+                                get() {
+                                    val params: HashMap<String, DataPart> = HashMap()
+                                    params["file"] = DataPart(
+                                        contentResolver.getFileName(uriFile),
+                                        byteArrray
+                                    )
+                                    return params
+                                }
+
+                            @Throws(AuthFailureError::class)
+                            override fun getParams(): Map<String?, String?> {
+                                hashMap["action"] = "list-gen"
+                                hashMap["category"] = "assignment-submit"
+                                hashMap["classid"] = "1"
+                                hashMap["emp_code"] = "ST0001"
+                                hashMap["id"] = string
+                                hashMap["type"] = string1
+                                hashMap["answer"] = ytextarea.text.toString().trim()
+                                return hashMap.toMap()
+                            }
+
+                        }
+                    Volley.newRequestQueue(applicationContext).add(volleyMultipartRequest)
+                }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }
-
-    private fun createMultipartBody(filePath: String): MultipartBody.Part? {
-        Log.d(TAG, "createMultipartBody:called")
-        val file = File(filePath)
-        val requestBody: RequestBody = createRequestForImage(file)
-        return MultipartBody.Part.createFormData("file_name", file.name, requestBody)
-    }
-
-    private fun createRequestForImage(file: File): RequestBody {
-        Log.d(TAG, "createRequestForImage:called")
-        return file.asRequestBody("application/pdf".toMediaTypeOrNull())
     }
 
     override fun onBackPressed() {
@@ -300,5 +368,13 @@ class NTaskUpload : AppCompatActivity() {
 
     companion object {
         var TAG = "NTaskUpload"
+        var UPLOAD_URL =
+            "https://flowrow.com/lfh/appapi.php?"
+        private val service1 = Utils.retrofit1.create(WebApi::class.java)
+        val hashMap: HashMap<String, String> = HashMap()
+    }
+
+    override fun onProgressUpdate(percentage: Int) {
+        Log.d(TAG, "onProgressUpdate:$percentage")
     }
 }
