@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION", "PackageName")
+
 package com.amuze.learnfromhome.Modal.FileUtils
 
 import android.content.ContentResolver
@@ -20,9 +22,6 @@ object FilePath {
      * @return path of the selected image file from gallery
      */
     fun getPath(context: Context, uri: Uri): String? {
-        //check here to KITKAT or new version
-        //val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-
         // DocumentProvider
         if (DocumentsContract.isDocumentUri(context, uri)) {
 
@@ -32,7 +31,7 @@ object FilePath {
                 val split = docId.split(":".toRegex()).toTypedArray()
                 val type = split[0]
                 if ("primary".equals(type, ignoreCase = true)) {
-                    return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
+                    return """${Environment.getExternalStorageDirectory()}/${split[1]}"""
                 }
             } else if (isDownloadsDocument(uri)) {
                 val id = DocumentsContract.getDocumentId(uri)
@@ -45,12 +44,16 @@ object FilePath {
                 val split = docId.split(":".toRegex()).toTypedArray()
                 val type = split[0]
                 var contentUri: Uri? = null
-                if ("image" == type) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                } else if ("video" == type) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                } else if ("audio" == type) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                when (type) {
+                    "image" -> {
+                        contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    }
+                    "video" -> {
+                        contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                    }
+                    "audio" -> {
+                        contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    }
                 }
                 val selection = "_id=?"
                 val selectionArgs = arrayOf(
@@ -58,17 +61,17 @@ object FilePath {
                 )
                 return getDataColumn(context, contentUri, selection, selectionArgs)
             }
-        } else if ("content".equals(uri.getScheme(), ignoreCase = true)) {
+        } else if ("content".equals(uri.scheme, ignoreCase = true)) {
 
             // Return the remote address
-            return if (isGooglePhotosUri(uri)) uri.getLastPathSegment() else getDataColumn(
+            return if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumn(
                 context,
                 uri,
                 null,
                 null
             )
-        } else if ("file".equals(uri.getScheme(), ignoreCase = true)) {
-            return uri.getPath()
+        } else if ("file".equals(uri.scheme, ignoreCase = true)) {
+            return uri.path
         }
         return null
     }
@@ -83,7 +86,7 @@ object FilePath {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    fun getDataColumn(
+    private fun getDataColumn(
         context: Context, uri: Uri?, selection: String?,
         selectionArgs: Array<String>?
     ): String? {
@@ -93,7 +96,7 @@ object FilePath {
             column
         )
         try {
-            cursor = context.getContentResolver().query(
+            cursor = context.contentResolver.query(
                 uri!!, projection, selection, selectionArgs,
                 null
             )
@@ -102,7 +105,7 @@ object FilePath {
                 return cursor.getString(index)
             }
         } finally {
-            if (cursor != null) cursor.close()
+            cursor?.close()
         }
         return null
     }
@@ -111,32 +114,32 @@ object FilePath {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
-    fun isExternalStorageDocument(uri: Uri): Boolean {
-        return "com.android.externalstorage.documents" == uri.getAuthority()
+    private fun isExternalStorageDocument(uri: Uri): Boolean {
+        return "com.android.externalstorage.documents" == uri.authority
     }
 
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
-    fun isDownloadsDocument(uri: Uri): Boolean {
-        return "com.android.providers.downloads.documents" == uri.getAuthority()
+    private fun isDownloadsDocument(uri: Uri): Boolean {
+        return "com.android.providers.downloads.documents" == uri.authority
     }
 
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
-    fun isMediaDocument(uri: Uri): Boolean {
-        return "com.android.providers.media.documents" == uri.getAuthority()
+    private fun isMediaDocument(uri: Uri): Boolean {
+        return "com.android.providers.media.documents" == uri.authority
     }
 
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is Google Photos.
      */
-    fun isGooglePhotosUri(uri: Uri): Boolean {
-        return "com.google.android.apps.photos.content" == uri.getAuthority()
+    private fun isGooglePhotosUri(uri: Uri): Boolean {
+        return "com.google.android.apps.photos.content" == uri.authority
     }
 
     fun ContentResolver.getFileName(fileUri: Uri): String {

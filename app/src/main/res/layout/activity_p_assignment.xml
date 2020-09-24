@@ -42,31 +42,52 @@
                 tools:ignore="HardcodedText" />
         </RelativeLayout>
 
-        <EditText
-            android:id="@+id/search_assignment"
+        <LinearLayout
+            android:id="@+id/no_data_found"
             android:layout_width="match_parent"
-            android:layout_height="50sp"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="7dp"
-            android:background="@drawable/border_rounded"
-            android:backgroundTint="@color/light_background"
-            android:drawableEnd="@drawable/search"
-            android:hint="@string/search"
-            android:inputType="text"
-            android:paddingStart="18dp"
-            android:paddingTop="14dp"
-            android:paddingEnd="28dp"
-            android:paddingBottom="15dp"
-            android:textColor="@color/accent_black"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:ignore="Autofill,LabelFor" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/prev_assignment_recycler"
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/no_data_found" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/recycler_prev"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp" />
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/search_assignment"
+                android:layout_width="match_parent"
+                android:layout_height="50sp"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="7dp"
+                android:background="@drawable/border_rounded"
+                android:backgroundTint="@color/light_background"
+                android:drawableEnd="@drawable/search"
+                android:hint="@string/search"
+                android:inputType="text"
+                android:paddingStart="18dp"
+                android:paddingTop="14dp"
+                android:paddingEnd="28dp"
+                android:paddingBottom="15dp"
+                android:textColor="@color/accent_black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:ignore="Autofill,LabelFor" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/prev_assignment_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

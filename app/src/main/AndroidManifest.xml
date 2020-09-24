@@ -27,7 +27,7 @@
         <activity
             android:name=".PDF.PDFWeb"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".StudentActivity.SWatchList"
             android:screenOrientation="portrait"

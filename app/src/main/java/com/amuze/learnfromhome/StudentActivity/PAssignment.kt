@@ -19,6 +19,7 @@ import com.amuze.learnfromhome.Modal.Task
 import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
+import kotlinx.android.synthetic.main.activity_p_assignment.*
 import kotlinx.android.synthetic.main.prev_assignment_item.view.*
 
 class PAssignment : AppCompatActivity() {
@@ -41,9 +42,20 @@ class PAssignment : AppCompatActivity() {
                 when (resource.status) {
                     Status.SUCCESS -> {
                         Log.d(TAG, "onCreate:${resource.data!!.body()}")
+                        when {
+                            resource.data.body()!!.subject.isBlank() -> {
+                                no_data_found.visibility = View.VISIBLE
+                                recycler_prev.visibility = View.GONE
+                            }
+                            else -> {
+                                no_data_found.visibility = View.GONE
+                                recycler_prev.visibility = View.VISIBLE
+                            }
+                        }
                     }
                     else -> {
                         Log.d(TAG, "onCreate:Error")
+                        no_data_found.visibility = View.VISIBLE
                     }
                 }
             }

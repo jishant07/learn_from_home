@@ -573,7 +573,7 @@ class VModel : ViewModel() {
 
     private suspend fun getSubmitAssign() = service1.getAssignmentSubmit(
         "list-gen",
-        "assignment-single",
+        "assignment-submit",
         "1",
         "ST0001",
         submitid,

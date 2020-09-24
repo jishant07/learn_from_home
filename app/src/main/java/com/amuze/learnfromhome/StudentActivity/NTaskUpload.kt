@@ -1,4 +1,7 @@
-@file:Suppress("PackageName", "PrivatePropertyName", "unused", "UNUSED_VARIABLE")
+@file:Suppress(
+    "PackageName", "PrivatePropertyName", "unused", "UNUSED_VARIABLE",
+    "SpellCheckingInspection"
+)
 
 package com.amuze.learnfromhome.StudentActivity
 
@@ -19,27 +22,18 @@ import androidx.lifecycle.ViewModelProviders
 import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.Modal.FileUtils.FilePath.getFileName
 import com.amuze.learnfromhome.Modal.FileUtils.UploadFileBody
-import com.amuze.learnfromhome.Network.MultipartRequestVolley
 import com.amuze.learnfromhome.Network.Status
-import com.amuze.learnfromhome.Network.Utils
-import com.amuze.learnfromhome.Network.WebApi
 import com.amuze.learnfromhome.PDF.PDFViewer
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
-import com.android.volley.AuthFailureError
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.VolleyError
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_task_upload2.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
+import org.apache.commons.io.IOUtils
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.io.InputStream
 import java.util.*
-import kotlin.collections.HashMap
 
 class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
 
@@ -100,9 +94,13 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
             when (intentString) {
                 "prev" -> {
                     Log.d(TAG, "onCreate:prev")
+                    submitAnswer(
+                        intent.getStringExtra("id")!!,
+                        intent.getStringExtra("type")!!.toString()
+                    )
                 }
                 else -> {
-                    uploadPdf(
+                    submitAnswer(
                         intent.getStringExtra("id")!!,
                         intent.getStringExtra("type")!!.toString()
                     )
@@ -136,7 +134,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                 e.printStackTrace()
             }
             val fileName = getFileName(applicationContext, uri)
-            Log.d("uri", "$uriString:::$fileName")
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -152,12 +149,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                 val sizeIndex: Int = returnCursor.getColumnIndex(OpenableColumns.SIZE)
                 returnCursor.moveToFirst()
                 if (nameIndex >= 0 && sizeIndex >= 0) {
-                    Log.d("File Name : ", returnCursor.getString(nameIndex))
-                    Log.d(
-                        "File Size : ", returnCursor.getLong(
-                            sizeIndex
-                        ).toString()
-                    )
                     val isValidFile: Boolean =
                         checkOtherFileType(returnCursor.getString(nameIndex).toString())
                     if (!isValidFile) {
@@ -181,6 +172,33 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
             }
         }
         return false
+    }
+
+    @Suppress("NAME_SHADOWING", "SENSELESS_COMPARISON")
+    private fun readContentFromFile(string: String): String {
+        var fileString = ""
+        try {
+            val fileInputStream = FileInputStream(File(string))
+            fileString = IOUtils.toString(fileInputStream, "UTF-8")
+            val path = applicationContext.filesDir
+            val directory = File(filesDir.toString() + File.separator + "MyLearnFHome")
+
+            val file = File(directory, "demo_txt_write.txt")
+            if (!file.exists()) {
+                file.parentFile!!.mkdirs()
+            }
+            try {
+                val fout = FileOutputStream(file)
+                val b = fileString.toByteArray()
+                fout.write(b)
+                fout.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return fileString
     }
 
     @SuppressLint("SetTextI18n")
@@ -262,87 +280,60 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
             })
     }
 
-    private fun submitAssignment(string: String, string1: String) {
-        CoroutineScope(Dispatchers.Main).launch {
-            withContext(Dispatchers.IO) {
-                try {
-                    Log.d(TAG, "submitAssignment:${Utils.userId}")
-                    val queue = Volley.newRequestQueue(applicationContext)
-                    val url =
-                        "https://flowrow.com/lfh/appapi.php?action=list-gen&category=assignment-submit" +
-                                "&classid=1&emp_code=${Utils.userId}&id=$string&type=$string1" +
-                                "&answer=${ytextarea.text.toString().trim()}"
-                    val stringRequest = StringRequest(
-                        Request.Method.GET,
-                        url,
-                        { response ->
-                            Log.d(TAG, ":$response")
-                            when (response) {
-                                "success" -> {
-                                    val intent = Intent(applicationContext, HomePage::class.java)
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    startActivity(intent)
-                                }
-                                else -> {
-                                    Log.d(TAG, "submitAssignment:error")
-                                }
-                            }
-                        },
-                        { error: VolleyError? ->
-                            Log.d(TAG, ":${error.toString()}")
-                        })
-                    queue.add(stringRequest)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
-    }
-
-    private fun uploadPdf(string: String, string1: String) {
+    private fun submitAnswer(string: String, string1: String) {
         try {
-            CoroutineScope(Dispatchers.Main).launch {
-                withContext(Dispatchers.IO) {
-                    val volleyMultipartRequest: MultipartRequestVolley =
-                        object : MultipartRequestVolley(
-                            Method.GET, UPLOAD_URL,
-                            mListener = Response.Listener { response ->
-                                //val jsonObject = JSONObject(response.data.toString())
-                                Log.d(TAG, "uploadPdf:S${response}")
-                            },
-                            mErrorListener = Response.ErrorListener { error: VolleyError? ->
-                                Log.d(TAG, "uploadPdf:E$error")
-                            }
-                        ) {
-                            override val byteData: HashMap<String, DataPart>?
-                                get() {
-                                    val params: HashMap<String, DataPart> = HashMap()
-                                    params["file"] = DataPart(
-                                        contentResolver.getFileName(uriFile),
-                                        byteArrray
-                                    )
-                                    return params
+            try {
+                val parcelFileDescriptor =
+                    contentResolver.openFileDescriptor(uriFile, "r", null)
+                        ?: return
+                val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
+                val file = File(cacheDir, contentResolver.getFileName(uriFile))
+                val outputStream = FileOutputStream(file)
+                inputStream.copyTo(outputStream)
+                val body = UploadFileBody(file, "file", this@NTaskUpload)
+                vModel.getSAssignData(
+                    string,
+                    string1,
+                    MultipartBody.Part.createFormData(
+                        "file",
+                        file.name,
+                        body
+                    ),
+                    ytextarea.text.toString().trim()
+                ).observe(this@NTaskUpload, Observer {
+                    it?.let { resource ->
+                        when (resource.status) {
+                            Status.SUCCESS -> {
+                                when (it.data!!.body()!!.message) {
+                                    "success" -> {
+                                        val intent =
+                                            Intent(applicationContext, HomePage::class.java)
+                                        startActivity(intent)
+                                    }
+                                    else -> {
+                                        Log.d(TAG, "submitAnswer:Error")
+                                    }
                                 }
-
-                            @Throws(AuthFailureError::class)
-                            override fun getParams(): Map<String?, String?> {
-                                hashMap["action"] = "list-gen"
-                                hashMap["category"] = "assignment-submit"
-                                hashMap["classid"] = "1"
-                                hashMap["emp_code"] = "ST0001"
-                                hashMap["id"] = string
-                                hashMap["type"] = string1
-                                hashMap["answer"] = ytextarea.text.toString().trim()
-                                return hashMap.toMap()
                             }
-
+                            Status.ERROR -> {
+                                Log.d(TAG, "submitAns_Error:${it.message}")
+                            }
+                            Status.LOADING -> {
+                                Log.d(TAG, "submitAns_Loading:${it.status}")
+                            }
                         }
-                    Volley.newRequestQueue(applicationContext).add(volleyMultipartRequest)
-                }
+                    }
+                })
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    override fun onProgressUpdate(percentage: Int) {
+        Log.d(TAG, "onProgressUpdate:$percentage")
     }
 
     override fun onBackPressed() {
@@ -368,13 +359,5 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
 
     companion object {
         var TAG = "NTaskUpload"
-        var UPLOAD_URL =
-            "https://flowrow.com/lfh/appapi.php?"
-        private val service1 = Utils.retrofit1.create(WebApi::class.java)
-        val hashMap: HashMap<String, String> = HashMap()
-    }
-
-    override fun onProgressUpdate(percentage: Int) {
-        Log.d(TAG, "onProgressUpdate:$percentage")
     }
 }
