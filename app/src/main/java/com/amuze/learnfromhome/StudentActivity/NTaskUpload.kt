@@ -93,7 +93,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
         submit_answer.setOnClickListener {
             when (intentString) {
                 "prev" -> {
-                    Log.d(TAG, "onCreate:prev")
                     submitAnswer(
                         intent.getStringExtra("id")!!,
                         intent.getStringExtra("type")!!.toString()
