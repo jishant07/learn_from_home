@@ -9,62 +9,63 @@
     android:layout_marginBottom="5dp"
     android:orientation="vertical">
 
-<!--    <RelativeLayout-->
-<!--        android:id="@+id/background"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="@color/cyan"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:padding="10dp">-->
+    <!--    <RelativeLayout-->
+    <!--        android:id="@+id/background"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="@color/cyan"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:padding="10dp">-->
 
-<!--        <ImageView-->
-<!--            android:id="@+id/delete_icon"-->
-<!--            android:layout_width="30dp"-->
-<!--            android:layout_height="30dp"-->
-<!--            android:layout_alignParentStart="true"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginStart="26dp"-->
-<!--            app:srcCompat="@drawable/assignment_submit"-->
-<!--            tools:ignore="ContentDescription" />-->
+    <!--        <ImageView-->
+    <!--            android:id="@+id/delete_icon"-->
+    <!--            android:layout_width="30dp"-->
+    <!--            android:layout_height="30dp"-->
+    <!--            android:layout_alignParentStart="true"-->
+    <!--            android:layout_centerHorizontal="true"-->
+    <!--            android:layout_marginStart="26dp"-->
+    <!--            app:srcCompat="@drawable/assignment_submit"-->
+    <!--            tools:ignore="ContentDescription" />-->
 
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:layout_toEndOf="@id/delete_icon"-->
-<!--            android:text="Completed"-->
-<!--            android:layout_marginStart="5dp"-->
-<!--            android:textColor="#fff"-->
-<!--            android:textSize="13sp"-->
-<!--            tools:ignore="HardcodedText" />-->
+    <!--        <TextView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:layout_toEndOf="@id/delete_icon"-->
+    <!--            android:text="Completed"-->
+    <!--            android:layout_marginStart="5dp"-->
+    <!--            android:textColor="#fff"-->
+    <!--            android:textSize="13sp"-->
+    <!--            tools:ignore="HardcodedText" />-->
 
-<!--        <ImageView-->
-<!--            android:id="@+id/delete_icon1"-->
-<!--            android:layout_width="30dp"-->
-<!--            android:layout_height="30dp"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:layout_marginEnd="10dp"-->
-<!--            app:srcCompat="@drawable/task_delete"-->
-<!--            tools:ignore="ContentDescription" />-->
+    <!--        <ImageView-->
+    <!--            android:id="@+id/delete_icon1"-->
+    <!--            android:layout_width="30dp"-->
+    <!--            android:layout_height="30dp"-->
+    <!--            android:layout_alignParentEnd="true"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:layout_marginEnd="10dp"-->
+    <!--            app:srcCompat="@drawable/task_delete"-->
+    <!--            tools:ignore="ContentDescription" />-->
 
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:layout_marginEnd="10dp"-->
-<!--            android:layout_toStartOf="@id/delete_icon1"-->
-<!--            android:text="Swipe to delete"-->
-<!--            android:textColor="#fff"-->
-<!--            android:textSize="13sp"-->
-<!--            tools:ignore="HardcodedText" />-->
+    <!--        <TextView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:layout_marginEnd="10dp"-->
+    <!--            android:layout_toStartOf="@id/delete_icon1"-->
+    <!--            android:text="Swipe to delete"-->
+    <!--            android:textColor="#fff"-->
+    <!--            android:textSize="13sp"-->
+    <!--            tools:ignore="HardcodedText" />-->
 
-<!--    </RelativeLayout>-->
+    <!--    </RelativeLayout>-->
 
     <RelativeLayout
         android:id="@+id/foreground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
         android:orientation="horizontal"
         android:padding="4dp"
         android:visibility="visible"
@@ -81,9 +82,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
             android:layout_toEndOf="@id/number"
             android:orientation="vertical"
-            android:layout_marginStart="1dp"
             android:visibility="visible">
 
             <TextView

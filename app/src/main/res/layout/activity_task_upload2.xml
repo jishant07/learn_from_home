@@ -55,7 +55,7 @@
                 android:id="@+id/correct_relative"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+
                 android:padding="6dp">
 
                 <LinearLayout
@@ -68,7 +68,7 @@
                     <ImageView
                         android:id="@+id/corrct_img"
                         android:layout_width="33dp"
-                        android:layout_height="28dp"
+                        android:layout_height="23dp"
                         android:src="@drawable/cancelsubmit" />
 
                     <TextView
@@ -76,11 +76,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:layout_marginTop="1dp"
                         android:padding="1dp"
                         android:text="Your Answer is Correct"
                         android:textColor="@color/black"
-                        android:textSize="17sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"
                         tools:ignore="HardcodedText" />
 
@@ -92,11 +91,11 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_gravity="end"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="5.5dp"
                     android:layout_marginEnd="20dp"
                     android:text="4/5"
                     android:textColor="@color/accent_pink"
-                    android:textSize="28sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
             </RelativeLayout>
@@ -142,6 +141,7 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/border_rounded"
                 android:backgroundTint="@color/accent_pink"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:orientation="horizontal"
                 android:paddingStart="15dp"
                 android:paddingTop="5dp"
@@ -223,6 +223,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_rounded"
                     android:backgroundTint="@color/accent_yellow"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
                     android:orientation="horizontal"
                     android:paddingStart="15dp"
                     android:paddingTop="5dp"
@@ -257,8 +258,8 @@
                     android:layout_gravity="end"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="20dp"
-                    android:visibility="gone"
                     android:src="@drawable/delete_document"
+                    android:visibility="gone"
                     tools:ignore="ContentDescription" />
             </RelativeLayout>
 
@@ -275,8 +276,8 @@
                 android:paddingStart="15dp"
                 android:paddingTop="8dp"
                 android:paddingEnd="15dp"
-                android:visibility="gone"
-                android:paddingBottom="8dp">
+                android:paddingBottom="8dp"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="17dp"
@@ -331,6 +332,7 @@
                 android:layout_marginBottom="26sp"
                 android:background="@drawable/edit_text_rounded"
                 android:backgroundTint="@color/accent_pink"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:text="SUBMIT"
                 android:textColor="@color/light_background"
                 android:textSize="18sp"

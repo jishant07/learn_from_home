@@ -4,8 +4,8 @@
     android:id="@+id/circular_body"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-
-    android:background="@color/background">
+    android:background="@color/background"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="wrap_content"

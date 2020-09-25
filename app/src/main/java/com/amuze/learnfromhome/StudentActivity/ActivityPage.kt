@@ -234,6 +234,17 @@ class ActivityPage : AppCompatActivity() {
             holder.itemView.number.setBackgroundColor(
                 myColor
             )
+            holder.itemView.task_body.setOnClickListener {
+                val intent = Intent(StudentTask.context, CreateTask::class.java)
+                intent.putExtra("title", sList[position].taskname)
+                intent.putExtra("desc", sList[position].taskname)
+                intent.putExtra("flag", sList[position].allday)
+                intent.putExtra("dtime", sList[position].time)
+                intent.putExtra("date", sList[position].taskdate)
+                intent.putExtra("color", sList[position].color)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                StudentTask.context.startActivity(intent)
+            }
             (holder as MyViewHolder).bindItems()
         }
 

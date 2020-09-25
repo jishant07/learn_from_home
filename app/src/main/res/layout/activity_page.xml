@@ -68,5 +68,6 @@
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/accent_pink"
+        android:foreground="?android:attr/selectableItemBackground"
         android:src="@drawable/add_task" />
 </RelativeLayout>

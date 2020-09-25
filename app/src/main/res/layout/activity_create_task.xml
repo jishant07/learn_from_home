@@ -226,6 +226,7 @@
             android:background="@drawable/border_rounded"
             android:backgroundTint="@color/accent_pink"
             android:fontFamily="@font/opensans_regular"
+            android:foreground="?android:attr/selectableItemBackground"
             android:text="SAVE"
             android:textColor="@color/light_background"
             android:textSize="20sp"

@@ -24,6 +24,7 @@ import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.PDF.PDFViewer
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_task_upload2.*
 import okhttp3.MultipartBody
 import java.io.File
@@ -162,10 +163,11 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                                     correct_txt.text = "Submit your Answer"
                                 }
                                 else -> {
-                                    correct_txt.text = "You've submitted your Answer"
+                                    correct_txt.text = "You've already submitted."
+                                    Picasso.get().load(R.drawable.assignment_submit).into(corrct_img)
                                 }
                             }
-                            correct_marks.text = "${it.data.body()!!.marks} marks"
+                            correct_marks.text = "${it.data.body()!!.marks}marks"
                             flag.text = it.data.body()!!.question
                             val colData = it.data.body()!!.cols1
                             val colData1 = it.data.body()!!.cols2
