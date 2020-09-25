@@ -281,51 +281,47 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
 
     private fun submitAnswer(string: String, string1: String) {
         try {
-            try {
-                val parcelFileDescriptor =
-                    contentResolver.openFileDescriptor(uriFile, "r", null)
-                        ?: return
-                val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
-                val file = File(cacheDir, contentResolver.getFileName(uriFile))
-                val outputStream = FileOutputStream(file)
-                inputStream.copyTo(outputStream)
-                val body = UploadFileBody(file, "file", this@NTaskUpload)
-                vModel.getSAssignData(
-                    string,
-                    string1,
-                    MultipartBody.Part.createFormData(
-                        "file",
-                        file.name,
-                        body
-                    ),
-                    ytextarea.text.toString().trim()
-                ).observe(this@NTaskUpload, Observer {
-                    it?.let { resource ->
-                        when (resource.status) {
-                            Status.SUCCESS -> {
-                                when (it.data!!.body()!!.message) {
-                                    "success" -> {
-                                        val intent =
-                                            Intent(applicationContext, HomePage::class.java)
-                                        startActivity(intent)
-                                    }
-                                    else -> {
-                                        Log.d(TAG, "submitAnswer:Error")
-                                    }
+            val parcelFileDescriptor =
+                contentResolver.openFileDescriptor(uriFile, "r", null)
+                    ?: return
+            val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
+            val file = File(cacheDir, contentResolver.getFileName(uriFile))
+            val outputStream = FileOutputStream(file)
+            inputStream.copyTo(outputStream)
+            val body = UploadFileBody(file, "file", this@NTaskUpload)
+            vModel.getSAssignData(
+                string,
+                string1,
+                MultipartBody.Part.createFormData(
+                    "file",
+                    file.name,
+                    body
+                ),
+                ytextarea.text.toString().trim()
+            ).observe(this@NTaskUpload, Observer {
+                it?.let { resource ->
+                    when (resource.status) {
+                        Status.SUCCESS -> {
+                            when (it.data!!.body()!!.message) {
+                                "success" -> {
+                                    val intent =
+                                        Intent(applicationContext, HomePage::class.java)
+                                    startActivity(intent)
+                                }
+                                else -> {
+                                    Log.d(TAG, "submitAnswer:Error")
                                 }
                             }
-                            Status.ERROR -> {
-                                Log.d(TAG, "submitAns_Error:${it.message}")
-                            }
-                            Status.LOADING -> {
-                                Log.d(TAG, "submitAns_Loading:${it.status}")
-                            }
+                        }
+                        Status.ERROR -> {
+                            Log.d(TAG, "submitAns_Error:${it.message}")
+                        }
+                        Status.LOADING -> {
+                            Log.d(TAG, "submitAns_Loading:${it.status}")
                         }
                     }
-                })
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+                }
+            })
         } catch (e: Exception) {
             e.printStackTrace()
         }
