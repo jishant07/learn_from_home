@@ -7,12 +7,9 @@ package com.amuze.learnfromhome.StudentActivity
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +20,7 @@ import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.Modal.FileUtils.FilePath.getFileName
 import com.amuze.learnfromhome.Modal.FileUtils.UploadFileBody
 import com.amuze.learnfromhome.Network.Status
+import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.PDF.PDFViewer
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
@@ -31,7 +29,6 @@ import okhttp3.MultipartBody
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.util.*
 
 class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
 
@@ -61,7 +58,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                 intentString = "prev"
                 ytextarea.visibility = View.VISIBLE
                 delete_doc.visibility = View.GONE
-                //upload_linear.visibility = View.GONE
                 submit_answer.visibility = View.VISIBLE
                 utitle.visibility = View.VISIBLE
                 udesc.visibility = View.VISIBLE
@@ -114,44 +110,9 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
             val uri: Uri? = data.data
             val uriString: String = uri!!.path!!
             uriFile = uri
-            val fileName = getFileName(applicationContext, uri)
+            val fileName = Utils.getFileName(applicationContext,uri)
         }
         super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    @SuppressLint("Recycle")
-    private fun getFileName(context: Context?, uri: Uri?): String? {
-        lateinit var string: String
-        if (uri != null && context != null) {
-            val returnCursor: Cursor? =
-                context.contentResolver.query(uri, null, null, null, null)
-            if (returnCursor != null) {
-                val nameIndex: Int = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                val sizeIndex: Int = returnCursor.getColumnIndex(OpenableColumns.SIZE)
-                returnCursor.moveToFirst()
-                if (nameIndex >= 0 && sizeIndex >= 0) {
-                    val isValidFile: Boolean =
-                        checkOtherFileType(returnCursor.getString(nameIndex).toString())
-                    if (!isValidFile) {
-                        return returnCursor.getString(nameIndex)
-                    }
-                    string = returnCursor.getString(nameIndex)
-                    Log.d("cursor", string)
-                    return string
-                }
-            }
-        }
-        return string
-    }
-
-    private fun checkOtherFileType(filePath: String): Boolean {
-        if (filePath.isNotEmpty()) {
-            val filePathInLowerCase = filePath.toLowerCase(Locale.getDefault())
-            if (filePathInLowerCase.endsWith(".pdf")) {
-                return true
-            }
-        }
-        return false
     }
 
     @SuppressLint("SetTextI18n")
