@@ -28,11 +28,9 @@ import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
 import kotlinx.android.synthetic.main.activity_task_upload2.*
 import okhttp3.MultipartBody
-import org.apache.commons.io.IOUtils
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.io.InputStream
 import java.util.*
 
 class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
@@ -40,11 +38,7 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
     private lateinit var intentString: String
     private lateinit var vModel: VModel
     private val STORAGE_PERMISSION_CODE = 123
-    private lateinit var mStringPath: String
     private lateinit var uriFile: Uri
-    private lateinit var byteArrray: ByteArray
-    private val boundary = "apiclient-" + System.currentTimeMillis()
-    private val mimeType = "multipart/form-data;boundary=$boundary"
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,18 +114,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
             val uri: Uri? = data.data
             val uriString: String = uri!!.path!!
             uriFile = uri
-            try {
-                val inputStream: InputStream? = applicationContext.contentResolver.openInputStream(
-                    uri
-                )
-                val bytesArray = ByteArray(inputStream!!.available())
-                inputStream.read(bytesArray)
-                inputStream.close()
-                byteArrray = bytesArray
-                Log.d("bytes", bytesArray.toString())
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
             val fileName = getFileName(applicationContext, uri)
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -154,7 +136,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                         return returnCursor.getString(nameIndex)
                     }
                     string = returnCursor.getString(nameIndex)
-                    mStringPath = returnCursor.getString(nameIndex)
                     Log.d("cursor", string)
                     return string
                 }
@@ -173,33 +154,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
         return false
     }
 
-    @Suppress("NAME_SHADOWING", "SENSELESS_COMPARISON")
-    private fun readContentFromFile(string: String): String {
-        var fileString = ""
-        try {
-            val fileInputStream = FileInputStream(File(string))
-            fileString = IOUtils.toString(fileInputStream, "UTF-8")
-            val path = applicationContext.filesDir
-            val directory = File(filesDir.toString() + File.separator + "MyLearnFHome")
-
-            val file = File(directory, "demo_txt_write.txt")
-            if (!file.exists()) {
-                file.parentFile!!.mkdirs()
-            }
-            try {
-                val fout = FileOutputStream(file)
-                val b = fileString.toByteArray()
-                fout.write(b)
-                fout.close()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return fileString
-    }
-
     @SuppressLint("SetTextI18n")
     private fun loadSingleAssign(string: String, string1: String) {
         vModel.getSingleAssignment(string, string1)
@@ -208,8 +162,7 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                     when (resource.status) {
                         Status.SUCCESS -> {
                             try {
-                                Log.d(TAG, "loadSingleAssign:${it.data!!.body()}")
-                                flag.text = it.data.body()!!.sname
+                                flag.text = it.data?.body()!!.sname
                                 utitle.text = it.data.body()!!.questn
                                 udesc.text = "Submit before ${it.data.body()!!.cdate}"
                                 refer_doc.setOnClickListener {
@@ -243,8 +196,7 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
-                            Log.d(TAG, "getSingleExams:${it.data!!.body()!!}")
-                            when (it.data.body()!!.uploadflg) {
+                            when (it.data?.body()!!.uploadflg) {
                                 "1" -> {
                                     correct_txt.text = "Submit your Answer"
                                 }
@@ -333,7 +285,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        Log.d("onBack_NTU", "called::$intentString")
         val intent = Intent(applicationContext, HomePage::class.java)
         startActivity(intent)
         finish()
