@@ -7,13 +7,20 @@ package com.amuze.learnfromhome.StudentActivity
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.amuze.learnfromhome.HomePage
@@ -37,11 +44,15 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
     private lateinit var vModel: VModel
     private val STORAGE_PERMISSION_CODE = 123
     private lateinit var uriFile: Uri
+    private lateinit var fileName: String
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_upload2)
+        mNotifyManager = NotificationManagerCompat.from(this)
+        mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+        createNotificationChannel()
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
@@ -111,7 +122,7 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
             val uri: Uri? = data.data
             val uriString: String = uri!!.path!!
             uriFile = uri
-            val fileName = Utils.getFileName(applicationContext,uri)
+            fileName = Utils.getFileName(applicationContext, uri)!!
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -164,7 +175,8 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                                 }
                                 else -> {
                                     correct_txt.text = "You've already submitted."
-                                    Picasso.get().load(R.drawable.assignment_submit).into(corrct_img)
+                                    Picasso.get().load(R.drawable.assignment_submit)
+                                        .into(corrct_img)
                                 }
                             }
                             correct_marks.text = "${it.data.body()!!.marks}marks"
@@ -196,6 +208,7 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
 
     private fun submitAnswer(string: String, string1: String) {
         try {
+            buildNotification()
             val parcelFileDescriptor =
                 contentResolver.openFileDescriptor(uriFile, "r", null)
                     ?: return
@@ -243,7 +256,47 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
     }
 
     override fun onProgressUpdate(percentage: Int) {
-        Log.d(TAG, "onProgressUpdate:$percentage")
+        progress = percentage
+    }
+
+    private fun buildNotification() {
+        val intent = Intent(this, NTaskUpload::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent
+            .getActivity(this, 0, intent, 0)
+        mBuilder?.setContentTitle(fileName)
+            ?.setContentText("Uploading")
+            ?.setOngoing(true)
+            ?.setPriority(NotificationCompat.PRIORITY_LOW)
+            ?.setProgress(99, 0, true)
+            ?.setContentIntent(pendingIntent)
+            ?.setAutoCancel(true)
+            ?.setSmallIcon(R.drawable.logo2)
+        mNotifyManager?.notify(1, mBuilder!!.build())
+        Thread {
+            SystemClock.sleep(2000)
+            do {
+                SystemClock.sleep(2000)
+                mBuilder?.setContentText("$progress%")
+                    ?.setProgress(99, progress, false)
+                mNotifyManager?.notify(1, mBuilder!!.build())
+            } while (progress < 99)
+            mBuilder!!.setContentText("Upload complete")
+            mNotifyManager?.cancel(1)
+        }.start()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "appnotification"
+            val description = "notification description"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance)
+            channel.description = description
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
     override fun onBackPressed() {
@@ -268,5 +321,10 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
 
     companion object {
         var TAG = "NTaskUpload"
+        private var mNotifyManager: NotificationManagerCompat? = null
+        private var mBuilder: NotificationCompat.Builder? = null
+        private var notificationId = 0
+        const val CHANNEL_ID = "download_progress_notification"
+        var progress = 0
     }
 }

@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.amuze.learnfromhome.Fragment.HomeFragment
 import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.Network.Utils
+import com.amuze.learnfromhome.PDF.PDFWeb
 import com.amuze.learnfromhome.StudentActivity.PinLogin
 import com.amuze.learnfromhome.ViewModel.VModel
 import kotlinx.android.synthetic.main.activity_login.*
@@ -51,26 +52,38 @@ class Login : AppCompatActivity() {
                 pString = ePassword.text.toString().trim()
                 when {
                     string.isNotEmpty() && pString.isNotEmpty() -> {
-                        vModel.getLogin(
-                            applicationContext, "student",
-                            string.capitalize(Locale.ROOT),
-                            pString
-                        )
-                            .observe(this, Observer {
-                                Log.d(TAG, it.toString())
-                                when {
-                                    it.equals("success") -> {
-                                        loadProfile()
-                                    }
-                                    else -> {
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "You're credentials were wrong!!",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                }
-                            })
+                        when (string) {
+                            "t001" -> {
+                                prefs.edit().putString("flag", "tloggedin").apply()
+                                val sIntent =
+                                    Intent(applicationContext, PDFWeb::class.java)
+                                sIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(sIntent)
+                                finish()
+                            }
+                            else -> {
+                                vModel.getLogin(
+                                    applicationContext, "student",
+                                    string.capitalize(Locale.ROOT),
+                                    pString
+                                )
+                                    .observe(this, Observer {
+                                        Log.d(TAG, it.toString())
+                                        when {
+                                            it.equals("success") -> {
+                                                loadProfile()
+                                            }
+                                            else -> {
+                                                Toast.makeText(
+                                                    applicationContext,
+                                                    "You're credentials were wrong!!",
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                            }
+                                        }
+                                    })
+                            }
+                        }
                     }
                     else -> {
                         Toast.makeText(

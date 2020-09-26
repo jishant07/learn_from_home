@@ -10,6 +10,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import com.amuze.learnfromhome.Network.Utils
+import com.amuze.learnfromhome.PDF.PDFWeb
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,11 +32,16 @@ class MainActivity : AppCompatActivity() {
 
         Handler().postDelayed(
             {
-                when {
-                    sharedPreferences.getString("flag", "") == "loggedin" -> {
+                when (sharedPreferences.getString("flag", "")) {
+                    "loggedin" -> {
                         Utils.userId = sharedPreferences.getString("ecode", "")!!
                         Utils.classId = sharedPreferences.getString("classid", "")!!
                         val i = Intent(this, HomePage::class.java)
+                        startActivity(i)
+                        finish()
+                    }
+                    "tloggedin" -> {
+                        val i = Intent(this, PDFWeb::class.java)
                         startActivity(i)
                         finish()
                     }
