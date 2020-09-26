@@ -20,7 +20,6 @@ import okhttp3.MultipartBody
 class VModel : ViewModel() {
 
     private lateinit var vContext: Context
-    private lateinit var vMap: HashMap<String, String>
     private val service1 = Utils.retrofit1.create(WebApi::class.java)
     private lateinit var discussFlag: String
     private lateinit var cAsk_id: String
@@ -53,9 +52,16 @@ class VModel : ViewModel() {
         }
     }
 
-    fun getLogin(context: Context, login: HashMap<String, String>): LiveData<String> {
-        vMap = login
+    fun getLogin(
+        context: Context,
+        usertype: String,
+        username: String,
+        upassword: String
+    ): LiveData<String> {
         vContext = context
+        userType = usertype
+        userName = username
+        uPassword = upassword
         return loginData
     }
 
@@ -78,21 +84,17 @@ class VModel : ViewModel() {
                 withContext(Dispatchers.Main) {
                     try {
                         val queue = Volley.newRequestQueue(vContext)
-                        val url = "https://flowrow.com/lfh/appapi.php?action=login"
-                        val stringRequest1: StringRequest = object : StringRequest(
-                            Method.GET,
+                        val url = "https://flowrow.com/lfh/appapi.php?action=login" +
+                                "&usertype=$userType&username=$userName&password=$uPassword"
+                        val stringRequest1 = StringRequest(
+                            Request.Method.GET,
                             url,
-                            Response.Listener { response ->
+                            { response ->
                                 loginData.value = response
                             },
-                            Response.ErrorListener { error: VolleyError? ->
+                            { error: VolleyError? ->
                                 loginData.value = error.toString()
-                            }) {
-                            @Throws(AuthFailureError::class)
-                            override fun getParams(): Map<String, String> {
-                                return vMap
-                            }
-                        }
+                            })
                         queue.add(stringRequest1)
                     } catch (e: Exception) {
                         e.localizedMessage
@@ -598,5 +600,8 @@ class VModel : ViewModel() {
         private lateinit var assigntype: String
         private lateinit var multipartFile: MultipartBody.Part
         private lateinit var answer: String
+        private lateinit var userType: String
+        private lateinit var userName: String
+        private lateinit var uPassword: String
     }
 }

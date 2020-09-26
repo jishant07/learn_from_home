@@ -128,11 +128,9 @@ class HomeFragment : Fragment() {
                         HomeFragment.context.startActivity(intent)
                     }
                     "ACCOUNT DETAIL" -> {
-                        Toast.makeText(
-                            activity,
-                            "Coming Soon!!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val intent = Intent(HomeFragment.context, AccountDetails::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        HomeFragment.context.startActivity(intent)
                     }
                     "WATCHLIST" -> {
                         val intent = Intent(HomeFragment.context, SWatchList::class.java)

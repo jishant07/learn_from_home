@@ -28,13 +28,13 @@ class MainActivity : AppCompatActivity() {
             Context.MODE_PRIVATE
         )
         editor = sharedPreferences.edit()
-        Log.d("token", sharedPreferences.getString("token", "")!!)
 
         Handler().postDelayed(
             {
                 when {
                     sharedPreferences.getString("flag", "") == "loggedin" -> {
                         Utils.userId = sharedPreferences.getString("ecode", "")!!
+                        Utils.classId = sharedPreferences.getString("classid", "")!!
                         val i = Intent(this, HomePage::class.java)
                         startActivity(i)
                         finish()

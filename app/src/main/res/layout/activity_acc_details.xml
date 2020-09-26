@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context=".StudentActivity.AccountUpdate">
 
@@ -98,9 +99,8 @@
         android:textStyle="bold"
         tools:ignore="Autofill,HardcodedText,LabelFor,RtlSymmetry" />
 
-
     <Button
-        android:id="@+id/submit_task"
+        android:id="@+id/saccount_update"
         android:layout_width="match_parent"
         android:layout_height="55sp"
         android:layout_marginStart="16sp"
@@ -110,6 +110,7 @@
         android:background="@drawable/border_rounded"
         android:backgroundTint="@color/accent_pink"
         android:fontFamily="@font/opensans_regular"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:text="SAVE"
         android:textColor="@color/light_background"
         android:textSize="20sp"

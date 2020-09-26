@@ -1,4 +1,4 @@
-@file:Suppress("PrivatePropertyName", "ReplaceCallWithBinaryOperator")
+@file:Suppress("PrivatePropertyName", "ReplaceCallWithBinaryOperator", "SpellCheckingInspection")
 
 package com.amuze.learnfromhome
 
@@ -25,17 +25,15 @@ import com.amuze.learnfromhome.ViewModel.VModel
 import kotlinx.android.synthetic.main.activity_login.*
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class Login : AppCompatActivity() {
 
     private val TAG: String = "LoginActivity"
     private val MY_PERMISSION_CODE = 123
     lateinit var string: String
-    lateinit var pString: String
+    private lateinit var pString: String
     private lateinit var vModel: VModel
-    private var hashmap: HashMap<String, String> = HashMap()
-    lateinit var prefs: SharedPreferences
+    private lateinit var prefs: SharedPreferences
 
     @RequiresApi(Build.VERSION_CODES.P)
     @ExperimentalStdlibApi
@@ -51,42 +49,25 @@ class Login : AppCompatActivity() {
             try {
                 string = eUsername.text.toString().trim()
                 pString = ePassword.text.toString().trim()
-                Log.d(TAG, "$string::$pString")
-                hashmap["usertype"] = "student"
-                hashmap["username"] = string
-                hashmap["password"] = pString
                 when {
-                    string.isNotEmpty() && pString.isEmpty() -> {
-//                        vModel.getLogin(applicationContext, hashmap).observe(this, Observer {
-//                            Log.d(TAG, it.toString())
-//                            if (it.isNotEmpty()) {
-//                                prefs.edit().putString("flag", "loggedin").apply()
-//                                val sIntent = Intent(applicationContext, HomePage::class.java)
-//                                sIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                                startActivity(sIntent)
-//                                finish()
-//                            }
-//                        })
-                        vModel.getSProfile(string.capitalize(Locale.ENGLISH))
+                    string.isNotEmpty() && pString.isNotEmpty() -> {
+                        vModel.getLogin(
+                            applicationContext, "student",
+                            string.capitalize(Locale.ROOT),
+                            pString
+                        )
                             .observe(this, Observer {
-                                it?.let { resource ->
-                                    when (resource.status) {
-                                        Status.SUCCESS -> {
-                                            prefs.edit().putString("flag", "loggedin").apply()
-                                            prefs.edit()
-                                                .putString("ecode", resource.data!!.body()!!.ecode)
-                                                .apply()
-                                            Utils.classId = resource.data.body()!!.classid
-                                            Utils.userId = resource.data.body()!!.ecode
-                                            val sIntent =
-                                                Intent(applicationContext, HomePage::class.java)
-                                            sIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                            startActivity(sIntent)
-                                            finish()
-                                        }
-                                        else -> {
-                                            Log.d(HomeFragment.TAG, "onCreate:Error")
-                                        }
+                                Log.d(TAG, it.toString())
+                                when {
+                                    it.equals("success") -> {
+                                        loadProfile()
+                                    }
+                                    else -> {
+                                        Toast.makeText(
+                                            applicationContext,
+                                            "You're credentials were wrong!!",
+                                            Toast.LENGTH_LONG
+                                        ).show()
                                     }
                                 }
                             })
@@ -108,6 +89,36 @@ class Login : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+    }
+
+    @ExperimentalStdlibApi
+    private fun loadProfile() {
+        vModel.getSProfile(string.capitalize(Locale.ENGLISH))
+            .observe(this, Observer {
+                it?.let { resource ->
+                    when (resource.status) {
+                        Status.SUCCESS -> {
+                            prefs.edit().putString("flag", "loggedin").apply()
+                            prefs.edit()
+                                .putString("ecode", resource.data!!.body()!!.ecode)
+                                .apply()
+                            prefs.edit()
+                                .putString("classid", resource.data.body()!!.classid)
+                                .apply()
+                            Utils.classId = resource.data.body()!!.classid
+                            Utils.userId = resource.data.body()!!.ecode
+                            val sIntent =
+                                Intent(applicationContext, HomePage::class.java)
+                            sIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(sIntent)
+                            finish()
+                        }
+                        else -> {
+                            Log.d(HomeFragment.TAG, "onCreate:Error")
+                        }
+                    }
+                }
+            })
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
