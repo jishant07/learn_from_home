@@ -5,10 +5,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.amuze.learnfromhome.Fragment.HomeFragment
 import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.Modal.Profile
 import com.amuze.learnfromhome.Network.Status
@@ -24,6 +25,7 @@ class MyProfile : AppCompatActivity() {
     private lateinit var mProfile: Profile
     private lateinit var intentFlag: String
     private lateinit var codeFlag: String
+    private lateinit var aDialog: AlertDialog
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +44,7 @@ class MyProfile : AppCompatActivity() {
                         setData(mProfile)
                     }
                     else -> {
-                        Log.d(HomeFragment.TAG, "onCreate:Error")
+                        Log.d(TAG, "onCreate:Error")
                     }
                 }
             }
@@ -57,6 +59,8 @@ class MyProfile : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun setData(profile: Profile) {
+        alertProgress.visibility = View.GONE
+        profile_body.visibility = View.VISIBLE
         Picasso.get().load(profile.image).into(profile_circular)
         profile_name.text = profile.student_name
         profile_rollNo.text = profile.roll_no

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center">
+
+        <ProgressBar
+            android:id="@+id/alertProgress"
+            style="@style/CircularProgressBar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/circular_progress_bar" />
+
+        <TextView
+            android:id="@+id/alertText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/alertProgress"
+            android:text="Loading"
+            android:textColor="@color/accent_pink"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+    </RelativeLayout>
+
+</RelativeLayout>
