@@ -58,7 +58,7 @@ class VideosFragment : Fragment() {
     private fun initView() {
         VideosFragment.context = activity!!
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
-        vModel.getVideosData().observe(this, Observer {
+        vModel.getVideosData().observe(viewLifecycleOwner, Observer {
             it?.let { resource ->
                 try {
                     when (resource.status) {

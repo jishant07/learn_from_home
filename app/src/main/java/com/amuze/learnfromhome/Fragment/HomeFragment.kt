@@ -1,5 +1,5 @@
 @file:Suppress(
-    "unused", "UNUSED_VARIABLE", "PackageName", "KDocUnresolvedReference"
+    "unused", "UNUSED_VARIABLE", "PackageName", "KDocUnresolvedReference", "DEPRECATION"
 )
 
 package com.amuze.learnfromhome.Fragment
@@ -19,12 +19,12 @@ import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProviders.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amuze.learnfromhome.*
 import com.amuze.learnfromhome.Modal.*
+import com.amuze.learnfromhome.Modal.NDataStore.ApplicationData
 import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.PDF.PDFViewer
@@ -36,6 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.circular_item.view.*
 import kotlinx.android.synthetic.main.ebook_item.view.body
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -63,6 +64,7 @@ class HomeFragment : Fragment() {
     private lateinit var vModel: VModel
     private lateinit var prefs: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
+    private lateinit var applicationData: ApplicationData
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,8 +81,9 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("CommitPrefEdits")
     private fun initView() {
-        vModel = ViewModelProviders.of(this).get(VModel::class.java)
+        vModel = of(this).get(VModel::class.java)
         HomeFragment.context = activity!!
+        applicationData = ApplicationData(HomeFragment.context)
         var scrollView: NestedScrollView = rootView.findViewById(R.id.home_body)
         recyclerView1 = rootView.findViewById(R.id.products_recycler_view)
         recyclerView2 = rootView.findViewById(R.id.live_recycler_view)
@@ -155,7 +158,7 @@ class HomeFragment : Fragment() {
             HomeFragment.context.startActivity(intent)
         }
         try {
-            vModel.getContinueWatch().observe(this@HomeFragment, Observer {
+            vModel.getContinueWatch().observe(viewLifecycleOwner, {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
@@ -167,7 +170,7 @@ class HomeFragment : Fragment() {
                     }
                 }
             })
-            vModel.getSessionData().observe(this@HomeFragment, Observer {
+            vModel.getSessionData().observe(viewLifecycleOwner, {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
@@ -182,7 +185,7 @@ class HomeFragment : Fragment() {
                     }
                 }
             })
-            vModel.getEbooks().observe(this@HomeFragment, Observer {
+            vModel.getEbooks().observe(viewLifecycleOwner, {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
@@ -194,7 +197,7 @@ class HomeFragment : Fragment() {
                     }
                 }
             })
-            vModel.getLVideos().observe(this@HomeFragment, Observer {
+            vModel.getLVideos().observe(viewLifecycleOwner, {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
@@ -206,7 +209,7 @@ class HomeFragment : Fragment() {
                     }
                 }
             })
-            vModel.getSProfile(Utils.userId).observe(this@HomeFragment, Observer {
+            vModel.getSProfile(Utils.userId).observe(viewLifecycleOwner, {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
@@ -224,6 +227,14 @@ class HomeFragment : Fragment() {
                                 .into(profileimg)
                             Utils.classId = resource.data.body()!!.classid
                             Utils.userId = resource.data.body()!!.ecode
+                            CoroutineScope(Dispatchers.Main).launch {
+                                withContext(Dispatchers.IO) {
+                                    addDataStore(
+                                        resource.data.body()!!.ecode,
+                                        resource.data.body()!!.classid
+                                    )
+                                }
+                            }
                         }
                         else -> {
                             Log.d(TAG, "onCreate:Error")
@@ -234,6 +245,7 @@ class HomeFragment : Fragment() {
         } catch (e: Exception) {
             Log.d("error", e.toString())
         }
+
 
         recyclerView1.apply {
             val layoutManager1 =
@@ -509,6 +521,17 @@ class HomeFragment : Fragment() {
         courses.clear()
         courses.addAll(list)
         sadapter1.notifyDataSetChanged()
+    }
+
+    private suspend fun addDataStore(string: String, string1: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.IO) {
+                applicationData.saveUserID(
+                    string,
+                    string1
+                )
+            }
+        }
     }
 
     companion object {

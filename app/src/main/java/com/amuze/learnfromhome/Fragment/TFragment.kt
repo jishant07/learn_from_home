@@ -133,7 +133,7 @@ class TFragment : Fragment() {
 
     private fun loadData() {
         try {
-            vModel.getClassroom().observe(this, Observer {
+            vModel.getClassroom().observe(viewLifecycleOwner, Observer {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {

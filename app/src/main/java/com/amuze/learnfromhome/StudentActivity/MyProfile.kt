@@ -6,9 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.asLiveData
 import com.amuze.learnfromhome.HomePage
+import com.amuze.learnfromhome.Modal.NDataStore.ApplicationData
 import com.amuze.learnfromhome.Modal.Profile
 import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.R
@@ -23,6 +24,7 @@ class MyProfile : AppCompatActivity() {
     private lateinit var mProfile: Profile
     private lateinit var intentFlag: String
     private lateinit var codeFlag: String
+    private lateinit var applicationData: ApplicationData
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,9 +32,16 @@ class MyProfile : AppCompatActivity() {
         setContentView(R.layout.activity_my_profile)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
+        applicationData = ApplicationData(applicationContext)
         intentFlag = intent.getStringExtra("flag")!!
         codeFlag = intent.getStringExtra("codeflag")!!
-        vModel.getSProfile(codeFlag).observe(this, Observer {
+        applicationData.userId.asLiveData().observe(this, {
+            Log.d(TAG, "userID:$it")
+        })
+        applicationData.classId.asLiveData().observe(this, {
+            Log.d(TAG, "classID:$it")
+        })
+        vModel.getSProfile(codeFlag).observe(this, {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
@@ -46,7 +55,6 @@ class MyProfile : AppCompatActivity() {
                 }
             }
         })
-
         profile_back.setOnClickListener {
             val intent = Intent(applicationContext, HomePage::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

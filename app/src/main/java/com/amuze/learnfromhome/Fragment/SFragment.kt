@@ -102,7 +102,7 @@ class SFragment : Fragment() {
 
     private fun loadData() {
         activity?.runOnUiThread {
-            vModel.getClassroom().observe(this, Observer {
+            vModel.getClassroom().observe(viewLifecycleOwner, Observer {
                 try {
                     it?.let { resource ->
                         when (resource.status) {

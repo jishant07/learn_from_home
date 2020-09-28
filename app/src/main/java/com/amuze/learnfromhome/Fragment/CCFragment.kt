@@ -154,7 +154,7 @@ class CCFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun loadData() {
-        vModel.getClassroom().observe(this, Observer {
+        vModel.getClassroom().observe(viewLifecycleOwner, Observer {
             try {
                 Log.d("MyClassroom", "onCreate:${it.data?.body()}")
                 gList.clear()

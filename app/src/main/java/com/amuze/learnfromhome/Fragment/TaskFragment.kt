@@ -72,7 +72,7 @@ class TaskFragment : Fragment() {
         recyclerView1 = rootView.findViewById(R.id.task_recycler_new)
         see_all = rootView.findViewById(R.id.see_all)
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
-        vModel.getTask().observe(this@TaskFragment, Observer {
+        vModel.getTask().observe(viewLifecycleOwner, Observer {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {

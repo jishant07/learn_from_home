@@ -71,7 +71,7 @@ class LiveFragment : Fragment() {
     private fun initView() {
         LiveFragment.context = context!!
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
-        vModel.getSessionData().observe(this, Observer {
+        vModel.getSessionData().observe(viewLifecycleOwner, {
             it?.let { resource ->
                 try {
                     when (resource.status) {

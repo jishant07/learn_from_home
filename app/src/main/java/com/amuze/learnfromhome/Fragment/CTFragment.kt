@@ -101,7 +101,7 @@ class CTFragment : Fragment() {
 
     private fun loadData() {
         activity?.runOnUiThread {
-            vModel.getClassroom().observe(this, Observer {
+            vModel.getClassroom().observe(viewLifecycleOwner, {
                 try {
                     it?.let { resource ->
                         when (resource.status) {
