@@ -16,7 +16,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
@@ -91,10 +90,6 @@ class HomeFragment : Fragment() {
         editor = prefs.edit()!!
         home_body.visibility = View.GONE
         loadgif.visibility = View.VISIBLE
-        Glide.with(activity!!)
-            .asGif()
-            .load(R.drawable.giftry)
-            .into(loadgif)
 
         assignment_linear.setOnClickListener {
             HomeFragment.context.startActivity(Intent(activity, Assignment::class.java))

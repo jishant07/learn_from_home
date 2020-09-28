@@ -11,7 +11,6 @@ import com.amuze.learnfromhome.Modal.Exams.EPrevious
 import com.amuze.learnfromhome.Modal.Exams.Exams
 import com.amuze.learnfromhome.Modal.Exams.SingleExams
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -257,5 +256,14 @@ interface WebApi {
         @Query("emp_code") empcode: String,
         @Query("id") id: String,
         @Query("type") type: String
-    ):Response<SingleExams>
+    ): Response<SingleExams>
+
+    @GET("appapi.php?")
+    suspend fun forgotPassword(
+        @Query("action") action: String,
+        @Query("usertype") utype: String,
+        @Query("username") uname: String,
+        @Query("old_password") oldpass: String,
+        @Query("new_password") newpass: String
+    ): Response<SMessage>
 }

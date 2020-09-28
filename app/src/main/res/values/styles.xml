@@ -28,6 +28,10 @@
         <item name="colorControlActivated">@color/accent_green1</item>
     </style>
 
+    <style name="CircularProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="colorControlActivated">@color/gray_text</item>
+    </style>
+
     <style name="ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/black</item>
     </style>

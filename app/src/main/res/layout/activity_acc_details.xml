@@ -51,7 +51,7 @@
         android:inputType="text|textMultiLine"
         android:paddingStart="30dp"
         android:paddingTop="16dp"
-        android:text="Enter Old Password "
+        android:hint="Enter Old Password "
         android:textColor="@color/text_dark_white"
         android:textStyle="bold"
         tools:ignore="Autofill,HardcodedText,LabelFor,RtlSymmetry" />
@@ -75,7 +75,7 @@
         android:inputType="text|textMultiLine"
         android:paddingStart="30dp"
         android:paddingTop="16dp"
-        android:text="Enter New Password "
+        android:hint="Enter New Password "
         android:textColor="@color/text_dark_white"
         android:textStyle="bold"
         tools:ignore="Autofill,HardcodedText,LabelFor,RtlSymmetry" />
@@ -94,7 +94,7 @@
         android:inputType="text|textMultiLine"
         android:paddingStart="30dp"
         android:paddingTop="16dp"
-        android:text="Re-Enter New Password "
+        android:hint="Re-Enter New Password "
         android:textColor="@color/text_dark_white"
         android:textStyle="bold"
         tools:ignore="Autofill,HardcodedText,LabelFor,RtlSymmetry" />

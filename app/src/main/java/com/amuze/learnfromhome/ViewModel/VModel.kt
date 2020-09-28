@@ -403,6 +403,17 @@ class VModel : ViewModel() {
             }
         }
 
+    fun getFPassword(string: String, string1: String) = liveData(Dispatchers.IO) {
+        oldPassword = string
+        newPassword = string1
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = getForgotPassword()))
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occured!"))
+        }
+    }
+
     private suspend fun getSTask() = service1.getTask(
         "list-gen",
         "tasks",
@@ -593,6 +604,14 @@ class VModel : ViewModel() {
         examtype
     )
 
+    private suspend fun getForgotPassword() = service1.forgotPassword(
+        "forgetpassword",
+        "student",
+        Utils.userId,
+        oldPassword,
+        newPassword
+    )
+
     companion object {
         private lateinit var examid: String
         private lateinit var examtype: String
@@ -603,5 +622,7 @@ class VModel : ViewModel() {
         private lateinit var userType: String
         private lateinit var userName: String
         private lateinit var uPassword: String
+        private lateinit var oldPassword: String
+        private lateinit var newPassword: String
     }
 }
