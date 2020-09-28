@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.Modal.CDiscuss
 import com.amuze.learnfromhome.Network.Status
+import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
 import com.android.volley.Request
@@ -177,7 +178,7 @@ class DiscussionForum : AppCompatActivity() {
                         Log.d(TAG, "addDiscussComment:$string::$askid")
                         val queue = Volley.newRequestQueue(applicationContext)
                         val url = "https://flowrow.com/lfh/appapi.php?" +
-                                "action=list-gen&category=adddiscusscomment&emp_code=ST0001&classid=1&" +
+                                "action=list-gen&category=adddiscusscomment&emp_code=${Utils.userId}&classid=${Utils.classId}&" +
                                 "text=$string&ask_id=$askid"
                         val stringRequest1 = StringRequest(
                             Request.Method.GET,

@@ -51,7 +51,7 @@ class Login : AppCompatActivity() {
                 string = eUsername.text.toString().trim()
                 pString = ePassword.text.toString().trim()
                 when {
-                    string.isNotEmpty() && pString.isNotEmpty() -> {
+                    string.isNotEmpty() && pString.isEmpty() -> {
                         when (string) {
                             "t001" -> {
                                 prefs.edit().putString("flag", "tloggedin").apply()
@@ -65,7 +65,7 @@ class Login : AppCompatActivity() {
                                 vModel.getLogin(
                                     applicationContext, "student",
                                     string.capitalize(Locale.ROOT),
-                                    pString
+                                    ""
                                 )
                                     .observe(this, Observer {
                                         Log.d(TAG, it.toString())

@@ -113,7 +113,7 @@ class VModel : ViewModel() {
                     try {
                         val queue = Volley.newRequestQueue(vContext)
                         val url = "https://flowrow.com/lfh/appapi.php?" +
-                                "action=list-gen&category=adddiscuss&emp_code=ST0001&classid=1&" +
+                                "action=list-gen&category=adddiscuss&emp_code=${Utils.userId}&classid=1&" +
                                 "text=$discussFlag"
                         val stringRequest1 = StringRequest(
                             Request.Method.GET,
@@ -142,7 +142,7 @@ class VModel : ViewModel() {
                     val queue = Volley.newRequestQueue(vContext)
                     val url =
                         "https://www.flowrow.com/lfh/appapi.php?action=list-gen&category=sendchat" +
-                                "&emp_code=ST0001&classid=1&chat_message=$string"
+                                "&emp_code=${Utils.userId}&classid=1&chat_message=$string"
                     val stringRequest1 = StringRequest(
                         Request.Method.GET,
                         url,
@@ -417,49 +417,49 @@ class VModel : ViewModel() {
     private suspend fun getSTask() = service1.getTask(
         "list-gen",
         "tasks",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getSDocuments() = service1.getDocuments(
         "list-gen",
         "documents",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getPAssign() = service1.getPrevAssignments(
         "list-gen",
         "prevassign",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getSAssign() = service1.getNAssignments(
         "list-gen",
         "assignment",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getSNVideos() = service1.getNVideos(
         "list-gen",
         "videos",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getSTimeTable() = service1.getTimeTableData(
         "list-gen",
         "timetable",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getSExams() = service1.getExams(
         "list-gen",
         "exams",
-        "ST0001",
+        Utils.userId,
         "1",
         "2"
     )
@@ -467,35 +467,35 @@ class VModel : ViewModel() {
     private suspend fun getSPrevExam() = service1.getPrevExams(
         "list-gen",
         "prevexams",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getSClassroom() = service1.getClassroomData(
         "list-gen",
         "classroom",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getSSession() = service1.getSessionData(
         "list-gen",
         "session",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getSEbooks() = service1.getEbooks(
         "list-gen",
         "ebooks",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getVideoCourses() = service1.getVideoCourse(
         "list-gen",
         "course",
-        "ST0001",
+        Utils.userId,
         "1",
         courseID
     )
@@ -503,28 +503,28 @@ class VModel : ViewModel() {
     private suspend fun getClassDiscuss() = service1.getClassDiscuss(
         "list-gen",
         "classdiscuss",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getLatestVideo() = service1.getLVideo(
         "list-gen",
         "latestvideos",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getLatestNotification() = service1.getNotifications(
         "list-gen",
         "notifications",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getWatchListData() = service1.getWatchList(
         "list-gen",
         "watchlist",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
@@ -538,7 +538,7 @@ class VModel : ViewModel() {
     private suspend fun getDComment() = service1.getComment(
         "list-gen",
         "discusscomment",
-        "ST0001",
+        Utils.userId,
         "1",
         cAsk_id
     )
@@ -546,7 +546,7 @@ class VModel : ViewModel() {
     private suspend fun getSubjectList() = service1.getLSubject(
         "list-gen",
         "study_material",
-        "ST0001",
+        Utils.userId,
         "1",
         sAsk_id
     )
@@ -554,21 +554,21 @@ class VModel : ViewModel() {
     private suspend fun getSChat() = service1.getChat(
         "list-gen",
         "getchat",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getContinueWatchingData() = service1.getCWatch(
         "list-gen",
         "continuewatching",
-        "ST0001",
+        Utils.userId,
         "1"
     )
 
     private suspend fun getSubmitWatchingData() = service1.getSCWatch(
         "list-gen",
         "submitcontinuewatching",
-        "ST0001",
+        Utils.userId,
         "1",
         video_id,
         markFlag,
@@ -579,7 +579,7 @@ class VModel : ViewModel() {
         "list-gen",
         "assignment-single",
         "1",
-        "ST0001",
+        Utils.userId,
         sAssignID,
         sAssignType
     )
@@ -588,7 +588,7 @@ class VModel : ViewModel() {
         "list-gen",
         "assignment-submit",
         "1",
-        "ST0001",
+        Utils.userId,
         submitid,
         assigntype,
         multipartFile,
@@ -599,7 +599,7 @@ class VModel : ViewModel() {
         "list-gen",
         "exam-single",
         "1",
-        "ST0001",
+        Utils.userId,
         examid,
         examtype
     )

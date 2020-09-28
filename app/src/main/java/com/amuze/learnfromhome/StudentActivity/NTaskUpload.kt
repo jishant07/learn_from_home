@@ -135,6 +135,8 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                     when (resource.status) {
                         Status.SUCCESS -> {
                             try {
+                                upload_page_body.visibility = View.VISIBLE
+                                taskProgress.visibility = View.GONE
                                 flag.text = it.data?.body()!!.sname
                                 utitle.text = it.data.body()!!.questn
                                 udesc.text = "Submit before ${it.data.body()!!.cdate}"
@@ -169,6 +171,8 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
+                            upload_page_body.visibility = View.VISIBLE
+                            taskProgress.visibility = View.GONE
                             when (it.data?.body()!!.uploadflg) {
                                 "1" -> {
                                     correct_txt.text = "Submit your Answer"

@@ -13,6 +13,21 @@ data class Profile(
     @SerializedName("student_name")
     @Expose
     var student_name: String,
+    @SerializedName("student_lastname")
+    @Expose
+    var student_lastname:String,
+    @SerializedName("father_name")
+    @Expose
+    var father_name:String,
+    @SerializedName("mother_name")
+    @Expose
+    var mother_name:String,
+    @SerializedName("father_contact")
+    @Expose
+    var father_contact:String,
+    @SerializedName("mother_contact")
+    @Expose
+    var mother_contact:String,
     @SerializedName("roll_no")
     @Expose
     var roll_no: String,

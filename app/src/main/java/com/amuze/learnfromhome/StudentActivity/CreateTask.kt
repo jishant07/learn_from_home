@@ -207,7 +207,7 @@ class CreateTask : AppCompatActivity() {
         runOnUiThread {
             mHex = hexcode.subSequence(1, hexcode.length).toString()
             hashMap["category"] = "addtask"
-            hashMap["emp_code"] = "ST0001"
+            hashMap["emp_code"] = Utils.userId
             hashMap["classid"] = "1"
             hashMap["title"] = namearea.text.toString().trim()
             hashMap["description"] = textarea.text.toString().trim()

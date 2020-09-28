@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.amuze.learnfromhome.HomePage
@@ -24,7 +23,6 @@ class MyProfile : AppCompatActivity() {
     private lateinit var mProfile: Profile
     private lateinit var intentFlag: String
     private lateinit var codeFlag: String
-    private lateinit var aDialog: AlertDialog
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,13 +59,13 @@ class MyProfile : AppCompatActivity() {
         alertProgress.visibility = View.GONE
         profile_body.visibility = View.VISIBLE
         Picasso.get().load(profile.image).into(profile_circular)
-        profile_name.text = profile.student_name
+        profile_name.text = "${profile.student_name} ${profile.student_lastname}"
         profile_rollNo.text = profile.roll_no
         genderdata.text = profile.gender
         birthdata.text = profile.date_birth
         address_data.text = profile.branch
-        fNameData.text = "Father Name"
-        mothername_data.text = "Mother Name"
+        fNameData.text = "${profile.father_name}  ${profile.father_contact}"
+        mothername_data.text = "${profile.mother_name}  ${profile.mother_contact}"
         emailData.text = profile.email
     }
 }

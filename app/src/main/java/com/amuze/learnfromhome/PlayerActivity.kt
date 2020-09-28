@@ -32,6 +32,7 @@ import com.amuze.learnfromhome.Modal.Constants
 import com.amuze.learnfromhome.Modal.OtherCourse
 import com.amuze.learnfromhome.Modal.VideoCourse
 import com.amuze.learnfromhome.Network.Status
+import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.StudentActivity.ChatApplication
 import com.amuze.learnfromhome.ViewModel.VModel
 import com.android.volley.Request
@@ -780,7 +781,7 @@ class PlayerActivity : AppCompatActivity() {
                             Log.d(TAG, "onPause:$it")
                         }
                         else -> {
-                            Log.d(TAG, "onPause:Error${it.message}")
+                            Log.d(TAG, "onPause:Error$cid::${it.message}")
                         }
                     }
                 }
@@ -1014,12 +1015,12 @@ class PlayerActivity : AppCompatActivity() {
                     val url: String = when {
                         courseid.isNotEmpty() -> {
                             "https://flowrow.com/lfh/appapi.php?" +
-                                    "action=list-gen&category=addwatchlist&emp_code=ST0001&classid=1" +
+                                    "action=list-gen&category=addwatchlist&emp_code=${Utils.userId}&classid=1" +
                                     "&course=$courseid&id=$id"
                         }
                         else -> {
                             "https://flowrow.com/lfh/appapi.php?" +
-                                    "action=list-gen&category=removewatchlist&emp_code=ST0001&classid=1&" +
+                                    "action=list-gen&category=removewatchlist&emp_code=${Utils.userId}&classid=1&" +
                                     "id=$id"
                         }
                     }
