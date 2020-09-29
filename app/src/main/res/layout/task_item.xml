@@ -74,7 +74,7 @@
         <TextView
             android:id="@+id/number"
             android:layout_width="3dp"
-            android:layout_height="50dp"
+            android:layout_height="55dp"
             android:layout_gravity="center"
             android:background="@color/accent_pink"
             android:padding="3dp" />
@@ -108,6 +108,47 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText,SmallSp" />
+
+            <TextView
+                android:id="@+id/head_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:ignore="HardcodedText,SmallSp" />
+
+            <RelativeLayout
+                android:id="@+id/edit_task_relative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/edittask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_toStartOf="@id/deletetask"
+                    android:background="@color/accent_pink"
+                    android:padding="5dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/edit_task" />
+
+                <ImageView
+                    android:id="@+id/deletetask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="8dp"
+                    android:background="@color/accent_pink"
+                    android:padding="5dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/task_delete" />
+            </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
 </FrameLayout>

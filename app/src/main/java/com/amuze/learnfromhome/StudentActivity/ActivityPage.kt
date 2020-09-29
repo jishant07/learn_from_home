@@ -1,4 +1,4 @@
-@file:Suppress("PackageName", "PrivatePropertyName")
+@file:Suppress("PackageName", "PrivatePropertyName", "DEPRECATION")
 
 package com.amuze.learnfromhome.StudentActivity
 
@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +30,7 @@ import kotlinx.android.synthetic.main.task_slider.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.properties.Delegates
 
 class ActivityPage : AppCompatActivity() {
 
@@ -50,7 +50,7 @@ class ActivityPage : AppCompatActivity() {
         setContentView(R.layout.activity_page)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
-        vModel.getTask().observe(this, Observer {
+        vModel.getTask().observe(this, {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
@@ -212,6 +212,10 @@ class ActivityPage : AppCompatActivity() {
 
     class CustomAdapter1(private val sList: ArrayList<LTask>) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+        private var checkFlag = false
+        private var myColor by Delegates.notNull<Int>()
+
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
@@ -230,12 +234,31 @@ class ActivityPage : AppCompatActivity() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             holder.itemView.head_title.text = sList[position].time
             holder.itemView.head_title1.text = sList[position].taskname
-            val myColor = Color.parseColor(sList[position].color)
+            myColor = try {
+                Color.parseColor(sList[position].color)
+            } catch (e: Exception) {
+                Color.parseColor("#000000")
+            }
             holder.itemView.number.setBackgroundColor(
                 myColor
             )
             holder.itemView.task_body.setOnClickListener {
-                val intent = Intent(StudentTask.context, CreateTask::class.java)
+                when {
+                    !checkFlag -> {
+                        checkFlag = true
+                        holder.itemView.head_desc.visibility = View.VISIBLE
+                        holder.itemView.edit_task_relative.visibility = View.VISIBLE
+                    }
+                    checkFlag -> {
+                        checkFlag = false
+                        holder.itemView.head_desc.visibility = View.GONE
+                        holder.itemView.edit_task_relative.visibility = View.GONE
+                    }
+                }
+            }
+            holder.itemView.edittask.setOnClickListener {
+                val intent = Intent(context, CreateTask::class.java)
+                CreateTask.taskID = sList[position].id
                 intent.putExtra("title", sList[position].taskname)
                 intent.putExtra("desc", sList[position].taskname)
                 intent.putExtra("flag", sList[position].allday)
@@ -243,7 +266,7 @@ class ActivityPage : AppCompatActivity() {
                 intent.putExtra("date", sList[position].taskdate)
                 intent.putExtra("color", sList[position].color)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                StudentTask.context.startActivity(intent)
+                context.startActivity(intent)
             }
             (holder as MyViewHolder).bindItems()
         }

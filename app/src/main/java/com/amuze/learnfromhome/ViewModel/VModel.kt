@@ -52,6 +52,12 @@ class VModel : ViewModel() {
         }
     }
 
+    private val deleteTaskData: MutableLiveData<String> by lazy {
+        MutableLiveData<String>().also {
+            deleteTask(dTaskID)
+        }
+    }
+
     fun getLogin(
         context: Context,
         usertype: String,
@@ -75,6 +81,12 @@ class VModel : ViewModel() {
         vContext = context
         chatMsg = string
         return chatMutableData
+    }
+
+    fun getDeleteTaskLiveData(context: Context, id: String): LiveData<String> {
+        vContext = context
+        dTaskID = id
+        return deleteTaskData
     }
 
     private fun loadLogin() {
@@ -112,9 +124,11 @@ class VModel : ViewModel() {
                 withContext(Dispatchers.Main) {
                     try {
                         val queue = Volley.newRequestQueue(vContext)
-                        val url = "https://flowrow.com/lfh/appapi.php?" +
-                                "action=list-gen&category=adddiscuss&emp_code=${Utils.userId}&classid=1&" +
-                                "text=$discussFlag"
+                        val url =
+                            "https://www.flowrow.com/lfh/appapi.php?" +
+                                    "action=list-gen&category=adddiscuss&" +
+                                    "emp_code=${Utils.userId}&classid=1&" +
+                                    "text=$discussFlag"
                         val stringRequest1 = StringRequest(
                             Request.Method.GET,
                             url,
@@ -151,6 +165,31 @@ class VModel : ViewModel() {
                         },
                         { error: VolleyError? ->
                             chatMutableData.value = error.toString()
+                        })
+                    queue.add(stringRequest1)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    private fun deleteTask(id: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    val queue = Volley.newRequestQueue(vContext)
+                    val url =
+                        "https://www.flowrow.com/lfh/appapi.php?action=list-gen&category=deletetask" +
+                                "&emp_code=${Utils.userId}&classid=1&taskid=$id"
+                    val stringRequest1 = StringRequest(
+                        Request.Method.GET,
+                        url,
+                        { response ->
+                            deleteTaskData.value = response
+                        },
+                        { error: VolleyError? ->
+                            deleteTaskData.value = error.toString()
                         })
                     queue.add(stringRequest1)
                 } catch (e: Exception) {
@@ -624,5 +663,7 @@ class VModel : ViewModel() {
         private lateinit var uPassword: String
         private lateinit var oldPassword: String
         private lateinit var newPassword: String
+        private lateinit var dTaskID: String
+        private var API_URL = "https://www.flowrow.com/lfh/appapi.php?action=list-gen&"
     }
 }

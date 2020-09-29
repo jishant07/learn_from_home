@@ -1,3 +1,9 @@
+@file:Suppress(
+    "PackageName", "PrivatePropertyName",
+    "SpellCheckingInspection", "DEPRECATION",
+    "UNUSED_VARIABLE", "unused"
+)
+
 package com.amuze.learnfromhome.StudentActivity
 
 import android.annotation.SuppressLint
@@ -14,10 +20,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,12 +35,14 @@ import com.amuze.learnfromhome.ViewModel.VModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.activity_student_task.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.task_assignment.view.*
 import kotlinx.android.synthetic.main.task_item.view.*
 import kotlinx.android.synthetic.main.task_item1.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.properties.Delegates
 
 class StudentTask : AppCompatActivity() {
 
@@ -47,7 +53,7 @@ class StudentTask : AppCompatActivity() {
     private lateinit var create_task: FloatingActionButton
     private lateinit var see_all: LinearLayout
     private lateinit var vModel: VModel
-    private val TAG = "StudentChat"
+    private val TAG = "StudentTask"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,20 +61,7 @@ class StudentTask : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         context = applicationContext
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
-        vModel.getTask().observe(this, Observer {
-            it?.let { resource ->
-                when (resource.status) {
-                    Status.SUCCESS -> {
-                        Log.d(TAG, "onCreate:${resource.data!!.body()}")
-                        addLTask(resource.data.body()!!)
-                    }
-                    else -> {
-                        Log.d(TAG, "onCreate:Error")
-                    }
-                }
-            }
-        })
-
+        loadTask()
         create_task = findViewById(R.id.create_task)
         recyclerView1 = findViewById(R.id.task_recycler_new)
         see_all = findViewById(R.id.see_all)
@@ -111,11 +104,12 @@ class StudentTask : AppCompatActivity() {
         swipeFun(context)
     }
 
-    class CustomAdapter(private val sList: ArrayList<LTask>) :
+    inner class CustomAdapter(private val sList: ArrayList<LTask>) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private var check: Boolean = false
         private var selected: Int = 0
         private var flag: Boolean = false
+        private var myColor by Delegates.notNull<Int>()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val inflater = LayoutInflater.from(parent.context)
@@ -139,7 +133,11 @@ class StudentTask : AppCompatActivity() {
                                 holder.itemView.nhead_title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                             holder.itemView.nhead_title1.paintFlags =
                                 holder.itemView.nhead_title1.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                            val myColor = Color.parseColor(sList[position].color)
+                            myColor = try {
+                                Color.parseColor(sList[position].color)
+                            } catch (e: Exception) {
+                                Color.parseColor("#000000")
+                            }
                             holder.itemView.nnumber.setBackgroundColor(
                                 ContextCompat.getColor(
                                     context,
@@ -152,7 +150,11 @@ class StudentTask : AppCompatActivity() {
                                 holder.itemView.nhead_title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                             holder.itemView.nhead_title1.paintFlags =
                                 holder.itemView.nhead_title1.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                            val myColor = Color.parseColor(sList[position].color)
+                            myColor = try {
+                                Color.parseColor(sList[position].color)
+                            } catch (e: Exception) {
+                                Color.parseColor("#000000")
+                            }
                             holder.itemView.nnumber.setBackgroundColor(
                                 myColor
                             )
@@ -163,9 +165,9 @@ class StudentTask : AppCompatActivity() {
             holder.itemView.ntask_body.setOnClickListener {
                 when {
                     flag -> {
-                        holder.itemView.nhead_desc.visibility = View.VISIBLE
+                        holder.itemView.nhead_desc.visibility = View.GONE
                         holder.itemView.edit_linear.visibility = View.VISIBLE
-                        holder.itemView.nhead_desc.text = sList[position].taskname
+                        //holder.itemView.nhead_desc.text = sList[position].taskname
                         flag = false
                     }
                     !flag -> {
@@ -178,6 +180,7 @@ class StudentTask : AppCompatActivity() {
             holder.itemView.edit_task.setOnClickListener {
                 try {
                     val intent = Intent(context, CreateTask::class.java)
+                    CreateTask.taskID = sList[position].id
                     intent.putExtra("title", sList[position].taskname)
                     intent.putExtra("desc", sList[position].taskname)
                     intent.putExtra("flag", sList[position].allday)
@@ -190,10 +193,18 @@ class StudentTask : AppCompatActivity() {
                     e.printStackTrace()
                 }
             }
+            holder.itemView.edit_task1.setOnClickListener {
+                try {
+                    Log.d(TAG, "viewholder::${sList[position].id}")
+                    deleteTask(sList[position].id)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
             holder.bindItems()
         }
 
-        class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             fun bindItems() {
                 val no = itemView.findViewById<TextView>(R.id.nnumber)
                 val title = itemView.findViewById<TextView>(R.id.nhead_title)
@@ -423,6 +434,23 @@ class StudentTask : AppCompatActivity() {
         itemTouchHelper.attachToRecyclerView(recyclerView1)
     }
 
+    private fun loadTask() = try {
+        vModel.getTask().observe(this, {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        addLTask(resource.data!!.body()!!)
+                    }
+                    else -> {
+                        Log.d(TAG, "onCreate:Error")
+                    }
+                }
+            }
+        })
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     private fun addLTask(list: List<LTask>) {
         try {
@@ -430,9 +458,8 @@ class StudentTask : AppCompatActivity() {
             fList.clear()
             tList.addAll(list)
             val current = Calendar.getInstance()
-            val curFormater = SimpleDateFormat("yyyy-MM-dd")
-            val formatted = curFormater.format(current.time)
-            Log.d(TAG, "addLTask:$formatted")
+            val curFormatter = SimpleDateFormat("yyyy-MM-dd")
+            val formatted = curFormatter.format(current.time)
             val filtered = tList.filter { it.taskdate == formatted }
             youhaveTask.text = "You have ${filtered.size} task today!!"
             unfinishedtask.text = "${filtered.size} unfinished task"
@@ -440,6 +467,23 @@ class StudentTask : AppCompatActivity() {
             sadapter1.notifyDataSetChanged()
         } catch (e: Exception) {
             Log.d(TAG, "addLTask:$e")
+        }
+    }
+
+    private fun deleteTask(id: String) {
+        try {
+            vModel.getDeleteTaskLiveData(applicationContext, id).observe(this, {
+                it.let {
+                    Log.d(TAG, "deleteTask:$it")
+                    when (it) {
+                        "success" -> {
+                            loadTask()
+                        }
+                    }
+                }
+            })
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

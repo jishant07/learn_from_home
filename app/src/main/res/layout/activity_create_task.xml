@@ -152,8 +152,9 @@
                     android:layout_width="30dp"
                     android:layout_height="25dp"
                     android:layout_marginStart="10dp"
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:src="@drawable/task_calendar"
-                    tools:ignore="Autofill,LabelFor,TextFields" />
+                    tools:ignore="Autofill,ContentDescription,LabelFor,TextFields" />
 
                 <TextView
                     android:id="@+id/text1"
@@ -196,6 +197,7 @@
                     android:layout_height="25dp"
                     android:layout_marginStart="10dp"
                     android:background="@color/accent_green"
+                    android:foreground="?android:attr/selectableItemBackground"
                     tools:ignore="Autofill,LabelFor,TextFields" />
 
                 <TextView

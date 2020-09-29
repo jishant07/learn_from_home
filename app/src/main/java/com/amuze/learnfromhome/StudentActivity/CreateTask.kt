@@ -1,6 +1,6 @@
 @file:Suppress(
     "SpellCheckingInspection",
-    "PrivatePropertyName", "PackageName", "UNUSED_VARIABLE"
+    "PrivatePropertyName", "PackageName", "UNUSED_VARIABLE", "DEPRECATION"
 )
 
 package com.amuze.learnfromhome.StudentActivity
@@ -99,6 +99,7 @@ class CreateTask : AppCompatActivity() {
             showColorPicker()
         }
         try {
+            Log.d(TAG, "onCreate:$taskID")
             val stitle = intent.getStringExtra("title")!!
             val desc = intent.getStringExtra("desc")!!
             val flag = intent.getStringExtra("flag")!!
@@ -107,6 +108,7 @@ class CreateTask : AppCompatActivity() {
             val mydate = intent.getStringExtra("date")!!
             namearea.setText(stitle)
             textarea.setText(desc)
+            text1.text = "$mydate $time"
         } catch (e: Exception) {
             Log.d(TAG, "onCreate:$e")
         }
@@ -222,25 +224,37 @@ class CreateTask : AppCompatActivity() {
     private fun addTask() {
         runOnUiThread {
             try {
-                Log.d(TAG, "loadTask$hashMap")
                 val queue = Volley.newRequestQueue(applicationContext)
-                val url =
-                    "https://flowrow.com/lfh/appapi.php?action=list-gen&" +
-                            "category=addtask&emp_code=${Utils.userId}&classid=1&title=${
-                                namearea.text.toString().trim()
-                            }&" +
-                            "description=${
-                                textarea.text.toString().trim()
-                            }&all_day=$isChecked&date=$myDate&time=$dtime&color=$mHex"
+                when {
+                    taskID.isEmpty() -> {
+                        TASK_URL = "https://flowrow.com/lfh/appapi.php?action=list-gen&" +
+                                "category=addtask&emp_code=${Utils.userId}&classid=1&title=${
+                                    namearea.text.toString().trim()
+                                }&" +
+                                "description=${
+                                    textarea.text.toString().trim()
+                                }&all_day=$isChecked&date=$myDate&time=$dtime&color=$mHex"
+                    }
+                    else -> {
+                        TASK_URL = "https://flowrow.com/lfh/appapi.php?action=list-gen&" +
+                                "category=updatetask&emp_code=${Utils.userId}&classid=1&taskid=$taskID&title=${
+                                    namearea.text.toString().trim()
+                                }&" +
+                                "description=${
+                                    textarea.text.toString().trim()
+                                }&all_day=$isChecked&date=$myDate&time=$dtime&color=$mHex"
+                    }
+                }
+                Log.d(TAG, "addTask:$TASK_URL")
                 val stringRequest1 = StringRequest(
                     Request.Method.GET,
-                    url,
+                    TASK_URL,
                     { response ->
                         aResponse = response
                         if (aResponse == "success") {
                             Toast.makeText(
                                 applicationContext,
-                                "Task Successfully added",
+                                "Success",
                                 Toast.LENGTH_LONG
                             ).show()
                             val intent = Intent(applicationContext, HomePage::class.java)
@@ -285,6 +299,7 @@ class CreateTask : AppCompatActivity() {
         var aResponse: String = ""
         var title = ""
         var desc = ""
+        var taskID: String = ""
+        var TASK_URL = ""
     }
-
 }
