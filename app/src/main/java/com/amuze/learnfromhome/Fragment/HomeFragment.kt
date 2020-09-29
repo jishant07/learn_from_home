@@ -246,7 +246,6 @@ class HomeFragment : Fragment() {
             Log.d("error", e.toString())
         }
 
-
         recyclerView1.apply {
             val layoutManager1 =
                 LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
