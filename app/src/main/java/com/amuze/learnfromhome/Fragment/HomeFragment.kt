@@ -302,8 +302,8 @@ class HomeFragment : Fragment() {
                 intent.putExtra("pic", clist[position].vthumb)
                 intent.putExtra("teacher", "Sachin Kunthe")
                 intent.putExtra("id", clist[position].id)
-                intent.putExtra("cid", clist[position].id)
-                PlayerActivity.cid = clist[position].id
+                intent.putExtra("cid", clist[position].cid)
+                PlayerActivity.cid = clist[position].cid
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             }

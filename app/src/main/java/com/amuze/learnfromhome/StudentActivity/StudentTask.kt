@@ -164,16 +164,16 @@ class StudentTask : AppCompatActivity() {
             }
             holder.itemView.ntask_body.setOnClickListener {
                 when {
-                    flag -> {
+                    !flag -> {
+                        flag = true
                         holder.itemView.nhead_desc.visibility = View.GONE
                         holder.itemView.edit_linear.visibility = View.VISIBLE
                         //holder.itemView.nhead_desc.text = sList[position].taskname
-                        flag = false
                     }
-                    !flag -> {
+                    flag -> {
+                        flag = false
                         holder.itemView.nhead_desc.visibility = View.GONE
                         holder.itemView.edit_linear.visibility = View.GONE
-                        flag = true
                     }
                 }
             }

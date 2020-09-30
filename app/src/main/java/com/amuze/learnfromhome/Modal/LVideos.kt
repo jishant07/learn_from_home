@@ -10,6 +10,9 @@ data class LVideos(
     @SerializedName("id")
     @Expose
     var id: String,
+    @SerializedName("courseid")
+    @Expose
+    var cid: String,
     @SerializedName("vthumb")
     @Expose
     var vthumb: String,
