@@ -304,6 +304,8 @@ class HomeFragment : Fragment() {
                 intent.putExtra("id", clist[position].id)
                 intent.putExtra("cid", clist[position].cid)
                 PlayerActivity.cid = clist[position].cid
+                PlayerActivity.documentUrl = clist[position].doc
+                PlayerActivity.id = clist[position].id
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             }
@@ -444,7 +446,10 @@ class HomeFragment : Fragment() {
                 intent.putExtra("desc", sList[position].vtitle)
                 intent.putExtra("pic", sList[position].thumb)
                 intent.putExtra("id", sList[position].id)
-                PlayerActivity.cid = sList[position].id
+                PlayerActivity.cid = sList[position].cid
+                PlayerActivity.id = sList[position].id
+                PlayerActivity.documentUrl = sList[position].doc
+                PlayerActivity.videoflag = "continue"
                 intent.putExtra("cid", "")
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
@@ -484,12 +489,15 @@ class HomeFragment : Fragment() {
     @SuppressLint("SimpleDateFormat")
     private fun addSession(list: List<Session>) {
         try {
-            if (list.isEmpty()) {
-                liveheading.visibility = View.GONE
-                live_recycler_view.visibility = View.GONE
-            } else {
-                liveheading.visibility = View.VISIBLE
-                live_recycler_view.visibility = View.VISIBLE
+            when {
+                list.isEmpty() -> {
+                    liveheading.visibility = View.GONE
+                    live_recycler_view.visibility = View.GONE
+                }
+                else -> {
+                    liveheading.visibility = View.VISIBLE
+                    live_recycler_view.visibility = View.VISIBLE
+                }
             }
             sessionList.clear()
             fList.clear()

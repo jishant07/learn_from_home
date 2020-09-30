@@ -230,7 +230,7 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                     body
                 ),
                 ytextarea.text.toString().trim()
-            ).observe(this@NTaskUpload, Observer {
+            ).observe(this@NTaskUpload, {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {

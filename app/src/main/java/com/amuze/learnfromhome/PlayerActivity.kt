@@ -33,6 +33,7 @@ import com.amuze.learnfromhome.Modal.OtherCourse
 import com.amuze.learnfromhome.Modal.VideoCourse
 import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.Network.Utils
+import com.amuze.learnfromhome.PDF.PDFViewer
 import com.amuze.learnfromhome.StudentActivity.ChatApplication
 import com.amuze.learnfromhome.ViewModel.VModel
 import com.android.volley.Request
@@ -436,6 +437,13 @@ class PlayerActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
+
+        document_linear.setOnClickListener {
+            val intent = Intent(applicationContext, PDFViewer::class.java)
+            intent.putExtra("url", documentUrl)
+            startActivity(intent)
+            finish()
+        }
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -480,6 +488,7 @@ class PlayerActivity : AppCompatActivity() {
                             val listIterator = resource.data.body()!!.course.listIterator()
                             //setCourseText(resource.data.body()!!)
                             courseUrl = resource.data.body()!!.videoInfo.vlink
+                            documentUrl = resource.data.body()!!.videoInfo.document
                             getCourseUrl()
                             spinnerList.clear()
                             while (listIterator.hasNext()) {
@@ -770,8 +779,17 @@ class PlayerActivity : AppCompatActivity() {
         }
         playerView.onPause()
         try {
+            val continueid = when (videoflag) {
+                "videos" -> {
+                    id
+                }
+                "continue" -> {
+                    cid
+                }
+                else -> cid
+            }
             vModel.getSCWatchingData(
-                cid,
+                continueid,
                 (simpleExoPlayer.currentPosition / 1000).toString(),
                 (simpleExoPlayer.duration / 1000).toString()
             ).observe(this@PlayerActivity, Observer {
@@ -781,7 +799,7 @@ class PlayerActivity : AppCompatActivity() {
                             Log.d(TAG, "onPause:$it")
                         }
                         else -> {
-                            Log.d(TAG, "onPause:Error$cid::${it.message}")
+                            Log.d(TAG, "onPause:Error$continueid::${it.message}")
                         }
                     }
                 }
@@ -1085,7 +1103,10 @@ class PlayerActivity : AppCompatActivity() {
         private lateinit var videoID: String
         private lateinit var courseUrl: String
         private var live_start_flag: String = ""
+        var videoflag = "videos"
+        var id = ""
         var cid = ""
+        var documentUrl = ""
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

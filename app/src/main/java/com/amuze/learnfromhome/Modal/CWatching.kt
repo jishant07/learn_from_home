@@ -7,6 +7,9 @@ data class CWatching(
     @SerializedName("id")
     @Expose
     var id: String,
+    @SerializedName("courseid")
+    @Expose
+    var cid: String,
     @SerializedName("watchtime")
     @Expose
     var watchtime: String,
@@ -18,5 +21,8 @@ data class CWatching(
     var vtitle: String,
     @SerializedName("vthumb")
     @Expose
-    var thumb: String
+    var thumb: String,
+    @SerializedName("document")
+    @Expose
+    var doc: String
 )

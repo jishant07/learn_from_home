@@ -18,5 +18,8 @@ data class LVideos(
     var vthumb: String,
     @SerializedName("subject_name")
     @Expose
-    var sname: String
+    var sname: String,
+    @SerializedName("document")
+    @Expose
+    var doc: String
 )

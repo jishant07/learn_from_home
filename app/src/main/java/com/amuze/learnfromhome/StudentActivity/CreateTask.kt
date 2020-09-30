@@ -114,18 +114,19 @@ class CreateTask : AppCompatActivity() {
         }
         submit_task.setOnClickListener {
             try {
-                if (namearea.text.toString().trim().isNotEmpty() ||
-                    textarea.text.toString().trim()
-                        .isNotEmpty() ||
-                    dtime.isNotEmpty()
-                ) {
-                    addTaskModel()
-                } else {
-                    Toast.makeText(
-                        applicationContext,
-                        "Please enter some value before submitting!!!",
-                        Toast.LENGTH_LONG
-                    ).show()
+                when {
+                    namearea.text.toString().trim().isNotEmpty() ||
+                            textarea.text.toString().trim()
+                                .isNotEmpty() || dtime.isNotEmpty() -> {
+                        addTaskModel()
+                    }
+                    else -> {
+                        Toast.makeText(
+                            applicationContext,
+                            "Please enter some value before submitting!!!",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -251,15 +252,17 @@ class CreateTask : AppCompatActivity() {
                     TASK_URL,
                     { response ->
                         aResponse = response
-                        if (aResponse == "success") {
-                            Toast.makeText(
-                                applicationContext,
-                                "Success",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            val intent = Intent(applicationContext, HomePage::class.java)
-                            startActivity(intent)
-                            finish()
+                        when (aResponse) {
+                            "success" -> {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Success",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                val intent = Intent(applicationContext, HomePage::class.java)
+                                startActivity(intent)
+                                finish()
+                            }
                         }
                         Log.d(TAG, ":$response")
                     },
