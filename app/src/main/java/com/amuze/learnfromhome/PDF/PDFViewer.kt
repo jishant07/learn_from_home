@@ -39,8 +39,8 @@ class PDFViewer : AppCompatActivity() {
             e.printStackTrace()
         }
         pdf_back.setOnClickListener {
-            val intent = Intent(applicationContext, HomePage::class.java)
-            startActivity(intent)
+//            val intent = Intent(applicationContext, HomePage::class.java)
+//            startActivity(intent)
             finish()
         }
     }

@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,7 +36,7 @@ class PAssignment : AppCompatActivity() {
         setContentView(R.layout.activity_p_assignment)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
-        vModel.getPAssignment().observe(this, Observer {
+        vModel.getPAssignment().observe(this, {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {

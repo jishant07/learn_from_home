@@ -443,10 +443,32 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         document_linear.setOnClickListener {
-            val intent = Intent(applicationContext, PDFViewer::class.java)
-            intent.putExtra("url", documentUrl)
-            startActivity(intent)
-            finish()
+            try {
+                when {
+                    documentUrl.length > 1 -> {
+                        val intent = Intent(applicationContext, PDFViewer::class.java)
+                        intent.putExtra("url", documentUrl)
+                        startActivity(intent)
+                        finish()
+                    }
+                    else -> {
+                        Toast.makeText(
+                            applicationContext,
+                            "No Documents Available!!",
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(
+                    applicationContext,
+                    "No Documents Available!!",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+            }
         }
     }
 
@@ -1056,7 +1078,8 @@ class PlayerActivity : AppCompatActivity() {
                                     .show()
                             }
                             else -> {
-                                Log.d(TAG, "addWatchList:${it.data}")
+                                Toast.makeText(applicationContext, it.data, Toast.LENGTH_LONG)
+                                    .show()
                             }
                         }
                     }

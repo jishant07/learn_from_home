@@ -87,9 +87,10 @@ class SWatchList : AppCompatActivity() {
                 intent.putExtra("subname", sList[position].coursename)
                 intent.putExtra("desc", sList[position].videotitle)
                 intent.putExtra("teacher", sList[position].coursename)
-                intent.putExtra("id", sList[position].id)
+                intent.putExtra("id", sList[position].vid)
                 intent.putExtra("cid", "")
                 PlayerActivity.page = "watchlist"
+                PlayerActivity.documentUrl = ""
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             }
