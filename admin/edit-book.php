@@ -15,11 +15,11 @@
 									<input type='hidden' name='bookid' id='bookid' value="<?=$book['book_id']?>">
 				
 									<div class="form-group">
-										<label>Book Title</label>
+										<label>Book Title*</label>
 										<input type="text" class="form-control" placeholder="Title" name='title' id='title' value="<?=$book['book_name']?>">
                                     </div>
 									<div class="form-group">
-										<label>Upload Book</label>
+										<label>Upload Book*</label>
 										<input type="file" name="bookfile" id="bookfile" class="file-upload-default">
 										<div class="input-group col-xs-12">
 											<input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Book">
@@ -33,7 +33,7 @@
 										<?php } ?>
 									</div>
                                     <div class="form-group">
-										<label>Upload Book Cover</label>
+										<label>Upload Book Cover*</label>
                                         <input type="file" id="myDropify" name='myDropify' class="border"/>
                                     </div>
 									<?php 
@@ -95,7 +95,7 @@ $( document ).ready(function() {
 });
 function bookValidation(){
 if(document.getElementById('title').value.trim()==''){
-	$("#result").html("Please enter title");
+	$("#result").html("<div class='alert alert-warning'>Please enter title</dov>");
 	document.getElementById('title').focus();
 	return false;
 }

@@ -75,9 +75,19 @@ else {
 								<?php } else echo $teacher['t_dob']?>
 							</div>
 							<div class="col-12 col-md-6">
-								<label>Gender</label>
-								Male <input type="radio" class="form-control" value="Male" name='t_gender' <?php if($teacher['t_gender']=='Male') echo 'checked';?> <?=$disable?>><BR>
-								Femail <input type="radio" class="form-control" value="Female" name='t_gender' <?php if($teacher['t_gender']=='Female') echo 'checked';?>   <?=$disable?>>
+								<label>Gender</label><br>
+								<div class="form-check form-check-inline">
+									<label class="form-check-label">
+										<input type="radio" class="form-check-input" value="Male" name='t_gender' <?php if($teacher['t_gender']=='Male') echo 'checked';?> <?=$disable?>>
+										Male
+									</label>
+								</div>
+								<div class="form-check form-check-inline">
+									<label class="form-check-label">
+										<input type="radio" value="Female" name='t_gender' <?php if($teacher['t_gender']=='Female') echo 'checked';?>   <?=$disable?>>
+										Female
+									</label>
+								</div>
 							</div>
 						</div>						
 					</div>
@@ -98,8 +108,6 @@ else {
 						</div>
 						
 					</div>
-					
-					<hr>
 					<div class="clearfix"></div>
 					<hr>
 					

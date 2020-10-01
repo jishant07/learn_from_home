@@ -14,14 +14,14 @@
 										<input type='hidden' name='class' id='class' value="<?=$_GET['class']?>">
 										<input type='hidden' name='subject' id='subject' value="<?=$_GET['subject']?>">
 									<div class="form-group">
-										<label>Title</label>
+										<label>Title*</label>
 										<input type="text" class="form-control" placeholder="Title" id='name' name='name'>
                                     </div>
                                    
 									
                                     
                                     <div class="form-group">
-										<label>Upload Document</label>
+										<label>Upload Document*</label>
                                         <input type="file" id="myDropify" name="myDropify" class="border"/>
                                     </div>
 									
@@ -87,12 +87,12 @@ $( document ).ready(function() {
 });
 function docValid(){
 if(document.getElementById('name').value.trim()==''){
-	$("#result").html("Please enter title");
+	$("#result").html("<div class='alert alert-warning'>Please enter title</div>");
 	document.getElementById('name').focus();
 	return false;
 }
 if(document.getElementById('myDropify').value==''){
-	$("#result").html("Please select doc file");
+	$("#result").html("<div class='alert alert-warning'>Please select doc file</div>");
 	document.getElementById('myDropify').focus();
 	return false;
 }

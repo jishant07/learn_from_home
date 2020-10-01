@@ -8,7 +8,7 @@ $answerx = explode('-',$data['answer']);
   <nav class="page-breadcrumb">
 	<ol class="breadcrumb">
 	  <li class="breadcrumb-item"><a href="#"><?=getClassName($exam['class'])?></a></li>
-	  <li class="breadcrumb-item"><a href="index.php?action=exams&class=<?=$exam['class']?>&subject=<?=$exam['subject']?>">Exams</a></li>
+	  <li class="breadcrumb-item"><a href="index.php?action=edit-new-exam&id=<?=$_GET['evid']?>">Exam</a></li>
 	  <li class="breadcrumb-item active" aria-current="page">Edit Exam</li>
 	</ol>
   </nav>          
@@ -29,13 +29,17 @@ $answerx = explode('-',$data['answer']);
 				<div class="row">
 					<div class="col-6">
 						<label class="d-inline-block mt-2 mr-2">Marks</label>
-						<input type="text" class="form-control d-inline-block wd-80" name='matchmarks' id='matchmarks' maxlength=2 size=2 onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false; " value="<?=$data['marks']?>">
+						<input type="text" class="form-control d-inline-block wd-80" name='matchmarks' id='matchmarks' maxlength=2 size=2 value="<?=$data['marks']?>" readonly>
 					</div>		
 				</div>
 			  </div>
 			  <div class="form-group">
 				<label>Match the following</label>
 				<input type="text" class="form-control" placeholder="Title" name='qmatch' id='qmatch' value="<?=$data['question']?>">
+			  </div>
+			  <div class="form-group">
+					<label>Discription</label>
+					<textarea class="form-control" placeholder="Discription" rows="5" id='description' name='description'><?=$data['description']?></textarea>
 			  </div>
 			<div id='matchrows'>	
 			  <?php 
@@ -44,48 +48,68 @@ $answerx = explode('-',$data['answer']);
 					$a=$cols2x[$i];
 					$k=$i+1;	
 			  ?>
-			  <div class="form-group" id='matchrows'>	
+			 <div class="form-group" id='matchrows'>	
 				<div class='rowmatch' id='rowpair<?=$k?>'>
-					<div class='matchcol'>Row<?=$k?> <input type='text' name='matchrowq[]' id='matchrowq<?=$k?>' onkeyup="setQuestion(this.value,<?=$k?>)" value='<?=$q?>'></div>
-					<div class='matchcol'>Row<?=$k?> <input type='text' name='matchrowopt[]' id='matchrowopt<?=$k?>' onkeyup="setAnswer(this.value,<?=$k?>)" value='<?=$a?>'></div>
+					<div class="row">
+						<div class="col-6">
+							<div class="matchcol">
+								<?php if($k==1){?>
+								<label class="control-label">Column One</label>
+								<?php } ?>
+								<input type="text" class="form-control" name='matchrowq[]' id='matchrowq<?=$k?>' onkeyup="setQuestion(this.value,<?=$k?>)" value='<?=$q?>'>
+							</div>
+						</div><!-- Col -->
+						<div class="col-6">
+							<div class="matchcol">
+								<?php if($k==1){?><label class="control-label">Column Two</label><?php } ?>
+								<input type="text" class="form-control" name='matchrowopt[]' id='matchrowopt<?=$k?>' onkeyup="setAnswer(this.value,<?=$k?>)" value='<?=$a?>'>
+							</div>
+						</div><!-- Col -->		
+						
+					</div>
+					
 				</div>
-			 </div>	
+			</div>		
+				
 			 <?php } ?>	
 			</div>	
 				
-			  <div class="form-group">
-				<input type='button' id='addmatchrow' class='btn btn-primary btn-icon mt-2' value='+ Add More Rows'>
-				<input type='button' id='removematchrow' class='btn btn-primary btn-icon mt-2' style='display:none' value='- Remove More Rows'>
-					
-			   </div>		
-			  <div class="form-group">
+			 
+			<div class="form-group">
+				<input type='button' id='addmatchrow' class='btn btn-primary mt-2' value='+ Add More Rows'>
+				<input type='button' id='removematchrow' class='btn btn-primary mt-2' style='display:none' value='- Remove More Rows'>			
+			</div>		
+			<div class="form-group mt-4">
 				<div id='matchrowans'>
-					<div class='rowmatch' style="clear:left;padding-top:30px;"> 
-						Answer
-					</div>
-					<div class='matchcol' style='width:20px;float:left'>
-					<ul id="sortno">
+					<div class="row">
+					<div class="col-sm-12"><h6 class="card-title mt-4 mb-2">Answer</h6></div>
+					
+					<div class='col-2 matchcol'>
+					<ul id="sortno" class="list-group">
 						<?php
 						for($i=0; $i<count($cols1x); $i++){
 							$k=$i+1;
 						?>
-						<li id="liq<?=$k?>"><?=$k?></li>       
+						<li class="list-group-item" id="liq<?=$k?>"><?=$k?></li>       
 						<?php } ?>
 					</ul>
 					</div>
-					<div class='matchcol'>
-					<ul id="sortable3" class='droptruex' style='margin:auto'>
+					<div class='col-5 matchcol'>
+					<!--ul id="sortable3" class='droptruex' style='margin:auto'-->
+					<div id="sortable3" class="list-group col">
 						<?php
 						for($i=0; $i<count($cols1x); $i++){
 							$k=$i+1;
-						?><li id="matchq<?=$k?>"><?=$cols1x[$i]?></li>       
+						?>
+						<div class="list-group-item" id='matchq<?=$k?>'><?=$cols1x[$i]?></div>
+						
 						<?php } ?>
-					</ul>
+					</div>
 					</div>
 
-					<div id="simple-list" class="row">			
+					<div id="simple-list" class="col-5 matchcol">			
 						<div id="example1" class="list-group col">
-							<?php
+						<?php
 						for($i=0; $i<count($answerx); $i++){
 							$k=$i+1;
 						?>
@@ -93,6 +117,7 @@ $answerx = explode('-',$data['answer']);
 							<?php } ?>
 						</div>			
 					</div>
+				</div>	
 				</div>	
 				
 			 </div>		
@@ -178,13 +203,35 @@ $answerx = explode('-',$data['answer']);
 	  let matrowopt = 'matchrowopt'+rval;
 	  let matchq = 'matchq'+rval;
 	  
-	  let rowmatch = `<div class="form-group"><div class='rowmatch' id=${id}><div class='matchcol'> Row${rval} <input type='text' name='matchrowq[]' id=${matrowq} onkeyup="setQuestion(this.value,${rval})"></div><div class='matchcol'> Row${rval}   <input type='text' name=matchrowopt[] id=${matrowopt} onkeyup="setAnswer(this.value,${rval})"></div></div></div>`;
+	  let rowmatch11 = `<div class="form-group"><div class='rowmatch' id=${id}><div class='matchcol'> Row${rval} <input type='text' name='matchrowq[]' id=${matrowq} onkeyup="setQuestion(this.value,${rval})"></div><div class='matchcol'> Row${rval}   <input type='text' name=matchrowopt[] id=${matrowopt} onkeyup="setAnswer(this.value,${rval})"></div></div></div>`;
+	  
+	  let rowmatch = `<div class="form-group"><div class='rowmatch' id=${id}>
+	  				<div class="row">
+						<div class="col-6">
+							<div class="matchcol">
+								<input type="text" class="form-control" name='matchrowq[]' id='${matrowq}' onkeyup="setQuestion(this.value,${rval})">
+							</div>
+						</div><!-- Col -->
+						<div class="col-6">
+							<div class="matchcol">
+								<input type="text" class="form-control" name='matchrowopt[]' id='${matrowopt}' onkeyup="setAnswer(this.value,${rval})" >
+							</div>
+						</div><!-- Col -->
+						
+						
+					</div>
+	  
+	  </div></div>`;
+	  
 	  let mid = 'rowmatch'+rval;	  
-		let rowans3 =`<li id="${matchq}"></li>`
+		//let rowans3 =`<li id="${matchq}"></li>`
+		let rowans3 =`<div class="list-group-item" id='${matchq}'></div>`
+		
 		let rxxxowans2 =`<li id="que"><span id='matchrowans_span${rval}'></span><input type='hidden' name="matchrowans[]" id=${matrowans}></li>`
 		let rowans2 =`<div class="list-group-item" id='mans${rval}'><span id='matchrowans_span${rval}'></span><input type=hidden name="matchrowans[]" id=${matrowans}></div>`
 				
-		let sortno=`<li id='liq${rval}'>${rval}</li>`
+		
+		let sortno=`<li class="list-group-item" id='liq${rval}'>${rval}</li>`
   $( "#matchrows" ).append( rowmatch );
   $( "#example1" ).append( rowans2 );
   $( "#sortable3" ).append( rowans3 );

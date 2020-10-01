@@ -72,6 +72,8 @@
 							<thead>
 							  <tr>
 								<th class="pt-0">Date</th>
+								<th class="pt-0">Section</th>
+								<th class="pt-0">Marks</th>
 								<th class="pt-0">Action</th>
 								
 							  </tr>
@@ -86,13 +88,19 @@
 									<?=$e['question']?>
 									</td>
 									<td>
-									 <a href="index.php?action=edit-question&id=<?=$e['id']?>&type=<?=$e['qtype']?>" class="btn btn-warning btn-icon" data-toggle="tooltip" data-placement="top" title="Edit">
+									<?=getSectionName($e['section'])?>
+									</td>
+									<td>
+									<?=$e['marks']?>
+									</td>
+									<td>
+									 <a href="index.php?action=edit-question&id=<?=$e['id']?>&type=<?=$e['qtype']?>&evid=<?=$_GET['id']?>" class="btn btn-warning btn-icon" data-toggle="tooltip" data-placement="top" title="Edit">
                             <i data-feather="edit-2" class="mt-2"></i>
                           </a>
                           
-                          <button type="button" class="btn btn-primary btn-icon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deleteRecord(<?=$e['id']?>,'<?=$qtype?>')">
+                          <!--button type="button" class="btn btn-primary btn-icon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deleteRecord(<?=$e['id']?>,'<?=$qtype?>')">
                             <i data-feather="x"></i>
-                          </button>
+                          </button-->
 									</td>
 								</tr>
 								<?php } ?>
@@ -103,396 +111,7 @@
 				</div>
 			  </div>
 			</div>
-		  
-		  
-		  <div class="row mb-3">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body">
-<div id='fillblanksection'>
-					<form class="forms-sample" method='post' id='frmfillblank'  autocomplete=off>  
-					  <div class="form-group">
-						<div class="row">
-							<div class="col-6">
-								<label class="d-inline-block mt-2 mr-2">Marks</label>
-								<input type="text" class="form-control d-inline-block wd-80" name='fillblankanswermarks' id='fillblankanswermarks' maxlength=2 size=2 onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false; ">
-							</div>		
-						</div>
-					  </div>
-					  <div class="form-group">
-						<label>Fill in the blanks</label>
-						<input type="text" class="form-control" placeholder="Title" name='fillblankque' id='fillblankque'>
-					  </div>
-						
-					  <div class="form-group" id='fillblankansdiv'>
-					  </div>		
-					  <div class="form-group">
-						<label>Discription</label>
-						<textarea class="form-control" placeholder="Discription" rows="5" id='description' name='description'></textarea>
-					  </div>
-					  <div class="form-group">
-						<label>Upload Referance Document</label>
-						<input type="file" name="refdoc" id="refdoc" class="file-upload-default">
-						<div class="input-group col-xs-12">
-						  <input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Document">
-						  <span class="input-group-append">
-							<button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-						  </span>
-						</div>
-					  </div>
-					  <hr>
-					  <div class="form-check form-check-flat form-check-primary">
-						<label class="form-check-label">
-						  <input type="checkbox" class="form-check-input" name='uploadflag' id='uploadflag' value='1'>
-						  Student can upload document
-						</label>
-					  </div>
-					  
-					  
-					  <button type="submit" class="btn btn-success mr-2 mt-2" name='createfillbankquestion' id='createfillbankquestion'>Save</button>
-					  <button type="button" class="btn btn-primary btn-icon mt-2" data-toggle="tooltip" data-placement="top" title="Delete" onclick="showSwal('passing-parameter-execute-cancel')">
-						  <i data-feather="x"></i>
-					  </button>
-					</form>
-					</div>
-
-<div id='matchsection'>
-<form class="forms-sample" method='post' id='frmmatch'  autocomplete=off>     
-	<input type='hidden' id='noofmatchrows' name='noofmatchrows' value='3'>
-				
-  <div class="form-group">
-	<div class="row">
-		<div class="col-6">
-			<label class="d-inline-block mt-2 mr-2">Marks</label>
-			<input type="text" class="form-control d-inline-block wd-80" name='matchmarks' id='matchmarks' maxlength=2 size=2 onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false; ">
-		</div>		
-	</div>
-  </div>
-  <div class="form-group">
-	<label>Match the following</label>
-	<input type="text" class="form-control" placeholder="Title" name='qmatch' id='qmatch'>
-  </div>
-<div id='matchrows'>	
-  <div class="form-group" id='matchrows'>	
-	<div class='rowmatch' id='rowpair1'>
-		<div class='matchcol'>Row1 <input type='text' name='matchrowq[]' id='matchrowq1' onkeyup="setQuestion(this.value,1)"></div>
-		<div class='matchcol'>Row1 <input type='text' name='matchrowopt[]' id='matchrowopt1' onkeyup="setAnswer(this.value,1)" ></div>
-	</div>
- </div>	
-	<div class="form-group" id='matchrows'>			
-	<div class='rowmatch' id='rowpair2'>
-		<div class='matchcol'>Row2 <input type='text' name='matchrowq[]' id='matchrowq2' onkeyup="setQuestion(this.value,2)" > </div>
-		<div class='matchcol'>Row2 <input type='text' name='matchrowopt[]' id='matchrowopt2' onkeyup="setAnswer(this.value,2)" ></div>
-	</div>
-	</div>
-<div class="form-group" id='matchrows'>	
-	<div class='rowmatch'  id='rowpair3'>
-		<div class='matchcol'>Row3 <input type='text' name='matchrowq[]' id='matchrowq3' onkeyup="setQuestion(this.value,3)"></div>
-		<div class='matchcol'>Row3 <input type='text' name='matchrowopt[]' id='matchrowopt3' onkeyup="setAnswer(this.value,3)" ></div>
-	</div>			
-  </div>	
-  </div>	
-	
-  <div class="form-group">
-				<input type='button' id='addmatchrow' class='btn btn-primary btn-icon mt-2' value='+ Add More Rows'>
-				<input type='button' id='removematchrow' class='btn btn-primary btn-icon mt-2' style='display:none' value='- Remove More Rows'>
-		
-   </div>		
-  <div class="form-group">
-	<div id='matchrowans'>
-		<div class='rowmatch' style="clear:left;padding-top:30px;"> 
-			Answer
-		</div>
-		<div class='matchcol' style='width:20px;float:left'>
-		<ul id="sortno">
-			<li id="liq1">1</li>       
-			<li id="liq2">2</li>       
-			<li id="liq3">3</li>
-		</ul>
-		</div>
-		<div class='matchcol'>
-		<ul id="sortable3" class='droptruex' style='margin:auto'>
-			<li id="matchq1"></li>       
-			<li id="matchq2"></li>       
-			<li id="matchq3"></li>				
-		</ul>
-		</div>
-
-		<div id="simple-list" class="row">			
-			<div id="example1" class="list-group col">
-				<div class="list-group-item" id='mans1'><span id='matchrowans_span1'></span><input type=hidden name=matchrowans[] id=matchrowans1></div>
-				<div class="list-group-item" id='mans2'><span id='matchrowans_span2'></span><input type=hidden name=matchrowans[] id=matchrowans2></div>
-				<div class="list-group-item" id='mans3'><span id='matchrowans_span3'></span><input type=hidden name=matchrowans[] id=matchrowans3></div>
-			</div>			
-		</div>
-	</div>	
-	
- </div>		
-  <div class="form-group">
-	<label>Discription</label>
-	<textarea class="form-control" placeholder="Discription" rows="5" id='description' name='description'></textarea>
-  </div>
-  <div class="form-group">
-	<label>Upload Referance Document</label>
-	<input type="file" name="refdoc" class="file-upload-default">
-	<div class="input-group col-xs-12">
-	  <input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Document">
-	  <span class="input-group-append">
-		<button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-	  </span>
-	</div>
-  </div>
-  <hr>
-  <div class="form-check form-check-flat form-check-primary">
-	<label class="form-check-label">
-	  <input type="checkbox" class="form-check-input" name='uploadflag' id='uploadflag' value='1'>
-	  Student can upload document
-	</label>
-  </div>
-  
-  
-  <button type="submit" class="btn btn-success mr-2 mt-2" name='createfillbankquestion' id='createfillbankquestion'>Save</button>
-  <button type="button" class="btn btn-primary btn-icon mt-2" data-toggle="tooltip" data-placement="top" title="Delete" onclick="showSwal('passing-parameter-execute-cancel')">
-	  <i data-feather="x"></i>
-  </button>
-</form>
- </div>
-	
-<div id='singlechoicesection'>
-<form class="forms-sample" method='post' id='frmsinglechoice'  autocomplete=off> 
-<input type='hidden' id='noofsinglechoice' name='noofsinglechoice' value='3'>                     
-  <div class="form-group">
-	<div class="row">
-		<div class="col-6">
-			<label class="d-inline-block mt-2 mr-2">Marks</label>
-			<input type="text" class="form-control d-inline-block wd-80" name='singlemarks' id='singlemarks' maxlength=2 size=2 onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
-		</div>		
-	</div>
-  </div>
-  <div class="form-group">
-	<label>Question</label>
-	<input type="text" class="form-control" placeholder="Title" name='singlechoicequestion' id='singlechoicequestion'>
-  </div>
-	
-  <div class="form-group">
-	<label>Discription</label>
-	<textarea class="form-control" placeholder="Discription" rows="5" id='description' name='description'></textarea>
-  </div>
-	<div id='singleanswerchoice'>
-	<div class="form-group" id='singleans1'>
-		<div class='left anspadd'>ans1</div> <div class='left'><input type='text' name='singlechoiceans[]' id='singlechoiceans1'> </div><div class='left'><input type="radio" id="sinans1" name="singleanswer" value="1" checked></div>		
-	</div>
-	<div class="form-group" id='singleans2'>
-		<div class='left anspadd'>ans2</div> <div class='left'><input type='text' name='singlechoiceans[]' id='singlechoiceans1'> </div><div class='left'><input type="radio" id="sinans2" name="singleanswer" value="2" checked></div>		
-	</div>
-	<div class="form-group" id='singleans3'>
-		<div class='left anspadd'>ans3</div> <div class='left'><input type='text' name='singlechoiceans[]' id='singlechoiceans3'> </div><div class='left'><input type="radio" id="sinans3" name="singleanswer" value="3" checked></div>		
-	</div>	
-	</div>
-	<div class='form-group'>
-		<div class='matchcol'>
-			<input type='button' id='addsinglechoice' class='btn btn-success mr-2 mt-2' value='+ Add More Rows'>
-			<input type='button' id='removesinglerow' class='btn btn-success mr-2 mt-2' style='display:none' value='- Remove More Rows'>
-		</div>				
-	</div>
-  <div class="form-group">
-	<label>Upload Referance Document</label>
-	<input type="file" name="refdoc" class="file-upload-default">
-	<div class="input-group col-xs-12">
-	  <input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Document">
-	  <span class="input-group-append">
-		<button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-	  </span>
-	</div>
-  </div>
-  <hr>
-  <div class="form-check form-check-flat form-check-primary">
-	<label class="form-check-label">
-	  <input type="checkbox" class="form-check-input" id='uploadflag' name='uploadflag' value='1'>
-	  Student can upload document
-	</label>
-  </div>
-  
-  
-  <button type="submit" class="btn btn-success mr-2 mt-2">Save</button>
-  <button type="button" class="btn btn-primary btn-icon mt-2" data-toggle="tooltip" data-placement="top" title="Delete" onclick="showSwal('passing-parameter-execute-cancel')">
-	  <i data-feather="x"></i>
-  </button>
-</form>
-</div>
-
-<div id='multiplechoicesection'>
-<form class="forms-sample" method='post' id='frmmultiplechoice'  autocomplete=off>  
-  <input type='hidden' id='noofmultiplechoice' name='noofmultiplechoice' value='3'>					
-  <div class="form-group">
-	<div class="row">
-		<div class="col-6">
-			<label class="d-inline-block mt-2 mr-2">Marks</label>
-			<input type="text" class="form-control d-inline-block wd-80" name='multiplemarks' id='multiplemarks' maxlength=2 size=2  onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
-		</div>		
-	</div>
-  </div>
-  <div class="form-group">
-	<label>Question</label>
-	<input type="text" class="form-control" placeholder="Title" name='multiplechoicequestion' id='multiplechoicequestion'>
-  </div>
-  <div class="form-group">
-	<label>Discription</label>
-	<textarea class="form-control" placeholder="Discription" rows="5" id='description' name='description'></textarea>
-  </div>
-
-<div id='multipleanswerchoice'>
-	<div class='form-group' id='multipleans1'> 
-		<div class='left anspadd'>ans1</div> <div class='left'><input type='text' name='muloption[]' id='muloption1'> </div><div class='left'><input type="checkbox" id="ans1" name="ans[]" value="1"></div>				
-	</div>
-	<div class='form-group' id='multipleans2'> 
-		<div class='left anspadd'>ans2</div> <div class='left'><input type='text' name='muloption[]' id='muloption2'> </div><div class='left'><input type="checkbox" id="ans2" name="ans[]" value="2"></div>				
-	</div>
-	<div class='form-group' id='multipleans3'> 
-		<div class='left anspadd'>ans3</div> <div class='left'><input type='text' name='muloption[]' id='muloption3'> </div><div class='left'><input type="checkbox" id="ans3" name="ans[]" value="3"></div>				
-	</div>
-</div>
-<div class='form-group'>
-	<div class='matchcol'><input type='button' id='addmultiplechoice' class='btn btn-success' value='+ Add More Rows'>
-	<input type='button' id='removemultiplerow' class='btn btn-success' style='display:none' value='- Remove More Rows'>
-	</div>				
-</div>
-  <div class="form-group">
-	<label>Upload Referance Document</label>
-	<input type="file" name="refdoc" class="file-upload-default">
-	<div class="input-group col-xs-12">
-	  <input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Document">
-	  <span class="input-group-append">
-		<button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-	  </span>
-	</div>
-  </div>
-  <hr>
-  <div class="form-check form-check-flat form-check-primary">
-	<label class="form-check-label">
-	  <input type="checkbox" class="form-check-input" id='uploadflag' name='uploadflag' value='1'>
-	  Student can upload document
-	</label>
-  </div>
-  
-  
-  <button type="submit" class="btn btn-success mr-2 mt-2" id='createmultiplechoicequestion'>Save</button>
-  <button type="button" class="btn btn-primary btn-icon mt-2" data-toggle="tooltip" data-placement="top" title="Delete" onclick="showSwal('passing-parameter-execute-cancel')">
-	  <i data-feather="x"></i>
-  </button>
-</form>
-</div>
-	
-<div id='freetextsection'>
-<form class="forms-sample" method='post' id='frmfreetext'  autocomplete=off>
-  <div class="form-group">
-	<div class="row">
-		<div class="col-6">
-			<label class="d-inline-block mt-2 mr-2">Marks</label>
-			<input type="text" class="form-control d-inline-block wd-80" name='freetextmarks' id='freetextmarks' maxlength=2 size=2 onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
-		</div>		
-	</div>
-  </div>
-  <div class="form-group">
-	<label>Question</label>
-	<input type="text" class="form-control" placeholder="Title" name='freetextquestion' id='freetextquestion'>
-  </div>
-  <div class="form-group">
-	<label>Discription</label>
-	<textarea class="form-control" placeholder="Discription" rows="5" name='txtanswer' id='txtanswer'></textarea>
-  </div>
-  <div class="form-group">
-	<label>Upload Referance Document</label>
-	<input type="file" name="refdoc" class="file-upload-default">
-	<div class="input-group col-xs-12">
-	  <input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Document">
-	  <span class="input-group-append">
-		<button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-	  </span>
-	</div>
-  </div>
-  <hr>
-  <div class="form-check form-check-flat form-check-primary">
-	<label class="form-check-label">
-	  <input type="checkbox" class="form-check-input" id='uploadflag' name='uploadflag' value='1'>
-	  Student can upload document
-	</label>
-  </div>
-  
-  
-  <button type="submit" class="btn btn-success mr-2 mt-2" id='createfreetextquestion'>Save</button>
-  <button type="button" class="btn btn-primary btn-icon mt-2" data-toggle="tooltip" data-placement="top" title="Delete" onclick="showSwal('passing-parameter-execute-cancel')">
-	  <i data-feather="x"></i>
-  </button>
-</form>	
-</div>
-	
-<div id='uploadimagesection'>		
-<form class="forms-sample" method='post' id='frmuploadmedia'  autocomplete=off>  
-  <div class="form-group">
-	<div class="row">
-		<div class="col-6">
-			<label class="d-inline-block mt-2 mr-2">Marks</label>
-			<input type="text" class="form-control d-inline-block wd-80" name='picsmarks' id='picsmarks' maxlength=2 size=2 onkeypress="if( isNaN( String.fromCharCode(event.keyCode) )) return false;">
-		</div>		
-	</div>
-  </div>
-  <div class="form-group">
-	<label>Submit pic or doc</label>
-	<input type="text" class="form-control" placeholder="Title" name='uoloadimagequestion' id='uoloadimagequestion'>
-  </div>
-  <div class="form-group">
-	<label>Discription</label>
-	<textarea class="form-control" placeholder="Discription" rows="5" id='discription' name='discription'></textarea>
-  </div>
-  <div class="form-group">
-	<label>Upload Referance Document</label>
-	<input type="file" name="refdoc" class="file-upload-default">
-	<div class="input-group col-xs-12">
-	  <input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Document">
-	  <span class="input-group-append">
-		<button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-	  </span>
-	</div>
-  </div>
-  <hr>
-  
-  <button type="submit" class="btn btn-success mr-2 mt-2" id='createpicquestion'>Save</button>
-  <button type="button" class="btn btn-primary btn-icon mt-2" data-toggle="tooltip" data-placement="top" title="Delete" onclick="showSwal('passing-parameter-execute-cancel')">
-	  <i data-feather="x"></i>
-  </button>
-</form>
-</div>	
-                      
-                  </div> 
-                </div>
-              </div>
-            </div>
-            
-		  <div class="row">
-              <div class="col-md-4"></div>
-             <div class="col-md-8 col-12">
-                <div class="form-group  d-inline-block float-right " >                 
-					<select name='selectarea' id='selectarea' class='form-control mb-3 '>
-						<option value='0' >Select Question Type</option>
-						<option value='fillblanksection' selected='selected'>fill in the blanks</option>
-						<option value='matchsection'>match the following</option>
-						<option value='singlechoicesection'>select objective single</option>
-						<option value='multiplechoicesection'>select objective multiple</option>					
-						<option value='freetextsection'>free text answer</option>
-						<option value='uploadimagesection'>upload image or doc</option>						
-					</select>	
-                </div>
-              </div>
-            </div>
-		  
-		  
 		  </div>
-		  
-		  
-		  
-		  
-		  
 		</div>
       <script src="assets/Sortable.js"></script>
 
@@ -708,13 +327,30 @@ $( "#addmatchrow" ).click(function() {
 	  let matrowopt = 'matchrowopt'+rval;
 	  let matchq = 'matchq'+rval;
 	  
-	  let rowmatch = `<div class="form-group"><div class='rowmatch' id=${id}><div class='matchcol'> Row${rval} <input type='text' name='matchrowq[]' id=${matrowq} onkeyup="setQuestion(this.value,${rval})"></div><div class='matchcol'> Row${rval}   <input type='text' name=${matrowopt} id=${matrowopt} onkeyup="setAnswer(this.value,${rval})"></div></div></div>`;
+	  let rowmatch = `<div class="form-group"><div class='rowmatch' id=${id}>
+	  				<div class="row">
+						<div class="col-6">
+							<div class="matchcol">
+								<input type="text" class="form-control" name='matchrowq[]' id='${matrowq}' onkeyup="setQuestion(this.value,${rval})">
+							</div>
+						</div><!-- Col -->
+						<div class="col-6">
+							<div class="matchcol">
+								<input type="text" class="form-control" name='matchrowopt[]' id='${matrowopt}' onkeyup="setAnswer(this.value,${rval})" >
+							</div>
+						</div><!-- Col -->
+						
+						
+					</div>
+	  
+	  </div></div>`;
 	  let mid = 'rowmatch'+rval;	  
-		let rowans3 =`<li id="${matchq}"></li>`
-		let rxxxowans2 =`<li id="que"><span id='matchrowans_span${rval}'></span><input type='hidden' name="matchrowans[]" id=${matrowans}></li>`
+		//let rowans3 =`<li id="${matchq}"></li>`
+		let rowans3 =`<div class="list-group-item" id='${matchq}'></div>`
+		/*let rxxxowans2 =`<li id="que" ><span id='matchrowans_span${rval}'></span><input type='hidden' name="matchrowans[]" id=${matrowans}></li>`*/
 		let rowans2 =`<div class="list-group-item" id='mans${rval}'><span id='matchrowans_span${rval}'></span><input type=hidden name="matchrowans[]" id=${matrowans}></div>`
 				
-		let sortno=`<li id='liq${rval}'>${rval}</li>`
+		let sortno=`<li class="list-group-item" id='liq${rval}'>${rval}</li>`
   $( "#matchrows" ).append( rowmatch );
   $( "#example1" ).append( rowans2 );
   $( "#sortable3" ).append( rowans3 );
@@ -739,9 +375,20 @@ $( "#removematchrow" ).click(function() {
 	  let rval=parseInt($('#noofsinglechoice').val())+parseInt(1);
 	  if(rval==4) $('#removesinglerow').show();
 	  let id = 'singleans'+rval
-	  let rowmatch = `<div class='clrboth m10' id='${id}'> 
-					<div class='left anspadd'>ans${rval}</div> <div class='left'><input type='text' name='singlechoiceans[]' id='singlechoiceans${rval}'> </div><div class='left'><input type="radio" id="sinans${rval}" name="singleanswer" value="${rval}"></div>				
-				</div>`;
+	
+	let rowmatch =`<div class="form-group" id="${id}">
+		<div class="row">
+			<div class="col-1"></div>
+			<div class="col-1 form-check">
+				<label class="form-check-label">
+					<input type="radio" class="form-check-input" id="sinans${rval}" name="singleanswer" value="${rval}" />
+				</label>
+			</div>
+			<div class="col-10">
+				<input type="text" class="form-control" name="singlechoiceans[]" id="singlechoiceans${rval}">
+			</div>
+		</div>	
+	</div>`			
 	  
   $( "#singleanswerchoice" ).append( rowmatch );
   $('#noofsinglechoice').val(rval)
@@ -761,8 +408,18 @@ $( "#removesinglerow" ).click(function() {
 	  let rval=parseInt($('#noofmultiplechoice').val())+parseInt(1);
 	  if(rval==4) $('#removemultiplerow').show();
 	  let id = 'multipleans'+rval
-	  let rowmatch = `<div class='clrboth m10' id='${id}'> 
-					<div class='left anspadd'>ans${rval}</div> <div class='left'><input type='text' name='muloption[]' id='muloption${rval}'> </div><div class='left'><input type="checkbox" id="ans${rval}" name="ans[]" value="${rval}"></div>				
+	  let rowmatch = `<div class='form-group m10' id='${id}'> 
+					<div class="row">
+						<div class="col-1"></div>
+						<div class="col-1 form-check">
+							<label class="form-check-label">
+								<input type="checkbox" class="form-check-input" id="ans${rval}" name="ans[]" value="${rval}">
+							</label>
+						</div>
+						<div class="col-10">
+							<input type='text' class="form-control" name='muloption[]' id='muloption${rval}'>
+						</div>
+					</div>				
 				</div>`;
 	  
   $( "#multipleanswerchoice" ).append( rowmatch );

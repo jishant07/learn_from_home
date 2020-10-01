@@ -6,12 +6,19 @@ if(isset($_GET['cid'])){
 	$listvideos=explode(',',$row['videos']);
 	$listprefs=explode(',',$row['preferences']);
 	$chapter = $row['chapter'];
+	
+	if(count($listvideos)==count($listprefs))
 	$newarr=array_combine($listprefs,$listvideos);
+	else $newarr=$listvideos;
+	
+				
+	//$newarr=array_combine($listprefs,$listvideos);
 	//$newarr = $row['videoarr'];
 	ksort($newarr);	
 	if(!isset($_GET['id'])){
 		$varray=$newarr;
 		$varr = array_values($varray);
+		
 		$_GET['id']=$varr[0];
 	}
 }
@@ -27,7 +34,10 @@ else{
 		$listvideos=explode(',',$row['videos']);
 		$listprefs=explode(',',$row['preferences']);
 		$chapter = $row['chapter'];
+	//	$newarr=array_combine($listprefs,$listvideos);
+	if(count($listvideos)==count($listprefs))
 		$newarr=array_combine($listprefs,$listvideos);
+		else $newarr=$listvideos;
 		//$newarr = $row['videoarr'];
 		ksort($newarr);	
 		//print_r($newarr);
@@ -36,6 +46,7 @@ else{
 
 //echo $cid;
 //echo $_GET['id'];
+
 	$video = course_video($_GET['id']);
 	//print_r($video);
 	$subject_name = getSubject($video['subject']);
@@ -49,28 +60,9 @@ else{
 	$sqex= $conn -> query("SELECT count(id) as cntex from tbl_evolution WHERE evolutiontype='exercise' and subject='$subid' and status=1");
 	$rowex = $sqex->fetch_assoc();
 	$vid_id = $video['id'];
-/*
-$vid_mat_sql = $conn -> query("SELECT * FROM study_material  WHERE mat_vid='$vid_id'");
-if ($vid_mat_sql->num_rows > 0){
-  $vid_mat_row = $vid_mat_sql->fetch_assoc();
-}
-if(isset($vid_mat_row)){
-	$disable_smaterial = '';
-}
-else{
-	$disable_smaterial = 'disabled'; 
-}*/
-/*
-$todays_date = date("Y-m-d H:i:s");
-$sub_start_date = $video['sub_start_at'];
-$sub_end_date = $video['sub_end_at'];
-if($todays_date >= $sub_start_date && $todays_date <= $sub_end_date){
-$disable_sub = '';
-}
-else{
-$disable_sub = 'disabled';
-}
-*/
+
+
+
 $emp_ecode = $_SESSION["eid"];
 $cls='fa fa-toggle-off';
 $dis='';$rid ='';
@@ -94,25 +86,29 @@ if($sql_watch->num_rows > 0){
 $videolink = $video['vlink'];
 
 addViews($vid_id,$emp_ecode);
+$surl = "https://flowrow.com/lfh/api/videoapi.php";
+//echo 'vid_id: ',$vid_id;
 ?>
+<link href="css/video-js.css" rel="stylesheet" />
 
  <input type='hidden' id='hvideoid' value="<?=$_GET['id']?>">
  <input type='hidden' id='coursid' value="<?=$cid?>">
  <input type='hidden' id='wflag' value="<?=$wflag?>">
  
-  <script type="text/javascript" src="https://content.jwplatform.com/libraries/P7tGbqKk.js"></script>
-  <script type="text/javascript">jwplayer.key="Df1+QHbNEKwrJaZ/gVnAoOQqjosU5yycYtQcnPGsmgY=";</script>
-		
+ 	
    <section class="container-fluid single-video mainwrapper">
         <div class="row">
-            <div class="col-md-7">
-                <div class="video">
-                <div id="player">
-                    <iframe frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="580"
-src="https://hls-test-player.herokuapp.com/studentID=<?=$_SESSION['eid']?>&videoID=<?=$vid_id?>">
-</iframe>
-                </div>
-                </div>
+            <div class="col-md-7">               
+				<?php
+				$tday = date('Y-m-d H:i:s');
+				if($video['sheduledate']<=$tday){
+				?>
+				 <video id="player" class="player-dimensions video-js vjs-default-skin " controls></video>
+
+			
+                   <?php } else {?>
+				<div class="Waiting-video d-flex align-items-center justify-content-center"><div><h2>This video is sheduled at </h2><div class="text"><?php echo date('d M Y h:i A',strtotime($video['sheduledate']));?></div></div></div><?php } ?>
+                
             </div>
 			<div class="col-md-5 content">
                 <div class="chapter"><?=$subject_name?></div>
@@ -124,20 +120,24 @@ src="https://hls-test-player.herokuapp.com/studentID=<?=$_SESSION['eid']?>&video
                     </div>                
                         
                 </div-->
-				<?php if(isset($newarr) && count($newarr)>0){?>
+				<?php 
+			//	print_r($newarr);
+				
+				if(isset($newarr) && count($newarr)>0){?>
 				<div class="dropdown">
 				<select id='videolist'>
 						 <?php foreach($newarr as $k=>$v){?>
                             <option value="<?=$v?>"><?=getCourseVideo($v)?></option>
 						 <?php } ?>
                  </select></div>
-				 <div class="chapter">Views <?=getViews($vid_id)?></div>
-				 <p><?=$video['description']?></p>
 				<?php } else {?>
 					<div class="content"><BR><?=$video['vtitle']?>
 					</div>
 					
 				<?php } ?>	
+				 <div class="chapter">Views <?=getViews($vid_id)?></div>
+				 <p><?=$video['description']?></p>
+				
                 <?php if(isset($row['description'])){ ?>  <p>
                 <?php echo stripslashes($row['description'])?>
                 </p><?php } else {?>
@@ -229,7 +229,9 @@ src="https://hls-test-player.herokuapp.com/studentID=<?=$_SESSION['eid']?>&video
             </div>
         </div>
       </section>
+	
    	 <?php include('javascript.php') ?>
+	 <?php  include 'hlsplayer.php'?>
    <script>
 	
 $(document).ready(function() {

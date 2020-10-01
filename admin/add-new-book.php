@@ -12,11 +12,11 @@
 								<form class="forms-sample" id='frmbook' autocomplete="off" enctype= "multipart/form-data">
 								<input type='hidden' name='classid' id='classid' value="<?=$_GET['class']?>">
 									<div class="form-group">
-										<label>Title</label>
+										<label>Title*</label>
 										<input type="text" class="form-control" placeholder="Title" name='title' id='title'>
                                     </div>
 									<div class="form-group">
-										<label>Upload Book</label>
+										<label>Upload Book*</label>
 										<input type="file" name="bookfile" id="bookfile" class="file-upload-default">
 										<div class="input-group col-xs-12">
 											<input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Book">
@@ -26,7 +26,7 @@
 										</div>
 									</div>
                                     <div class="form-group">
-										<label>Upload Book Cover</label>
+										<label>Upload Book Cover*</label>
                                         <input type="file" id="myDropify" name="myDropify" class="border"/>
                                     </div>
 									
@@ -85,17 +85,17 @@ $( document ).ready(function() {
 });
 function bookValidation(){
 if(document.getElementById('title').value.trim()==''){
-	$("#result").html("Please enter title");
+	$("#result").html("<div class='alert alert-warning'>Please enter title</div>");
 	document.getElementById('title').focus();
 	return false;
 }
 if(document.getElementById('bookfile').value.trim()==''){
-	$("#result").html("Please select book file");
+	$("#result").html("<div class='alert alert-warning'>Please select book file</div>");
 	document.getElementById('bookfile').focus();
 	return false;
 }
 if(document.getElementById('myDropify').value.trim()==''){
-	$("#result").html("Please select image");
+	$("#result").html("<div class='alert alert-warning'>Please select image</div>");
 	document.getElementById('myDropify').focus();
 	return false;
 }

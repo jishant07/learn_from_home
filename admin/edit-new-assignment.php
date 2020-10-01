@@ -19,11 +19,11 @@
 						<?php echo $_GET['type']=='freetext'?'Free Text Answer':'Upload Image or Doc'?>
 					</div>
 					<div class="form-group">
-						<label>Title</label>
+						<label>Title*</label>
 						<input type="text" class="form-control" placeholder="Title" name='title' id='title' value="<?=stripslashes($data['question'])?>">
 					</div>
 					<div class="form-group">
-						<label>Discription</label>
+						<label>Discription*</label>
 						<textarea class="form-control" placeholder="Discription" rows="5" name='description' id='description'><?=stripslashes($data['answer'])?></textarea>
 					</div>
 					<div class="form-group">
@@ -39,7 +39,7 @@
 						<?php } ?>
 					</div>
 					<div class="form-group">
-						<label>Submission Last Date</label>
+						<label>Submission Last Date*</label>
 						<div class="input-group date datepicker" id="datePickerExample">
 							<input type="text" class="form-control" name='submitdate' id='submitdate' value="<?=$data['closedate']?>"><span class="input-group-addon"><i data-feather="calendar"></i></span>
 						</div>
@@ -81,17 +81,17 @@ $( document ).ready(function() {
 });
 function assignValidation(){
 if(document.getElementById('title').value.trim()==''){
-	$("#result").html("Please enter title");
+	$("#result").html("<div class='alert alert-warning'>Please enter title</div>");
 	document.getElementById('title').focus();
 	return false;
 }
 if(document.getElementById('description').value.trim()==''){
-	$("#result").html("Please enter description");
+	$("#result").html("<div class='alert alert-warning'>Please enter description</div>");
 	document.getElementById('description').focus();
 	return false;
 }
 if(document.getElementById('submitdate').value.trim()==''){
-	$("#result").html("Please select submission date");
+	$("#result").html("<div class='alert alert-warning'>Please select submission date</div>");
 	document.getElementById('submitdate').focus();
 	return false;
 }

@@ -1,7 +1,7 @@
 <nav class="page-breadcrumb">
 	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><?=getClassName($_GET['class'])?></li>
-		<li class="breadcrumb-item"><a href="index.php?action=live-sessions&class=<?=$_GET['class']?>&subject=<?=$video['vid_sub']?>" title='Live Session'>Live Session</a></li>
+		<li class="breadcrumb-item"><?=getClassName($video['vid_class'])?></li>
+		<li class="breadcrumb-item"><a href="index.php?action=live-sessions&class=<?=$video['vid_class']?>&subject=<?=$video['vid_sub']?>" title='Live Session'>Live Session</a></li>
 		<li class="breadcrumb-item active" aria-current="page">Edit</li>
 	</ol>
 </nav>
@@ -16,11 +16,11 @@
 					<input type='hidden' name='vid_teacher' id='vid_teacher' value="<?=$video['vid_teacher']?>">
 					<input type='hidden' name='vid_sub' id='vid_sub' value="<?=$video['vid_sub']?>">
 					<div class="form-group">
-						<label>Title</label>
+						<label>Title*</label>
 						<input type="text" class="form-control" placeholder="Title" id='vtitle' name='vtitle' value="<?=$video['vtitle']?>">
 					</div>
 					<div class="form-group">
-						<label>Discription</label>
+						<label>Discription*</label>
 						<textarea class="form-control" placeholder="Discription"  id='description'  name='description' rows="5"><?=$video['vdesc']?></textarea>
 					</div>
 					<div class="form-group">
@@ -34,7 +34,7 @@
 						</div><?php if($video['ref_doc']!=''){ ?><a href="../uploads/videos/refdoc/<?=$video['ref_doc']?>" target='_blank'><?=$video['ref_doc']?></a><?php } ?>
 					</div>
 					<div class="form-group">
-						<label>Date </label>
+						<label>Date* </label>
 						<div class="input-group date datepicker" id="sub_start_at">
 							<input type="text" class="form-control" id='sub_start_date' name='sub_start_date' value="<?=date('Y-m-d',strtotime($video['sub_start_at']))?>"><span class="input-group-addon"><i data-feather="calendar"></i></span>
 						</div>
@@ -42,7 +42,7 @@
 					<div class="form-group">
 						<div class="row">
 							<div class="col-6">
-								<label>Start Session </label>
+								<label>Start Session* </label>
 								<div class="input-group date timepicker" id="datetimepickerExample" data-target-input="nearest">
 									<input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerExample" id='start_time' name='start_time' value="<?=date('H:i',strtotime($video['sub_start_at']))?>"/>
 									<div class="input-group-append" data-target="#datetimepickerExample" data-toggle="datetimepicker">
@@ -51,7 +51,7 @@
 								</div>
 							</div>
 							<div class="col-6">
-								<label>End Session</label>
+								<label>End Session*</label>
 								<div class="input-group date timepicker" id="datetimepickerExample2" data-target-input="nearest">
 									<input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerExample2" id='end_time' name='end_time' value="<?=date('H:i',strtotime($video['sub_end_at']))?>"/>
 									<div class="input-group-append" data-target="#datetimepickerExample2" data-toggle="datetimepicker">
@@ -143,40 +143,40 @@ function videoValidation(){
 
 //alert(livevideo)
 if(document.getElementById('vtitle').value.trim()==''){
-	$("#result").html("Please enter title");
+	$("#result").html("<div class='alert alert-warning'>Please enter title</div>");
 	document.getElementById('vtitle').focus();
 	return false;
 }
 if(document.getElementById('description').value.trim()==''){
-	$("#result").html("Please enter description");
+	$("#result").html("<div class='alert alert-warning'>Please enter description</div>");
 	document.getElementById('description').focus();
 	return false;
 }
 if(document.getElementById('sub_start_date').value.trim()==''){
-	$("#result").html("Please select date");
+	$("#result").html("<div class='alert alert-warning'>Please select date</div>");
 	document.getElementById('sub_start_date').focus();
 	return false;
 }
 if(document.getElementById('start_time').value.trim()==''){
-	$("#result").html("Please select start time");
+	$("#result").html("<div class='alert alert-warning'>Please select start time</div>");
 	document.getElementById('start_time').focus();
 	return false;
 }
 if(document.getElementById('end_time').value.trim()==''){
-	$("#result").html("Please select end time");
+	$("#result").html("<div class='alert alert-warning'>Please select end time</div>");
 	document.getElementById('end_time').focus();
 	return false;
 }
 if(livevideo=='link'){
 	if(document.getElementById('vlink').value.trim()==''){
-	$("#result").html("Please enter video link");
+	$("#result").html("<div class='alert alert-warning'>Please enter video link</div>");
 	document.getElementById('vlink').focus();
 	return false;
 	}
 }
 if(livevideo=='video'){
 	if(document.getElementById('myDropify').value.trim()==''){
-	$("#result").html("Please select video");
+	$("#result").html("<div class='alert alert-warning'>Please select video</div>");
 	document.getElementById('myDropify').focus();
 	return false;
 	}

@@ -15,14 +15,14 @@
 					<input type='hidden' name='subject' id='subject' value="<?=$course['subject']?>">
 						
 					<div class="form-group">
-						<label>Title</label>
+						<label>Title*</label>
 						<input type="text" class="form-control" placeholder="Title" id='title' name='title' value="<?=$course['name']?>">
 					</div>
 				   
 					
 					
 					<div class="form-group">
-						<label>Upload Thumbnail</label>
+						<label>Upload Thumbnail*</label>
 						<input type="file" id="myDropify" name="myDropify" class="border"/>
 					</div>
 					<?php if($course['cthumb']!=''){ ?><a href="../uploads/images/courses/<?=$course['cthumb']?>"  target='_blank'><?=$course['cthumb']?></a><BR><?php } ?>
@@ -35,25 +35,56 @@
 			</div>
 		</div>
 	</div>
-<?php $cvideos = explode(',',$course['videos'])?>
+<?php
+//echo '<pre>',print_r($course);
+ $cvideos = explode(',',$course['videos']);
+ $preferences = explode(',',$course['preferences']);
+
+
+if(count($cvideos)==count($preferences))
+				$newarr=array_combine($preferences,$cvideos);
+				else $newarr=$cvideos;
+				//$newarr = $row['videoarr'];
+				ksort($newarr);	
+			$newarr = array_values($newarr);
+//echo '<pre>',print_r($newarr);
+
+
+
+?>
 	<div class="col-md-6 grid-margin">
 		<div class="card">
+		<form class="forms-sample" id="edit-preference" method='post'>
+					<input type='hidden' name='id' id='id' value="<?=$_GET['id']?>">
 			<div class="card-body">
 				<div class="list-group">
-
-					<ul id="sortable" class='droptrue sortable3'>
+								
+						<!--div id="example1" class="list-group col">
+							<?php for($c=0;$c<count($newarr);$c++){
+								$cvid = getCourseVideo($newarr[$c]);
+								$p=$c+1;
+								?>
+							<div class="list-group-item">
+							<?php echo $cvid['title']?><input type=hidden name=matchprefs[] value="<?=$p?>" >
+							</div>
+							<?php } ?>
+							
+						</div-->			
+						
+						<ul id="sortable" class='droptrue sortable3 list-group pl-0'>
 						<?php for($c=0;$c<count($cvideos);$c++){
 								$cvid = getCourseVideo($cvideos[$c]);
 								?>			
-							 <li><?php echo $cvid['title']?><input type=hidden name=matchans[] value='<?php echo $cvideos[$c]?>'>            
+							 <li class="list-group-item"><?php echo $cvid['title']?><input type=hidden name=matchans[] value='<?php echo $cvideos[$c]?>'>            
 						
-					<?php } ?>
-					</ul>
+						<?php } ?>
+						</ul>
 
-
+						
 					<!--a href="#" class="list-group-item list-group-item-action"><?//=$cvideos[$i]?></a-->
-				</div>
+				</div><!--button type="submit" class="btn btn-primary mr-2 mt-2">Set Preferences</button-->
 			</div>
+			</form>
 		</div>
 	</div>
 </div>
@@ -78,6 +109,11 @@
       </div>
     </div>
   </div> 
+  
+  <script src="assets/Sortable.js"></script>
+
+	
+	<script src="assets/app.js"></script>  
 
 <?php include('javascript.php') ?>
    
@@ -104,12 +140,30 @@ $( document ).ready(function() {
 			processData: false
 		});
 		}
-	})
+	});
+	
+	$("#edit-preference").on('submit', function(e) {
+		e.preventDefault();
+		var formData = new FormData(this);
+		$.ajax({
+			url: 'index.php?action=course-edit-preference',
+			data: formData,
+			type: 'POST',
+			success: function(data) {
+				alert(data)
+			},
+			cache: false,
+			contentType: false,
+			processData: false
+		});
+		
+	});
+	
 	
 });
 function courseValidation(){
 if(document.getElementById('title').value.trim()==''){
-	$("#result").html("Please enter title");
+	$("#result").html("<div class='alert alert-warning'>Please enter title</div>");
 	document.getElementById('title').focus();
 	return false;
 }

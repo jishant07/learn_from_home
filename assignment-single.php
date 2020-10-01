@@ -38,10 +38,10 @@
                     <a href="" class="document"><i class="fa fa-file-text-o" aria-hidden="true"></i> Document Name</a>
                     <a href="" class="delete"><i class="fa fa-trash" aria-hidden="true"></i></a>
                 </div-->
-                <?php if($tasks['uploadflag']=='1'){?>
+                <?php //if($tasks['uploadflag']=='1'){?>
 				<input type='file' name='uploaddoc' class="leftfl upload " >
                 
-				<?php } ?>
+				<?php //} ?>
                 <div class="clearfix"></div><br>
                 <input type='submit' name='submit' class="button2 btn-red" value='SUBMIT'>
 				</form>

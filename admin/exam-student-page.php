@@ -4,7 +4,7 @@
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="#"><?=getClassName($exam['class'])?></a></li>
               <li class="breadcrumb-item"><a href="index.php?action=exams&class=<?=$exam['class']?>&subject=<?=$exam['subject']?>">Exams</a></li>
-              <li class="breadcrumb-item"><a href="index.php?action=exam-student-list&id=<?=$_GET['id']?>"><?=date('d M Y',strtotime($exam['opendate']))?></a></li>
+              <li class="breadcrumb-item"><a href="index.php?action=exam-student-list&id=<?=$_GET['id']?>&class=<?=$exam['class']?>"><?=date('d M Y',strtotime($exam['opendate']))?></a></li>
               <li class="breadcrumb-item active" aria-current="page"><?=$student_info['student_name'].' '.$student_info['student_lastname']?></li>
             </ol>
           </nav>

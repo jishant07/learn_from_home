@@ -91,19 +91,17 @@
 					?>
                       <tr>
                         <td>
-                          <a href="" class="d-flex align-items-center">
+                          <a href="index.php?action=edit-teacher&id=<?=$c['t_id']?>" class="d-flex align-items-center">
                             <div class="mr-3">
-							<a href="index.php?action=edit-teacher&id=<?=$c['t_id']?>">
                               <img src="<?=$c['t_pic']?>" class="rounded-circle wd-40" alt="user">
-							  </a>
                             </div>
                             <div class="w-100">
-                              <div class="d-flex justify-content-between"><a href="index.php?action=edit-teacher&id=<?=$c['t_id']?>">
-                               <h6 class="text-body mt-1"><?=$c['t_name']?><?php if($c['t_id']==$classteacher['t_id']) {?> <span class="badge badge-pill badge-primary">CT</span><?php } ?></h6>
-							   </a>
+                              <div class="d-flex justify-content-between">
+                              <h6 class="text-body mt-1"><?=$c['t_name']?><?php if($c['t_id']==$classteacher['t_id']) {?> <span class="badge badge-pill badge-primary">CT</span><?php } ?></h6>
                               </div>
                             </div>
                           </a>
+                          
                         </td>
                         <td>
 						<?php if(!empty($tassign)){

@@ -26,7 +26,14 @@ $question =$exam['question'];
                 <div class="marks"><?=$exam['marks']?> Marks</div>
                 <h1><?=$exam['question']?></h1>
                 <p></p>
-                <a href=""><i class="fa fa-file-text-o" aria-hidden="true"></i> Ref. Document</a>
+				<?php
+					if($exam['referdoc']!=''){
+					$referdoc = 'uploads/evaluation/referdoc/'.$exam['referdoc'];
+					if(file_exists($referdoc)){
+				?>
+                <a href="javascript:window.open('<?=$referdoc?>')"><i class="fa fa-file-text-o" aria-hidden="true"></i> Ref. Document</a>
+					<?php }
+					}					?>
             </div>
 
             <div class="exam-answer col-md-6">
@@ -109,8 +116,12 @@ $question =$exam['question'];
                 
                 <div class="clearfix"></div>
 				<?php } ?>
+				<?php if($exam['uploadflag']==1){ ?>
+				<input type='file' name='uploaddoc' class="leftfl upload " >
+				<div class="clearfix"></div>
+				<?php } ?>
 				</div>
-								 <div class="form-group">
+				<div class="form-group">
                 <input type='submit' class="button2 btn-red" value='SUBMIT'>
 				</div>
 				</form>

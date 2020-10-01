@@ -15,18 +15,18 @@
 					<input type='hidden' name='subject' id='subject' value="<?=$_GET['subject']?>">
 					
 					<div class="form-group">
-						<label>Select Question Type</label>
+						<label>Select Question Type*</label>
 						<select name='qtype' id='qtype' class='form-control mb-3'>
 						<option value='freetextsection'>free text answer</option>
 						<option value='uploadimagesection'>upload image or doc</option>						
 						</select>
 					</div>
 					<div class="form-group">
-						<label>Title</label>
+						<label>Title*</label>
 						<input type="text" class="form-control" placeholder="Title" name='title' id='title'>
 					</div>
 					<div class="form-group">
-						<label>Discription</label>
+						<label>Discription*</label>
 						<textarea class="form-control" placeholder="Discription" rows="5" name='description' id='description'></textarea>
 					</div>
 					<div class="form-group">
@@ -40,7 +40,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label>Submission Last Date</label>
+						<label>Submission Last Date*</label>
 						<div class="input-group date datepicker" id="datePickerExample">
 							<input type="text" class="form-control" name='submitdate' id='submitdate'><span class="input-group-addon"><i data-feather="calendar"></i></span>
 						</div>
@@ -82,17 +82,17 @@ $( document ).ready(function() {
 });
 function assignValidation(){
 if(document.getElementById('title').value.trim()==''){
-	$("#result").html("Please enter title");
+	$("#result").html("<div class='alert alert-warning'>Please enter title</div>");
 	document.getElementById('title').focus();
 	return false;
 }
 if(document.getElementById('description').value.trim()==''){
-	$("#result").html("Please enter description");
+	$("#result").html("<div class='alert alert-warning'>Please enter description</div>");
 	document.getElementById('description').focus();
 	return false;
 }
 if(document.getElementById('submitdate').value.trim()==''){
-	$("#result").html("Please select submission date");
+	$("#result").html("<div class='alert alert-warning'>Please select submission date</div>");
 	document.getElementById('submitdate').focus();
 	return false;
 }

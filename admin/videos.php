@@ -43,7 +43,7 @@ $gclass=$_GET['class'];
 						<?php } ?>
 						</td>
 						<td><?=date('d M Y',strtotime($v['created']))?></td>
-						<td><span class="badge badge-success"><?php echo ($v['createdby']=='teacher')?'you':'Admin'?></span></td>
+						<td><span class="badge badge-success"><?php echo ucfirst($v['createdby'])?></span></td>
 						<td class="w-20"><?=$v['title']?></td>
 						<td class="w-20"><span class="badge badge-info"><?=$v['course']?></span></td>
 						<td>

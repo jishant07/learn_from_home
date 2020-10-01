@@ -3,12 +3,13 @@
         <img src="images/amuze_logo.svg" />
     </div>
 	
-	
-	
     <!--chat-->
     <div id="mySidenav" class="sidenav">
+	<?php //include 'chat/index.html'?>
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <iframe class="chat-iframe" src="chat/group.php?username=<?=$studentname?>&room=<?=$_SESSION['class']?>" ></iframe>
+        <!--iframe class="chat-iframe" src="chat/group.php?username=<?=$studentname?>&room=<?=$_SESSION['class']?>&user=<?=$_GET['user']?>&userpic=<?=$studentpic?>" ></iframe-->
+		
+		<iframe class="chat-iframe" src="chat/index.php?username=<?=$studentname?>&room=<?=$_SESSION['class']?>&user=<?=$_GET['user']?>&userpic=<?=$studentpic?>" ></iframe>
     </div>
     <!--chat-->
 

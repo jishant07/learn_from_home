@@ -2,7 +2,6 @@
 $totquestions = count($details);
 $totsolved = count($ans);
 $notsolved = $totquestions-$totsolved;
-
 $twrong=0;
 $tcorrect=0;
 $obtmarks=0;
@@ -58,11 +57,16 @@ for($i=0; $i<count($ans); $i++){
                 
               </div>
 			  <?php if(!empty($nextexam)){?>
-              <div class="row LastExamScore mt-2">
+               <div class="row LastExamScore mt-2">
                 <div class="col">
-                  <h1>Next Exam</h1>
-                  <div class="exam-time">On <?=date('l H:i A',strtotime($nextexam['opendate']))?><span class="float-right">Subject : <?=getSubject($nextexam['subject'])?></span></div>
-                </div>                
+                  <h1>Next Exam</h1>                  
+                </div> 
+				<div class="col">                 
+                  <div class="exam-time">On <?=date('D h:i A',strtotime($nextexam['opendate']))?></div>
+                </div> 
+				<div class="col">                  
+                  <div class="exam-time"><span class="float-right">Subject : <?=getSubject($nextexam['subject'])?></span></div>
+                </div> 				
               </div>
 			  <?php } ?>
             </a>
@@ -121,7 +125,10 @@ for($i=0; $i<count($ans); $i++){
           <div class="videos-continue tab-pane fade show active" id="continue-watching" role="tabpanel" aria-labelledby="continue-watching-tab">
             <div class="continue-loop" id="continue-loop">
               <?php for($i=0;$i<count($pvideos);$i++){
-				$vthumb = $pvideos[$i]['vthumb']  ;
+				  $p = & $pvideos[$i];
+				$vthumb = $p['vthumb']  ;
+				$per = ($p['watchtime']*100)/$p['duration'];
+				
 			  ?>
 			  <div class="item">
                   <a href="index.php?action=history-videos&id=<?=$pvideos[$i]['id']?>" title="<?=$pvideos[$i]['vtitle']?>" class="video-thumb d-flex align-items-end" style="background: url('<?=$vthumb?>');">
@@ -130,7 +137,7 @@ for($i=0; $i<count($ans); $i++){
                         <?=$pvideos[$i]['vtitle']?>
                       </div>
                       <div class="progress">
-                        <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar" role="progressbar" style="width: <?=$per?>%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                       </div>
                     </div>
                   </a>

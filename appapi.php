@@ -29,6 +29,28 @@ if($action=='login'){
 	
 }
 
+if($action=='forgetpassword'){
+	extract($_GET);
+	$code = trim($username);
+	$oldpass = trim($old_password);
+	$newpass = trim($new_password);
+	
+    $sql="SELECT std_id FROM students WHERE ecode='$code'";
+	$sq4= $conn->query("select pwd FROM students where std_id='$code'");
+	$rw = $sq4->num_rows;
+	$rowmain = $sq4->fetch_assoc();
+	$hash = $rowmain['pwd'];
+	if (password_verify($oldpass, $hash)) {		
+		$newpwd = password_hash($newpass, PASSWORD_DEFAULT);	
+		$conn->query("update students set pwd='$newpwd' where std_id='$std_id'");
+		$message = "Password changes successfuly";
+	}
+	else{
+		$message = "Please enter correct password";
+	}
+	$arr['message'] = $message;
+	echo json_encode($arr);	
+}
 if($action=='register'){
 	$ecode = trim($jdata['stdcode']);
 	$pwd = password_hash(trim($jdata['password']), PASSWORD_DEFAULT); 
@@ -64,7 +86,8 @@ if($action=='register'){
 			$imgname=$ecode.'.'.$ext;
 			$path=$url."uploads/images/students/$imgname";
 			if(move_uploaded_file($tmpname, $path)){
-				$sql="update students set image='$imgname' where std_id='$insert_id'";$conn->query($sql);	
+				$sql="update students set image='$imgname' where std_id='$insert_id'";
+				$conn->query($sql);
 			}
 			echo 'success';
 		} else echo 'failure';	
@@ -285,6 +308,36 @@ if($action == 'list-gen') {
 		//echo'<pre>',print_r($arr);
 		echo json_encode($arr);
 	}
+	else if($category == 'assignment-single')
+	{		
+		$tasks = getAssignment($_GET['id'],$_GET['type']);
+		echo json_encode($tasks);
+		//print_r($tasks);
+	}
+	else if($category == 'assignment-submit')
+	{		
+		extract($_REQUEST);
+		$answer=addslashes(trim($answer));
+		if($type=='doc') $questype='tbl_questiondoc';
+		if($type=='freetext') $questype='tbl_freetext';
+		$sql = "INSERT INTO tbl_answer(studid,question,question_type,answer,created) 
+		VALUES('$emp_ecode','$id','$questype','$answer',NOW())";
+		if(mysqli_query($conn,$sql)) {
+			if(isset($_FILES['file'])){
+				$lastid = mysqli_insert_id($conn);
+				$fileType = strtolower(pathinfo($_FILES['file']['name'],PATHINFO_EXTENSION));
+				$filename='doc-'.$lastid.'.'.$fileType;
+				$target='uploads/evaluation/'.$filename;
+				if(move_uploaded_file($_FILES['file']['tmp_name'],$target)){
+					$sqlu="UPDATE tbl_answer SET document='$filename' WHERE id='$lastid'";
+					$conn->query($sqlu);
+				}
+			}
+			$arr['message']='success'; 	
+		}	
+		else $arr['message']='fail';
+		echo json_encode($arr);
+	}
 	else if($category == 'prevassign')
 	{
 		$assign = getLastAssignment($emp_ecode);
@@ -316,12 +369,16 @@ if($action == 'list-gen') {
 		if(isset($_GET['cid'])){
 			$cid=$_GET['cid'];	
 			$row= getCourse($cid);
-			//print_r($row);;
+		
 			$listvideos=explode(',',$row['videos']);
 			$listprefs=explode(',',$row['preferences']);
 			$chapter = $row['chapter'];
+			if(count($listvideos)==count($listprefs))
 			$newarr=array_combine($listprefs,$listvideos);
-			//$newarr = $row['videoarr'];
+			else $newarr=$listvideos;
+			
+			
+			
 			ksort($newarr);	
 			if(!isset($_GET['id'])){
 				$varray=$newarr;
@@ -341,7 +398,9 @@ if($action == 'list-gen') {
 				$listvideos=explode(',',$row['videos']);
 				$listprefs=explode(',',$row['preferences']);
 				$chapter = $row['chapter'];
+				if(count($listvideos)==count($listprefs))
 				$newarr=array_combine($listprefs,$listvideos);
+				else $newarr=$listvideos;
 				//$newarr = $row['videoarr'];
 				ksort($newarr);	
 				//print_r($newarr);
@@ -349,6 +408,7 @@ if($action == 'list-gen') {
 		}
 		
 		$video = course_video($_GET['id']);
+		$video['document'] = $url.'uploads/coursedocuments/'.$video['document'];
 		$subject_name = getSubject($video['subject']);
 		$courses =  getCourses($video['subject'],$emp_ecode);
 		$arr['videoinfo']=$video;
@@ -389,8 +449,26 @@ if($action == 'list-gen') {
 	else if($category == 'exams')
 	{		
 		$examdetails = getExams();
+		$qdetails = $examdetails['qdetails'];
+		//echo'<pre>',	print_r($examdetails);
+		for($i=0; $i<count($qdetails); $i++){
+			$ex[$i] = & $qdetails[$i];
+			$ex[$i]['ansid'] = checkAnswer($emp_ecode,$examdetails[$i]['id'],$examdetails[$i]['qtype']);
+		}				
+		echo json_encode($ex);
+	}
+	else if($category == 'exam-single')
+	{		
+		$examdetails = getExamsQuestion($_GET['id'],$_GET['type']);
 		echo json_encode($examdetails);
 	}
+	
+	else if($category == 'exam-submit')
+	{		
+		submit_exam_api();
+		echo json_encode($examdetails);
+	}
+	
 	else if($category == 'prevexams')
 	{		
 		$lastexam = getLastExam();	
@@ -410,6 +488,20 @@ if($action == 'list-gen') {
 		$arr['students'] =  getAllStudents();
 		$arr['subjects'] =  getSubjects();
 		echo json_encode($arr);
+	}
+	else if($category == 'deletetask')
+	{		
+		extract($_GET);		
+		$sql="delete from student_task where id='$taskid'";
+		if(mysqli_query($conn,$sql)) echo 'success';else echo 'failure';		
+	}
+	else if($category == 'updatetask')
+	{		
+		extract($_GET);
+		$title=addslashes(trim($title));
+		$description=addslashes(trim($description));		
+		$sql="update student_task set taskname='$title',description='$description',allday='$all_day',taskdate='$date',time='$time',color='$color' where id='$taskid'";
+		if(mysqli_query($conn,$sql)) echo 'success';else echo 'failure';		
 	}
 	else if($category == 'addtask')
 	{		

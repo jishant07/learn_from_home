@@ -39,6 +39,9 @@ else {
 			<div class="card-body"><div id='result'></div>
 				<form class="forms-sample">
 				<input type='hidden' name='std_id' value="<?=$student['std_id']?>">
+					<div class="form-group d-flex justify-content-end">
+						<a href="index.php?action=students-stats&sid=<?=$student['std_id']?>" class="btn btn-dark mr-0">View Stats</a>
+					</div>
 					<div class="form-group">
 						<div class="row">
 							<div class="col-12 col-md-6">
@@ -77,47 +80,60 @@ else {
 					<div class="form-group">
 						<div class="row">
 							<div class="col-12 col-md-6">
-								<label>Fisrt Name</label>
+								<label>Fisrt Name*</label>
 								<input type="text" class="form-control" placeholder="Fisrt Name" id='student_name' name='student_name' value="<?=$student['student_name']?>" <?=$readonly?>>
 							</div>
 							<div class="col-12 col-md-6">
-								<label>Last Name</label>
+								<label>Last Name*</label>
 								<input type="text" class="form-control" placeholder="Last Name"  id='student_lastname' name='student_lastname' value="<?=$student['student_lastname']?>" <?=$readonly?>>
 							</div>
 						</div>
 						
 					</div>
 					<div class="form-group">
-						<div class="col-12 col-md-6">
-							<label>Date of Birth</label>
-							<?php if($_SESSION['u_type']=='admin') {?>
-							<div class="input-group date datepicker" id="datePickerExample">
+						<div class="row">
+							<div class="col-12 col-md-6">
+								<label>Date of Birth*</label>
+								<?php if($_SESSION['u_type']=='admin') {?>
+								<div class="input-group date datepicker" id="datePickerExample">
+									
+									<input type="text" class="form-control" id='date_birth' name='date_birth' value="<?=$student['date_birth']?>" <?=$readonly?> ><span class="input-group-addon"><i data-feather="calendar"></i></span>
+									</div><?php } else echo $student['date_birth'] ?>
 								
-								<input type="text" class="form-control" id='date_birth' name='date_birth' value="<?=$student['date_birth']?>" <?=$readonly?> ><span class="input-group-addon"><i data-feather="calendar"></i></span>
-								</div><?php } else echo $student['date_birth'] ?>
-							
+							</div>
+							<div class="col-12 col-md-6">
+								<label>Gender*</label><br>
+								<div class="form-check form-check-inline">
+									<label class="form-check-label">
+										<input type="radio" class="form-check-input" value="Male" name='gender' <?php if($student['gender']=='Male') echo 'checked';?> <?=$disable?>>
+										Male
+									</label>
+								</div>
+								<div class="form-check form-check-inline">
+									<label class="form-check-label">
+										<input type="radio" value="Female" name='gender' <?php if($student['gender']=='Female') echo 'checked';?> <?=$disable?>>
+										Female
+									</label>
+								</div>								
+							</div>
 						</div>
-						<div class="col-12 col-md-6">
-							<label>Gender</label>
-							Male <input type="radio" class="form-control" value="Male" name='gender' <?php if($student['gender']=='Male') echo 'checked';?> <?=$disable?>><BR>
-							Female <input type="radio" class="form-control" value="Female" name='gender' <?php if($student['gender']=='Female') echo 'checked';?> <?=$disable?>>
-						</div>
+						
 					</div>
 					
 					
 					
 					<div class="form-group">
-						<label>Address</label>
+						<label>Address*</label>
 						<textarea class="form-control" placeholder="Address" rows="5" id='address' name='address' <?=$readonly?>><?=$student['address']?></textarea>
 					</div>
 					<div class="form-group">
 						<div class="row">
 							<div class="col-12 col-md-6">
-								<label>Father Name</label>
+								<label>Father Name*</label>
 								<input type="text" class="form-control" placeholder="Father Name"  id='father_name' name='father_name' value="<?=$student['father_name']?>" <?=$readonly?>>
 							</div>
 							<div class="col-12 col-md-6">
-								<label>Father Contact No</label>
+								<label>Father Contact No*</label>
 								<input type="text" class="form-control" placeholder="Father Contact No" id='father_contact' name='father_contact' value="<?=$student['father_contact']?>" <?=$readonly?>>
 							</div>
 							
@@ -138,7 +154,7 @@ else {
 						
 					</div>
 					<div class="form-group">
-						<label>Email ID</label>
+						<label>Email ID*</label>
 						<input type="text" class="form-control" placeholder="Email ID" id='email' name='email' value="<?=$student['email']?>" <?=$readonly?>>								
 					</div>                                   
 					<hr>
@@ -177,52 +193,52 @@ $( document ).ready(function() {
 });
 function studentValidation(){
 if(document.getElementById('class').value.trim()==''){
-	$("#result").html("Please select class");
+	$("#result").html("<div class='alert alert-warning'>Please select class</div>");
 	document.getElementById('class').focus();
 	return false;
 }
 if(document.getElementById('student_name').value.trim()==''){
-	$("#result").html("Please enter student first name");
+	$("#result").html("<div class='alert alert-warning'>Please enter student first name</div>");
 	document.getElementById('student_name').focus();
 	return false;
 }
 if(document.getElementById('student_lastname').value.trim()==''){
-	$("#result").html("Please enter last name");
+	$("#result").html("<div class='alert alert-warning'>Please enter last name</div>");
 	document.getElementById('student_lastname').focus();
 	return false;
 }
 
 if(document.getElementById('date_birth').value.trim()==''){
-	$("#result").html("Please select birth date");
+	$("#result").html("<div class='alert alert-warning'>Please select birth date</div>");
 	document.getElementById('date_birth').focus();
 	return false;
 }
 var option=document.getElementsByName('gender');
 
 if (!(option[0].checked || option[1].checked)) {
-    alert("Please Select Gender");
+    $("#result").html("<div class='alert alert-warning'>Please Select Gender</div>");
     return false;
 }
 
 if(document.getElementById('address').value.trim()==''){
-	$("#result").html("Please enter address");
+	$("#result").html("<div class='alert alert-warning'>Please enter address</div>");
 	document.getElementById('address').focus();
 	return false;
 }
 
 if(document.getElementById('father_name').value.trim()==''){
-	$("#result").html("Please enter father name");
+	$("#result").html("<div class='alert alert-warning'>Please enter father name</div>");
 	document.getElementById('father_name').focus();
 	return false;
 }
 if(document.getElementById('father_contact').value.trim()==''){
-	$("#result").html("Please enter father mobile number");
+	$("#result").html("<div class='alert alert-warning'>Please enter father mobile number</div>");
 	document.getElementById('father_contact').focus();
 	return false;
 }
 
 if(document.getElementById('email').value==''){
-	$("#result").html("Please enter email id");
+	$("#result").html("<div class='alert alert-warning'>Please enter email id</div>");
 	document.getElementById('email').focus();
 	return false;
 }

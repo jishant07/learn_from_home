@@ -25,7 +25,7 @@ $currdate = date('Y-m-d');
             </div>
             <div class="col-5 col-md-2">
                 <div class="date-picker">                    
-                    <input class="form-control" id="date" name="date" placeholder="Today" type="text" autocomplete='off' value="<?=$today?>" onchange="changeDate(this.value)"/>
+                    <input class="form-control" id="date" name="date" placeholder="Today" type="text" autocomplete='off' value="<?=$gdate?>" onchange="changeDate(this.value)"/>
 					
 
                 </div>
@@ -69,10 +69,10 @@ $currdate = date('Y-m-d');
 								$closedate = $ts['closedate'];
 								$opendate = $ts['opendate'];
 								if($currdate>$closedate)$href="javascript:alert('submission date is expired')";
-								if($currdate<$opendate){
+								/*if($currdate<$opendate){
 									$href="javascript:alert('You can not submit this question before start date')";
 									$styl='display:none;';
-								}
+								}*/
 							}	
 							
 						?>

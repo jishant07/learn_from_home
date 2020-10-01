@@ -60,9 +60,10 @@ $seldate = 'Today';
 				
 				?>
 				<li class="cd-schedule__group">
-                <div class="cd-schedule__top-info"><span><?php echo $date?></span></div>
-        
+                <div class="cd-schedule__top-info"><span><?php echo $date?></span><BR><BR><BR></div>
+				<div style='clear:both' class='clearfix'></div>
                 <ul>
+				
 				<?php	
 				$maxslotarr=array();
 				$event = count($day_slots);
@@ -74,7 +75,10 @@ $seldate = 'Today';
 						if($type=='livesession')$link='index.php?action=live-video&id='.$vk['id'];
 						
 						if($type=='assignment'){
-							$link='index.php?action=assignments&adate='.$vk['start_date'];
+							
+							$start_date = date('Y-m-d',strtotime($vk['start_date']));
+							$link='index.php?action=assignments&adate='.$start_date;
+							
 							$slot1 = date('H:i', strtotime($lasttime)); // 10:09 + 1 hour
 							if($slot1<'10:30')$slot1='10:30';
 							$slot2 = date('H:i',strtotime($slot1) + 120*60); // 10:09 + 1 hour
@@ -96,16 +100,13 @@ $seldate = 'Today';
                     <a href='#'  data-start="<?=$slot1?>" data-end="<?=$slot2?>" data-content="event-abs-circuit" data-event="event-<?=$event?>" href="#0">
                         <em class="cd-schedule__name"><?=$subject_name?></em>
                     </a>
-                    </li>
+                    </li>					
 					<?php
 					$event--;
-					} ?>
-                   
+					} ?>                   
                 </ul>
                 </li>
-        <?php } ?>
-                
-                
+        <?php } ?>               
             </ul>
             </div>
         

@@ -1,5 +1,18 @@
 <?php
  $sub_start_at = $video['sub_start_at'];
+ $times =  explode(':',date('H:i:s',strtotime($sub_start_at)));
+ $start_sec = $times[0]*3600+$times[1]*60+$times[2]; 
+ $currentTimeinSeconds = time();  
+  
+ $currentDate = date('H:i:s', $currentTimeinSeconds); 
+ $times2 =  explode(':',$currentDate);
+ $current_sec = $times2[0]*3600+$times2[1]*60+$times2[2];
+ 
+ 
+ 
+ 
+ 
+ 
 $sub_end_at = $video['sub_end_at'];
 	$video_id = $video['vid_id'];
 	$studentw = watchingVideos($emp_ecode,$video_id);
@@ -16,22 +29,46 @@ $sub_end_at = $video['sub_end_at'];
 	}
 		
 ?>	
+<link href="css/video-js-live.css" rel="stylesheet" />
+<style>.vjs-play-control{
+  display: none !important;
+} 
+.vjs-tech {
+  pointer-events: none;
+}
+.vjs-remaining-time-display{ display:none !important;}
+.vjs-duration, vjs-time-control, vjs-control{ display:none !important;}
+.vjs-progress-control, vjs-control{ display:none !important;}
+</style>
+<script src="http://vjs.zencdn.net/5.19.2/video.js"></script>
+<script src="http://unpkg.com/videojs-contrib-media-sources@4.4.4/dist/videojs-contrib-media-sources.min.js"></script>
+<script src="js/dist/videojs-contrib-hlsjs.min.js"></script>
 <input type='hidden' id='raiseflag' value='<?=$flag?>'>
 <input type='hidden' id='videoid' value='<?=$video['vid_id']?>'>
-	<script type="text/javascript" src="https://content.jwplatform.com/libraries/P7tGbqKk.js"></script>
-    <script type="text/javascript">jwplayer.key="Df1+QHbNEKwrJaZ/gVnAoOQqjosU5yycYtQcnPGsmgY=";</script>
+	
    <section class="container-fluid live-video mainwrapper">
         <div class="row">
             <div class="col-md-7">
 			<?php $todate=date('Y-m-d H:i:s');
 			//echo '<BR>',$sub_start_at;
 				if($todate>=$sub_start_at && $todate<=$sub_end_at){
+					
+					$diff = $current_sec-$start_sec;
 			?>			
-                <iframe frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="580"
+			<video id="player" class="video-js vjs-default-skin" height="360" width="640" controls autoplay preload="none" data-setup='{ "controlBar": { "pause": false } }'>
+			<source src="<?=$video['aws_link']?>"
+            type="application/x-mpegURL"/><?//=$video['aws_link']?>
+</video>
+
+<script>
+
+    var player = videojs('#player',{disableVideoPlayPauseClick: false});
+	player.currentTime(<?=$diff?>);
+</script>      <!--iframe frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="580"
 src="https://www.youtube.com/embed/PSJG5W04LGM">
-</iframe>
+</iframe-->
 <!--iframe src="jwplayer.php?videolink=<?php echo $video['videolink'] ?>" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="580"></iframe-->
-				<?php } else {?>
+				<?php } else { ?>
 				<div class="Waiting-video d-flex align-items-center justify-content-center"><div><h2>This live session will start at</h2><div class="text"><?php echo date('d M Y H:i A',strtotime($sub_start_at));?></div></div></div><?php } ?>
             </div>
 			<div class="col-md-5 content">

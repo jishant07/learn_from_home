@@ -15,7 +15,7 @@
 										<input type='hidden' name='class' id='class' value="<?=$doc['class']?>">
 										<input type='hidden' name='subject' id='subject' value="<?=$doc['subject']?>">
 									<div class="form-group">
-										<label>Title</label>
+										<label>Title*</label>
 										<input type="text" class="form-control" placeholder="Title" id='name' name='name' value="<?=stripslashes($doc['name'])?>">
                                     </div>
                                    
@@ -85,7 +85,7 @@ $( document ).ready(function() {
 			processData: false
 		});
 		} else{
-			$("#result").html("Please enter document title");
+			$("#result").html("<div class='alert alert-warning'>Please enter document title</div>");
 		}
 	})
 	

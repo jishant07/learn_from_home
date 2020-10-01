@@ -1,3 +1,31 @@
+        <link href="css/cropper.min.css" rel="stylesheet" type="text/css"/>
+<style>
+            #change-profile .preview {
+
+            }
+
+            .priview-wraper{
+                width: 100px;
+                height:100px;
+                position: absolute;
+                top: 25%;
+                right: 10%;
+                overflow: hidden;
+                border-radius: 100%;
+
+
+            }
+
+            .priview-wraper-origal{
+                width: 100px;
+                height:100px;
+                overflow: hidden;
+                border-radius: 100%;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: 100%;
+            }
+        </style>
 <nav class="page-breadcrumb">
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="index.php?action=students">Students</a></li>
@@ -9,9 +37,10 @@
 		<div class="card"><form class="forms-sample" id="frmstudent" autocomplete='off' enctype= "multipart/form-data">
 			<div class="card-body">
 				<div class="mb-2">
-					<input type="file" id="myDropify" name="myDropify" class="border"/>					
-				</div>				
+					<input type="file" id="myDropify" name="myDropify"  accept="image/*" class="border" onchange="loadFile(event)"/>					
+				</div>
 			</div>
+			<div class="preview"></div>
 		</div>
 	</div>
 	<div class="col-md-9 grid-margin stretch-card">
@@ -46,20 +75,32 @@
 							</div>
 						</div>					
 					</div>
-					<div class="form-group">
-						<div class="col-12 col-md-6">
-							<label>Date of Birth</label>
-							<div class="input-group date datepicker" id="datePickerExample">
-								<input type="text" class="form-control" id='date_birth' name='date_birth'><span class="input-group-addon"><i data-feather="calendar"></i></span>
-							</div>
-						</div>
-						<div class="col-12 col-md-6">
-							<label>Gender</label>
-							Male <input type="radio" class="form-control" value="Male" name='gender'><BR>
-							Female <input type="radio" class="form-control" value="Female" name='gender'>
-						</div>
-					</div>
 					
+					<div class="form-group">
+						<div class="row">
+							<div class="col-12 col-md-6">
+								<label>Date of Birth</label>								
+								<div class="input-group date datepicker" id="datePickerExample">
+									<input type="text" class="form-control" id='date_birth' name='date_birth'><span class="input-group-addon"><i data-feather="calendar"></i></span>
+								</div>								
+							</div>
+							<div class="col-12 col-md-6">
+								<label>Gender</label><br>
+								<div class="form-check form-check-inline">
+									<label class="form-check-label">
+										<input type="radio" class="form-check-input" value="Male" name='gender'>
+										Male
+									</label>
+								</div>
+								<div class="form-check form-check-inline">
+									<label class="form-check-label">
+										<input type="radio" value="Female" name='gender'>
+										Female
+									</label>
+								</div>								
+							</div>
+						</div>						
+					</div>
 					
 					
 					<div class="form-group">
@@ -98,7 +139,8 @@
 						<input type="text" class="form-control" placeholder="Email ID" id='email' name='email'>								
 					</div>                                   
 					<hr>
-					<button type="submit" class="btn btn-primary mr-2 mt-2">Submit</button>
+					<input type='hidden' id='canvascrp' name='canvascrp'>
+					<button type="submit" class="btn btn-primary mr-2 mt-2" id='submitp'>Submit</button>
 					<button class="btn btn-light mt-2">Cancel</button>
 				</form>
 			</div>
@@ -106,7 +148,10 @@
 	</div>
 </div>
  <?php include('javascript.php') ?>
+        
+       
 <script>
+
 $( document ).ready(function() {
 	$("#frmstudent").on('submit', function(e) {
 		e.preventDefault();
@@ -131,58 +176,59 @@ $( document ).ready(function() {
 });
 function studentValidation(){
 if(document.getElementById('class').value.trim()==''){
-	$("#result").html("Please select class");
+	$("#result").html("<div class='alert alert-warning'>Please select class</div>");
 	document.getElementById('class').focus();
 	return false;
 }
 if(document.getElementById('student_name').value.trim()==''){
-	$("#result").html("Please enter student first name");
+	$("#result").html("<div class='alert alert-warning'>Please enter student first name</div>");
 	document.getElementById('student_name').focus();
 	return false;
 }
 if(document.getElementById('student_lastname').value.trim()==''){
-	$("#result").html("Please enter last name");
+	$("#result").html("<div class='alert alert-warning'>Please enter last name</div>");
 	document.getElementById('student_lastname').focus();
 	return false;
 }
 
 if(document.getElementById('date_birth').value.trim()==''){
-	$("#result").html("Please select birth date");
+	$("#result").html("<div class='alert alert-warning'>Please select birth date</div>");
 	document.getElementById('date_birth').focus();
 	return false;
 }
 var option=document.getElementsByName('gender');
 
 if (!(option[0].checked || option[1].checked)) {
-    alert("Please Select Gender");
+   // alert("");
+	$("#result").html("<div class='alert alert-warning'>Please Select Gender</div>");
     return false;
 }
 
 if(document.getElementById('address').value.trim()==''){
-	$("#result").html("Please enter address");
+	$("#result").html("<div class='alert alert-warning'>Please enter address</div>");
 	document.getElementById('address').focus();
 	return false;
 }
 
 if(document.getElementById('father_name').value.trim()==''){
-	$("#result").html("Please enter father name");
+	$("#result").html("<div class='alert alert-warning'>Please enter father name</div>");
 	document.getElementById('father_name').focus();
 	return false;
 }
 if(document.getElementById('father_contact').value.trim()==''){
-	$("#result").html("Please enter father mobile number");
+	$("#result").html("<div class='alert alert-warning'>Please enter father mobile number</div>");
 	document.getElementById('father_contact').focus();
 	return false;
 }
 
 if(document.getElementById('email').value==''){
-	$("#result").html("Please enter email id");
+	$("#result").html("<div class='alert alert-warning'>Please enter email id</div>");
 	document.getElementById('email').focus();
 	return false;
 }
 
 if(document.getElementById('myDropify').value==''){
-	$("#result").html("Please select student pic");
+	$("#result").html("<div class='alert alert-warning'>Please select student pic</div>");
 	document.getElementById('myDropify').focus();
 	return false;
 }

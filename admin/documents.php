@@ -35,7 +35,7 @@ $gclass=$_GET['class'];
 						?>
                       <tr>
                         <td><?=date('d M Y',strtotime($d['created']))?></td>
-                        <td><span class="badge badge-success">You</span></td>
+                        <td><span class="badge badge-success"><?=$d['createdby']?></span></td>
                         <td><?=$d['name']?></td>
                         <td><button type="button" class="btn btn-outline-info" onclick="window.open('<?=$file?>')">View</button></td>
                         <td>

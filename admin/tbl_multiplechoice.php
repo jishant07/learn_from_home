@@ -7,8 +7,8 @@ $answer = explode('-',$data['answer']);
           <nav class="page-breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="#"><?=getClassName($exam['class'])?></a></li>
-              <li class="breadcrumb-item"><a href="index.php?action=exams&class=<?=$exam['class']?>&subject=<?=$exam['subject']?>">Exams</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Edit Exam</li>
+			  <li class="breadcrumb-item"><a href="index.php?action=edit-new-exam&id=<?=$_GET['evid']?>">Exam</a></li>
+			  <li class="breadcrumb-item active" aria-current="page">Edit Exam</li>
             </ol>
           </nav>          
         </div>
@@ -29,7 +29,7 @@ $answer = explode('-',$data['answer']);
 	<div class="row">
 		<div class="col-6">
 			<label class="d-inline-block mt-2 mr-2">Marks</label>
-			<input type="text" class="form-control d-inline-block wd-80" name='multiplemarks' id='multiplemarks' maxlength=2 size=2  onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;" value="<?=$data['marks']?>">
+			<input type="text" class="form-control d-inline-block wd-80" name='multiplemarks' id='multiplemarks' maxlength=2 size=2 value="<?=$data['marks']?>" readonly>
 		</div>		
 	</div>
   </div>
@@ -43,13 +43,29 @@ $answer = explode('-',$data['answer']);
   </div>
 
 <div id='multipleanswerchoice'>
+	<div class="row mt-3">
+		<div class="col-12">
+			<label>Check only Right Answers</label>
+		</div>
+	</div>
 	<?php
 	for($i=0;$i<count($options); $i++){
 		$k=$i+1;
 		if(in_array($k,$answer)) $chk='checked'; else $chk='';
 	?>
+	
 	<div class='form-group' id='multipleans<?=$k?>'> 
-		<div class='left anspadd'>ans<?=$k?></div> <div class='left'><input type='text' name='muloption[]' id='muloption<?=$k?>' value="<?=$options[$i]?>"> </div><div class='left'><input type="checkbox" id="ans<?=$k?>" name="ans[]" value="<?=$k?>" <?=$chk?>></div>
+		<div class="row">
+			<div class="col-1"></div>
+			<div class="col-1 form-check">
+				<label class="form-check-label">
+					<input type="checkbox" class="form-check-input" id="ans<?=$k?>" name="ans[]" value="<?=$k?>" <?=$chk?>>
+				</label>
+			</div>
+			<div class="col-10">
+				<input type='text' class="form-control" name='muloption[]' id='muloption<?=$k?>' value="<?=$options[$i]?>">
+			</div>
+		</div>				
 	</div>
 	<?php } ?>
 </div>
@@ -130,9 +146,25 @@ $answer = explode('-',$data['answer']);
 	  let rval=parseInt($('#noofmultiplechoice').val())+parseInt(1);
 	  if(rval>=4) $('#removemultiplerow').show();
 	  let id = 'multipleans'+rval
-	  let rowmatch = `<div class='clrboth m10' id='${id}'> 
+	  /*let rowmatch = `<div class='clrboth m10' id='${id}'> 
 					<div class='left anspadd'>ans${rval}</div> <div class='left'><input type='text' name='muloption[]' id='muloption${rval}'> </div><div class='left'><input type="checkbox" id="ans${rval}" name="ans[]" value="${rval}"></div>				
 				</div>`;
+	  */
+	  let rowmatch = `<div class='form-group m10' id='${id}'> 
+					<div class="row">
+						<div class="col-1"></div>
+						<div class="col-1 form-check">
+							<label class="form-check-label">
+								<input type="checkbox" class="form-check-input" id="ans${rval}" name="ans[]" value="${rval}">
+								<i class="input-frame"></i>
+							</label>
+						</div>
+						<div class="col-10">
+							<input type='text' class="form-control" name='muloption[]' id='muloption${rval}'>
+						</div>
+					</div>				
+				</div>`;
+	  
 	  
   $( "#multipleanswerchoice" ).append( rowmatch );
   $('#noofmultiplechoice').val(rval)

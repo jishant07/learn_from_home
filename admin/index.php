@@ -2,6 +2,7 @@
 <?php
 session_start();
 error_reporting(E_ALL);
+error_reporting(0);
 include '../model/config.php';
 include 'functions/functions.php';
 if(isset($_GET['action']))
@@ -11,6 +12,7 @@ if(!isset($_SESSION['tid'])) {header("location:login.php");exit;}
 //$_SESSION['tid']='1';
 //$_SESSION['tcode']='t001';
 //$_SESSION['u_type']='teacher';
+
 if($action!='add-new-exam'){
 	unset($_SESSION['tot_marks']);
 	unset($_SESSION['qcount']);
@@ -18,7 +20,8 @@ if($action!='add-new-exam'){
 }
 $rclass=explode(',',$_SESSION['class']);
 $rclassn = $rclass[0];
-//if($_SESSION['u_type']=='teacher' && $action=='home') {header("location:index.php?action=classroom&class=$rclassn");exit;}
+
+$folder='';
 switch($action){
 	case 'home':
 		$live = getAlLiveSessions();
@@ -63,6 +66,9 @@ switch($action){
 	break;
 	case 'course-add':		
 		addCourse();exit;
+	break;
+	case 'course-edit-preference':		
+		courseEditPreference();exit;
 	break;
 	
 	case 'videos':	
@@ -186,6 +192,16 @@ switch($action){
 		actionsubject();exit;
 	break;
 	
+	//new section wise exam
+	case 'examsnew':
+		unset($_SESSION['exam']);
+		$exams = getClassExams($_GET['class'],$_GET['subject']);		
+		$pexams = getPrevClassExams($_GET['class'],$_GET['subject']);		
+	break;
+	
+	//end new section wise exam
+	
+	
 	case 'exams':
 		$exams = getClassExams($_GET['class'],$_GET['subject']);		
 		$pexams = getPrevClassExams($_GET['class'],$_GET['subject']);		
@@ -212,6 +228,9 @@ switch($action){
 			//echo'<pre>',print_r($exam);	exit;	
 	break;
 	
+	case 'exam-delete':
+		examDelete($_GET['id']);
+	break;
 	case 'changeStatusExam':
 	changeStatusExam($_GET['i']);exit;
 	break;
@@ -219,6 +238,7 @@ switch($action){
 	case 'edit-question':
 		$type = $_GET['type']; 
 		$data = getQuestion($_GET['id'],$_GET['type']);
+		$exam = getExam($_GET['evid']);
 		$action=$type;	
 		//print_r($data);exit;
 	break;
@@ -276,7 +296,7 @@ switch($action){
 	
 	case 'students':
 		$students = getAllStudentsNew();
-		//echo'<pre>',print_r($students[0]);exit;
+		//echo'<pre>',print_r($students);exit;
 	break;
 	case 'edit-student':
 		$student = getStudent($_GET['id']);
@@ -317,9 +337,45 @@ switch($action){
 		uploadTeacherCSV();exit;	
 	break;
 	
+	
+	case 'createevaluation':		
+	$folder='newexam/';
+	break;
+	
+	case 'students-stats':
+		$sinfo=getStudentInfo($_GET['sid']);
+		//print_r($sinfo);
+		$sessions=getStatsLiveSession($sinfo['dept_id']);
+		
+		
+		$freeassignemnt=getStatsAssignmentFreeText($sinfo['dept_id']);
+		$docassignemnt=getStatsAssignmentDoc($sinfo['dept_id']);
+		
+		$exam= getStatsExams($sinfo['dept_id']);
+		
+		$stats = getStudentStats($sinfo['ecode']);
+		//print_r($stats);exit;
+	break;
+	case 'students-live-sessions':
+		$sinfo=getStudentInfo($_GET['sid']);
+		$sessions=getStatsLiveSession($sinfo['dept_id']);
+		$stats = getStudentStats($sinfo['ecode']);
+	break;
+	case 'students-assignments':
+		$sinfo=getStudentInfo($_GET['sid']);
+		$freeassignemnt=getStatsAssignmentFreeText($sinfo['dept_id']);
+		$docassignemnt=getStatsAssignmentDoc($sinfo['dept_id']);
+		$stats = getStudentStats($sinfo['ecode']);
+	break;
+	case 'students-exam':
+		$sinfo=getStudentInfo($_GET['sid']);
+		$exam= getStatsExams($sinfo['dept_id']);
+		
+		//$stats = getStudentStats($sinfo['ecode']);
+	break;
 }
 
-$file="$action.php";	
+$file="$folder$action.php";	
 if($_SESSION['u_type']=='teacher'){
 $tclasses = getTeacherClasses();
 $tsubjects = getTeacherSubjectByClasses($_SESSION['tid']);

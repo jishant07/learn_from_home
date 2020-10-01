@@ -15,14 +15,14 @@
 					<input type='hidden' name='subject' id='subject' value="<?=$_GET['subject']?>">
 						
 					<div class="form-group">
-						<label>Title</label>
+						<label>Title*</label>
 						<input type="text" class="form-control" placeholder="Title" id='title' name='title'>
 					</div>
 				   
 					
 					
 					<div class="form-group">
-						<label>Upload Thumbnail</label>
+						<label>Upload Thumbnail*</label>
 						<input type="file" id="myDropify" name="myDropify" class="border"/>
 					</div>
 					<button type="submit" class="btn btn-primary mr-2 mt-2">Submit</button>
@@ -97,12 +97,12 @@ $( document ).ready(function() {
 });
 function courseValidation(){
 if(document.getElementById('title').value.trim()==''){
-	$("#result").html("Please enter title");
+	$("#result").html("<div class='alert alert-warning'>Please enter title</div>");
 	document.getElementById('title').focus();
 	return false;
 }
 if(document.getElementById('myDropify').value.trim()==''){
-	$("#result").html("Please select image");
+	$("#result").html("<div class='alert alert-warning'>Please select image</div>");
 	document.getElementById('myDropify').focus();
 	return false;
 }

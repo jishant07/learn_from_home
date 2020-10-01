@@ -1,11 +1,17 @@
 <?php $students = watchingVideos($video['vid_id']);?>
-<script type="text/javascript" src="https://content.jwplatform.com/libraries/P7tGbqKk.js"></script>
-<script type="text/javascript">jwplayer.key="Df1+QHbNEKwrJaZ/gVnAoOQqjosU5yycYtQcnPGsmgY=";</script>
+
+<link href="../css/video-js-live.css" rel="stylesheet" />
+<script src="http://vjs.zencdn.net/5.19.2/video.js"></script>
+<script src="http://unpkg.com/videojs-contrib-media-sources@4.4.4/dist/videojs-contrib-media-sources.min.js"></script>
+<script src="../js/dist/videojs-contrib-hlsjs.min.js"></script>
+
+
+
 <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
 	<nav class="page-breadcrumb">
 		<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="#"><?=getClassName($video['vid_class'])?></a></li>
-		<li class="breadcrumb-item"><a href="#"><?=getSubject($video['vid_sub'])?></a></li>
+		<li class="breadcrumb-item"><a href="index.php?action=live-sessions&class=<?=$video['vid_class']?>&subject=<?=$video['vid_sub']?>"><?=getSubject($video['vid_sub'])?></a></li>
 		<li class="breadcrumb-item active" aria-current="page">Live</li>
 		</ol>
 	</nav>
@@ -27,32 +33,26 @@
 	<div class="col-md-7 stretch-card">
 		<div class="card">
 			<div class="card-body">
-				<!--img src="assets/images/live.jpg" width="100%" /-->
-				<div id="player">
-	
-				</div>
-				<script type="text/javascript">
-				jwplayer("player").setup({
-				width: '100%',
-				autostart: true,
-				image: "<?//=$video['vthumb']?>",
-				//  logo: {file:""},
-				sources: [{
-				file: "<?php echo $video['videolink'] ?>"
-				},{
-			   // file: "rtsp://35.154.134.191:1935/live/myStream"
-				}],
-				/*
-				rtmp: {
-				bufferlength: 3
-				},*/
-				fallback: true,
-				androidhls: true,
-				aspectratio: "16:9",
+				<video id="player" class="player-dimensions video-js vjs-default-skin"  controls preload="none">
+					<source src="<?=$video['aws_link']?>"
+							type="application/x-mpegURL"/>
+				</video>
+				<?php $sub_start_at = $video['sub_start_at'];
+				 $times =  explode(':',date('H:i:s',strtotime($sub_start_at)));
+				 $start_sec = $times[0]*3600+$times[1]*60+$times[2]; 
+				 $currentTimeinSeconds = time();  
+				  
+				 $currentDate = date('H:i:s', $currentTimeinSeconds); 
+				 $times2 =  explode(':',$currentDate);
+				 $current_sec = $times2[0]*3600+$times2[1]*60+$times2[2];
+				 $diff = $current_sec-$start_sec;
+				 ?>
 				
-				});
-				</script>
-				<?php if(file_exists($video['ref_doc'])){?>
+				<script>
+					var player = videojs('#player');
+					player.currentTime(<?=$diff?>);
+				</script>  
+				<?php if($video['ref_doc']!=''){?>
 				<button type="button" class="btn btn-primary btn-icon-text mt-3" onclick="window.open('<?=$video['ref_doc']?>')">
 					<i class="btn-icon-prepend" data-feather="file-text"></i>
 					Document

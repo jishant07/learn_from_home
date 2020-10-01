@@ -53,16 +53,14 @@ else if($type=='insert'){
 	
 }
 else if($type=='update'){
-	$studentID=$_GET['studentID'];
-	$videoID=$_GET['videoID'];
-	$pauseTime=$_GET['pauseTime'];
+	extract($_GET);
 	$sql = "select id from videotrack WHERE student='$studentID' AND video='$videoID'";
 	$res = mysqli_query($conn,$sql);
 	if(mysqli_num_rows($res)>0){	
 	$sql="UPDATE videotrack SET watchtime='$pauseTime',datewatched=NOW() WHERE student='$studentID' AND video='$videoID'";
 	}
 	else{
-		$sql="INSERT INTO videotrack(student,video,watchtime,datewatched) VALUES('$studentID','$videoID','$pauseTime',NOW())";	
+		$sql="INSERT INTO videotrack(student,video,duration,watchtime,datewatched) VALUES('$studentID','$videoID','$duration','$pauseTime',NOW())";	
 	}
 	if($conn -> query($sql)) $arr['message']='Success';else $arr['message']='Fail'; 
 	echo json_encode($arr);	

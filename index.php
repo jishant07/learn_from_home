@@ -25,7 +25,7 @@ $notifications = getNotifications('student');
 //if($action!='live-video' && $action !='student_watching') deleteWatchingVideos($emp_ecode);
 if(in_array($action,['live-video','student_watching'])){} else deleteWatchingVideos($emp_ecode);
 $studentname = getStudentName($emp_ecode);
-
+$studentpic = getStudentImage($emp_ecode);
 switch($action){
 	case 'home':
 		$pvideos =  getWatchingVideos($emp_ecode);
@@ -129,9 +129,9 @@ switch($action){
 	break;
 	
 	case 'my_classroom':
-		$file='my-classroom.php';	
-		$classteacher =  getClassTeacher($emp_ecode);
+		$file='my-classroom.php';
 		$room =  my_classroom($emp_ecode);
+		$classteacher =  getClassTeacher($room['class_id']);
 		$teachers =  getClassTeachers($room['class_id']);
 		$subjects =  getClassSubjects($room['class_id']);
 		//$time =  getClassTimeTable($room['class_id']);
@@ -350,7 +350,14 @@ switch($action){
 	case 'notifications':
 		$notifications = getNotifications('student');
 		$file='notifications.php';	
+	break;
+	
+	case 'add-chat-message':
+		addChatMessage();exit;
 	break;	
+	case 'remove-chat-message':
+		removeChatMessage();exit;
+	break;
 	
 }
 

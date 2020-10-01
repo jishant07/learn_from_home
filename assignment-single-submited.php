@@ -11,15 +11,28 @@
                 <div class="sub"><?=$tasks['subject_name']?></div>
                 <h1><?=$tasks['question']?></h1>
                 <p></p>
-                <a href=""><i class="fa fa-file-text-o" aria-hidden="true"></i> Ref. Document</a>
+				<?php if($tasks['document']!=''){
+					$doc='uploads/evaluation/referdoc/'.$tasks['document'];
+					
+					?>
+                <a href="javascript:window.open('<?=$doc?>')"><i class="fa fa-file-text-o" aria-hidden="true"></i> Ref. Document</a>
+				<?php } ?>
+                <!--a href=""><i class="fa fa-file-text-o" aria-hidden="true"></i> Ref. Document</a-->
             </div>
 
             <div class="assignment-answer col-md-6">
                 <h1>YOUR COMMENT</h1>
                 <p><?=$ans['answer']?></p>
+				<?php if($ans['document']!=''){
+					$doc='uploads/evaluation/'.$ans['document'];
+					if(file_exists($doc)){
+					?>
+				
                 <div class="attachment">
-                    <a href="" class="document"><i class="fa fa-file-text-o" aria-hidden="true"></i> Document Name</a>
+                    <a href="javascript:window.open('<?=$doc?>')" class="document"><i class="fa fa-file-text-o" aria-hidden="true"></i> Document Name</a>
                 </div>
+					<?php } 
+				} ?>
 				<?php if($ans['teacher_feedback']!=''){?>
                 <h2>TEACHER FEEDBACK</h2>
                 <div class="feedback">

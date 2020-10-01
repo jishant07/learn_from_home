@@ -21,12 +21,19 @@
 				<?php } ?>
 				<div class="marks">Marks <?=$ans['marks']?>/<?=$tasks['marks']?></div></div>
                 <p><?=$ans['answer']?></p>
+               <?php if($ans['document']!=''){
+					$doc='uploads/evaluation/'.$ans['document'];
+					if(file_exists($doc)){
+					?>
+				
                 <div class="attachment">
-                    <a href="" class="document"><i class="fa fa-file-text-o" aria-hidden="true"></i> Document Name</a>
+                    <a href="javascript:window.open('<?=$doc?>')" class="document"><i class="fa fa-file-text-o" aria-hidden="true"></i> Document Name</a>
                 </div>
+					<?php } 
+				} ?>
                 <h2>TEACHER FEEDBACK</h2>
                 <div class="feedback">
-                No Feedbck 
+                <?php if($ans['teacher_feedback']!='') echo stripslashes($ans['teacher_feedback']); else echo'No Feedback'?>
                 </div>
             </div>
         </div>

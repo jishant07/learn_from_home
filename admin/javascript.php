@@ -37,7 +37,7 @@
 	<script src="assets/js/datepicker.js"></script>
 	<script src="assets/js/timepicker.js"></script>
 	<script src="assets/js/file-upload.js"></script>
-  
+  <script src="assets/js/apexcharts.js"></script>
 	<!-- end plugin js for this page -->
 	<!-- inject:js -->
 	<script src="assets/vendors/feather-icons/feather.min.js"></script>
@@ -45,7 +45,5 @@
 	<!-- endinject -->
   <!-- custom js for this page -->
   <script src="assets/js/dashboard.js"></script>
-  <script src="assets/js/datepicker.js"></script>
-  <script src="assets/js/sweet-alert.js"></script>
   <script src="assets/js/data-table.js"></script>
   

@@ -1,7 +1,9 @@
 <?php 
-$totquestions = count($details);
+//print_r($details);
+$totquestions = count($exams);//count($details);
 $totsolved = count($ans);
 $notsolved = $totquestions-$totsolved;
+$sper = 100*($totsolved/$totquestions);
 if(isset($_GET['adate']) && $_GET['adate']!='') $today =date('l, d M Y',strtotime($_GET['adate']));
 else $today='Today';
 	
@@ -19,7 +21,7 @@ for($i=0; $i<count($ans); $i++){
 	$obtmarks = $obtmarks+$a['marks'];
 }
 $currdate = date('Y-m-d H:i:s');
-
+//addExamAttendance();
 ?>
   <section class="container-fluid wrapper-inner mainwrapper">
         <div class="row">
@@ -44,14 +46,10 @@ $currdate = date('Y-m-d H:i:s');
 						  <div class="status"><span class="text-red"><?=$lastexam['wrong']?></span> Wrong Answers </div>
 						  <div class="status"><span class="text-red"><?=$lastexam['notsolved']?></span> Not submited</div>
 						<?php } ?>
-                        </div>
-						
-								
-						
+                        </div>					
                         <div class="col-2">
                             <div class="score"><?=$lastexam['marks']?></div>
-                        </div>
-                        
+                        </div>                        
                     </div>
                 </a>
                 <div class="details-box">
@@ -60,7 +58,7 @@ $currdate = date('Y-m-d H:i:s');
                     </h1>
                     <h5><?=$notsolved?> unfinished tasks<span class="float-right">Submit before 6 PM</span></h5>
                     <div class="progress">
-                        <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar" role="progressbar" style="width: <?=$sper?>%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     <div class="subject"><span>Subject :</span> <?=$examdetails['subject_name']?></div>
                 </div>
@@ -80,6 +78,21 @@ $currdate = date('Y-m-d H:i:s');
                     </div>
 					<?php
 					if(count($exams)>0){	
+					$closedate = $examdetails['closedate'];
+					$opendate =  $examdetails['opendate'];
+					if($currdate<$opendate){
+					?>
+					<li>
+                        <div class="row">
+                            <div class="col-12 col-md-7">
+                                <div class="disc">Exam will start at <?php echo date('d M Y H:i A',strtotime($opendate))?></div>
+                            </div>                    
+                           
+                        </div>
+                    </li>
+					<?php
+					} else{	
+					addExamAttendance($examdetails['evid']);
 					for($i=0; $i<count($exams); $i++){
 							$ex = & $exams[$i];
 							$styl='';
@@ -91,12 +104,12 @@ $currdate = date('Y-m-d H:i:s');
 							else {
 								$status='Pending';
 								$href="index.php?action=exam-single&id=".$ex['id']."&type=".$ex['qtype'];
-								$closedate = $examdetails['closedate'];
-								$opendate =  $examdetails['opendate'];
+								
 								if($currdate>$closedate)$href="javascript:alert('Submission date is expired')";
 								if($currdate<$opendate){
 									$href="javascript:alert('You can not submit before start date')";
 									$styl='display:none;';
+									
 								}
 							}
 							
@@ -119,6 +132,7 @@ $currdate = date('Y-m-d H:i:s');
                         </div>
                     </li>
                     <?php } 
+					}
 					} else { ?>
                     <div class='alert alert-info'>No records found!</div>
                     <?php } ?>

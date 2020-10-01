@@ -5,6 +5,18 @@
 		<li class="breadcrumb-item active" aria-current="page">Edit</li>
 	</ol>
 </nav>
+
+<?php 
+if($video['sheduledate']!=''){
+$sdatex = explode(' ',$video['sheduledate']);
+$sdate=$sdatex[0];
+$stime=date('h:i A',strtotime($sdatex[1]));
+}
+else {
+	$sdate='';
+	$stime='';
+}
+?>
 <div class="row">
 	<div class="col-md-6 grid-margin stretch-card">
 		<div class="card">
@@ -16,11 +28,11 @@
 					<input type='hidden' name='vid_sub' id='vid_sub' value="<?=$video['subject']?>">
 						
 					<div class="form-group">
-						<label>Title</label>
+						<label>Title*</label>
 						<input type="text" class="form-control" placeholder="Title" name='title' id='title' value="<?=$video['title']?>">
 					</div>
 					<div class="form-group">
-						<label>Discription</label>
+						<label>Discription*</label>
 						<textarea class="form-control" placeholder="Discription" rows="5" id='description' name='description'><?=stripslashes($video['description'])?></textarea>
 					</div>
 					<div class="form-group">
@@ -35,7 +47,7 @@
 							<?php } ?>	
 					</div>
 					<div class="form-group">
-						<label>Upload Thumbnail</label>
+						<label>Upload Thumbnail*</label>
 						<div class="form-group">
 							<input type="file" id="myDropify2" name="myDropify2" class="border"/>
 						</div><?php if($video['vthumb']!=''){ ?><a href="../uploads/images/coursevideos/<?=$video['vthumb']?>"  target='_blank'><?=$video['vthumb']?></a><BR>
@@ -50,13 +62,13 @@
 							<div class="col-6">
 								<label>Schedule Date</label>
 								<div class="input-group date datepicker" id="datePickerExample">
-									<input type="text" class="form-control"><span class="input-group-addon"><i data-feather="calendar"></i></span>
+									<input type="text" class="form-control" name='sheduledate' id='sheduledate' value="<?=$sdate?>"><span class="input-group-addon"><i data-feather="calendar"></i></span>
 								</div>
 							</div>
 							<div class="col-6">
 								<label>Schedule Time</label>
 								<div class="input-group date timepicker" id="datetimepickerExample" data-target-input="nearest">
-									<input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerExample"/>
+									<input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerExample" name='sheduletime' id='sheduletime' value="<?=$stime?>"/>
 									<div class="input-group-append" data-target="#datetimepickerExample" data-toggle="datetimepicker">
 										<div class="input-group-text"><i data-feather="clock"></i></div>
 									</div>
@@ -143,25 +155,25 @@ function videoValidation(){
 
 //alert(livevideo)
 if(document.getElementById('title').value.trim()==''){
-	$("#result").html("Please enter title");
+	$("#result").html("<div class='alert alert-warning'>Please enter title</div>");
 	document.getElementById('title').focus();
 	return false;
 }
 if(document.getElementById('description').value.trim()==''){
-	$("#result").html("Please enter description");
+	$("#result").html("<div class='alert alert-warning'>Please enter description</div>");
 	document.getElementById('description').focus();
 	return false;
 }
 if(livevideo=='link'){
 	if(document.getElementById('vlink').value.trim()==''){
-	$("#result").html("Please enter video link");
+	$("#result").html("<div class='alert alert-warning'>Please enter video link</div>");
 	document.getElementById('vlink').focus();
 	return false;
 	}
 }
 if(livevideo=='video'){
 	if(document.getElementById('myDropify').value.trim()==''){
-	$("#result").html("Please select video");
+	$("#result").html("<div class='alert alert-warning'>Please select video</div>");
 	document.getElementById('myDropify').focus();
 	return false;
 	}
@@ -174,7 +186,3 @@ function hideVformat(f){
 	if(f=='live') { $('#fileid').hide();$('#linkid').hide();$('#livesess').show();}
 }
 </script>			
-
-amim mata building
-near kamal driving school
-mahajan layout

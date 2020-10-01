@@ -12,13 +12,13 @@
           <div class="col-lg-12 stretch-card">
             <div class="card">
               <div class="card-body">
-                <div class="d-flex justify-content-between align-items-baseline mb-2">
+                <!--div class="d-flex justify-content-between align-items-baseline mb-2">
                   <h6 class="card-title mb-0"></h6>
                   <button type="button" onclick="window.location.href='index.php?action=start-new-discussion&class=<?=$classn?>'" class="btn btn-success btn-icon-text">
                     <i class="btn-icon-prepend" data-feather="plus-square"></i>
                     Start New
                   </button>
-                </div>
+                </div-->
                 <div class="table-responsive mt-5">
                   <table id="dataTableExample" class="table table-hover mb-0">
                     <thead>

@@ -75,11 +75,11 @@ for($i=0; $i<count($ans); $i++){
 							$ansid = checkAnswer($emp_ecode,$ex['id'],$ex['qtype']);
 							if($ansid!='') {
 								$status='Submited';
-								//$href="index.php?action=exam-single-checked&id=$ansid";
+								$href="index.php?action=exam-single-checked&id=$ansid";
 							}
 							else {
 								$status='Pending';
-								//$href="index.php?action=exam-single&id=".$ex['id']."&type=".$ex['qtype'];
+								$href="#";//index.php?action=exam-single&id=".$ex['id']."&type=".$ex['qtype'];
 								
 							}
 							

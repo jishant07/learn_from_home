@@ -1467,3 +1467,10 @@ Stack trace:
 [03-Sep-2020 17:56:07 Asia/Kolkata] PHP Notice:  Undefined variable: baseurl in /home1/flowrtid/public_html/lfh/appapi.php on line 264
 [03-Sep-2020 17:56:07 Asia/Kolkata] PHP Notice:  Undefined variable: baseurl in /home1/flowrtid/public_html/lfh/appapi.php on line 264
 [03-Sep-2020 17:56:07 Asia/Kolkata] PHP Notice:  Undefined variable: baseurl in /home1/flowrtid/public_html/lfh/appapi.php on line 264
+[15-Sep-2020 12:06:15 Asia/Kolkata] PHP Notice:  Undefined index: user in /home1/flowrtid/public_html/lfh/footer.php on line 10
+[22-Sep-2020 12:06:47 Asia/Kolkata] PHP Notice:  Undefined index: user in /home1/flowrtid/public_html/lfh/footer.php on line 10
+[22-Sep-2020 12:06:47 Asia/Kolkata] PHP Notice:  Undefined index: user in /home1/flowrtid/public_html/lfh/footer.php on line 12
+[22-Sep-2020 22:16:13 Asia/Kolkata] PHP Notice:  Undefined index: user in /home1/flowrtid/public_html/lfh/footer.php on line 10
+[22-Sep-2020 22:16:13 Asia/Kolkata] PHP Notice:  Undefined index: user in /home1/flowrtid/public_html/lfh/footer.php on line 12
+[29-Sep-2020 20:45:34 Asia/Kolkata] PHP Warning:  mysqli::__construct(): (HY000/1040): Too many connections in /home1/flowrtid/public_html/lfh/model/config.php on line 10
+[29-Sep-2020 20:45:34 Asia/Kolkata] PHP Warning:  mysqli::set_charset(): Couldn't fetch mysqli in /home1/flowrtid/public_html/lfh/model/config.php on line 11

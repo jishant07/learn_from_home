@@ -14,11 +14,11 @@
 					<input type='hidden' name='vid_sub' id='vid_sub' value="<?=$_GET['subject']?>">
 						
 					<div class="form-group">
-						<label>Title</label>
+						<label>Title*</label>
 						<input type="text" class="form-control" placeholder="Title" name='title' id='title'>
 					</div>
 					<div class="form-group">
-						<label>Discription</label>
+						<label>Discription*</label>
 						<textarea class="form-control" placeholder="Discription" rows="5" id='description' name='description'></textarea>
 					</div>
 					<div class="form-group">
@@ -32,7 +32,7 @@
 						</div>	
 					</div>
 					<div class="form-group">
-						<label>Upload Thumbnail</label>
+						<label>Upload Thumbnail*</label>
 						<div class="form-group">
 							<input type="file" id="myDropify2" name="myDropify2" class="border"/>
 						</div>
@@ -46,13 +46,13 @@
 							<div class="col-6">
 								<label>Schedule Date</label>
 								<div class="input-group date datepicker" id="datePickerExample">
-									<input type="text" class="form-control"><span class="input-group-addon"><i data-feather="calendar"></i></span>
+									<input type="text" class="form-control" name='sheduledate' id='sheduledate'><span class="input-group-addon"><i data-feather="calendar"></i></span>
 								</div>
 							</div>
 							<div class="col-6">
 								<label>Schedule Time</label>
 								<div class="input-group date timepicker" id="datetimepickerExample" data-target-input="nearest">
-									<input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerExample"/>
+									<input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerExample" name='sheduletime' id='sheduletime'/>
 									<div class="input-group-append" data-target="#datetimepickerExample" data-toggle="datetimepicker">
 										<div class="input-group-text"><i data-feather="clock"></i></div>
 									</div>
@@ -136,37 +136,37 @@ function videoValidation(){
 
 //alert(livevideo)
 if(document.getElementById('title').value.trim()==''){
-	$("#result").html("Please enter title");
+	$("#result").html("<div class='alert alert-warning'>Please enter title</div>");
 	document.getElementById('title').focus();
 	return false;
 }
 if(document.getElementById('description').value.trim()==''){
-	$("#result").html("Please enter description");
+	$("#result").html("<div class='alert alert-warning'>Please enter description</div>");
 	document.getElementById('description').focus();
 	return false;
 }
 if(document.getElementById('myDropify2').value.trim()==''){
-	$("#result").html("Please select video image");
+	$("#result").html("<div class='alert alert-warning'>Please select video image</div>");
 	document.getElementById('myDropify2').focus();
 	return false;
 }
 if(livevideo=='link'){
 	if(document.getElementById('vlink').value.trim()==''){
-	$("#result").html("Please enter video link");
+	$("#result").html("<div class='alert alert-warning'>Please enter video link</div>");
 	document.getElementById('vlink').focus();
 	return false;
 	}
 }
 if(livevideo=='live'){
 	if(document.getElementById('sessionvideo').value.trim()==''){
-	$("#result").html("Please enter video link");
+	$("#result").html("<div class='alert alert-warning'>Please enter video link</div>");
 	document.getElementById('sessionvideo').focus();
 	return false;
 	}
 }
 if(livevideo=='video'){
 	if(document.getElementById('myDropify').value.trim()==''){
-	$("#result").html("Please select video");
+	$("#result").html("<div class='alert alert-warning'>Please select video</div>");
 	document.getElementById('myDropify').focus();
 	return false;
 	}

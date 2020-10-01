@@ -490,8 +490,12 @@ $( "#selectarea" ).change(function() {
 				data: formData,
 				type: 'POST',
 				success: function(data) {
-					var obj = JSON.parse(data);
-					if(obj.evid!==''){
+					//alert(data);
+					//var obj = JSON.parse(data);
+					var obj= eval('(' + data + ')');
+					//alert(obj.message+'::'+obj.evid)
+					if(obj.message!='')$("#result").html(obj.message);
+					else if(obj.evid!=''){
 						$('#evsave').hide();
 						$('#selectarea').show();
 						$("#result").html('Evaluation is created successfully!');

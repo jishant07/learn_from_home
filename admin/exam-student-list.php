@@ -64,12 +64,14 @@
 			  <?php
 				for($s=0; $s<count($ans); $s++){					
 					$a = & $ans[$s];
+					
 					if($a['image']!=''){
 						$pic = '../uploads/images/students/'.$a['image'];
 						if(!file_exists($pic)) $pic='../uploads/avtar.png';
 					}
 					else $pic='../uploads/avtar.png';
 					$status = $a['status']=='1'?'Not Checked':'Checked';
+					
 			  ?>
 			  <tr>
 				<td>
@@ -80,17 +82,19 @@
 				<td><span class="badge badge-pill badge-success"><i data-feather="check" class="wd-10 ht-10"></i></span></td>
 				<td><span class="badge badge-info"><?=$status?></span></td>
 				<td><?=$a['totmarks']?></td>
-				<td><a href="index.php?action=exam-student-page&id=<?=$_GET['id']?>&student=<?=$a['studid']?>" class="btn btn-danger"><?=$a['studid']?> OPEN</a></td>
+				<td><a href="index.php?action=exam-student-page&id=<?=$_GET['id']?>&student=<?=$a['studid']?>" class="btn btn-danger">OPEN</a></td>
 			  </tr>
 				<?php } ?>
 				<?php
 				for($s=0;$s<count($notans);$s++){							
 					$a = & $notans[$s];
+					//print_r($a);
 					if($a['image']!=''){
 						$pic = '../uploads/images/students/'.$a['image'];
 						if(!file_exists($pic)) $pic='../uploads/avtar.png';
 					}
-					else $pic='../uploads/avtar.png';					
+					else $pic='../uploads/avtar.png';
+					$chkatt=chkExamAttendance($exam['id'],$a['ecode']);					
 				?>
 			  <tr>
 				<td>
@@ -98,7 +102,7 @@
 					<img src="<?=$pic?>" class="rounded-circle" alt="user"> <?=$a['student_name']?>
 				  </div>                         
 				</td>
-				<td><span class="badge badge-pill badge-success"><i data-feather="check" class="wd-10 ht-10"></i></span></td>
+				<td><?php if($chkatt){?><span class="badge badge-pill badge-success"><i data-feather="check" class="wd-10 ht-10"></i></span><?php }?></td>
 				<td><span class="badge badge-info">Not Submitted</span></td>
 				<td></td>
 				<td></td>

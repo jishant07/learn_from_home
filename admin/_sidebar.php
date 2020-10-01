@@ -84,6 +84,10 @@ else $action='home';
 				<li class="nav-item">
                   <a href="index.php?action=classroom-discussion&class=<?=$classroom?>" class="nav-link <?=$actionc=='classroom-discussion'?'active':''?>">Classroom Discussion</a>
                 </li>
+				
+				 <li class="nav-item">
+                  <a href="index.php?action=examsnew&class=<?=$classroom?>" class="nav-link <?=$actionc=='newexams'?'active':''?>">New Exams</a>
+                </li>
               </ul>
             </div>
           </li>

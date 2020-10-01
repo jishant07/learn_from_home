@@ -13,10 +13,13 @@ $past = & $live['past'];
 $upcomming = & $live['upcomming'];
 
 //print_r($upcomming);
-if(isset($clive['ref_doc']) && $clive['ref_doc']!='')$cref_doc = "../uploads/videos/refdoc/".$clive['ref_doc'];
+if(isset($clive['ref_doc']) && $clive['ref_doc']!=''){
+		$cref_doc = "../uploads/videos/refdoc/".$clive['ref_doc'];
+		if(!file_exists($cref_doc))$cref_doc='';
+}
 else $cref_doc='';
 $gclass=$_GET['class'];
-//exit;
+
 //print_r($clive);
 ?>        <div class="row">
           <div class="col-lg-12 stretch-card">
@@ -46,7 +49,7 @@ $gclass=$_GET['class'];
                         <td>Today</td>
                         <td><span class="badge badge-danger">Live</span></td>
                         <td><?=$clive['vtitle']?></td>
-                        <td><button type="button" class="btn btn-outline-info" <?php if(file_exists($cref_doc)){?> onclick="window.open('<?=$cref_doc?>')" <?php } ?>>View</button></td>
+                        <td><?php if(file_exists($cref_doc)){?><button type="button" class="btn btn-outline-info" onclick="window.open('<?=$cref_doc?>')" >View</button><?php } ?></td>
                         <td>
                           <button onclick="window.location.href='index.php?action=live-video&id=<?=$clive['id']?>'" type="button" class="btn btn-primary btn-sm">VISIT</button>
                         </td>
@@ -69,16 +72,17 @@ $gclass=$_GET['class'];
                     <tbody>
                       <?php for($i=0; $i<count($upcomming); $i++) {
 							$u = $upcomming[$i];
-							if($u['ref_doc']!='')
+							if($u['ref_doc']!=''){
 							$uref_doc = "../uploads/videos/refdoc/".$u['ref_doc'];
+							if(!file_exists($uref_doc))$uref_doc='';
+							}
 							else $uref_doc = "";
-
 						?>
                       <tr>
                         <td><?=date('d/m/Y',strtotime($u['sub_start_at']))?></td>
                         <td><span class="badge badge-success"><?=date('H:iA',strtotime($u['sub_start_at']))?> to <?=date('H:iA',strtotime($u['sub_end_at']))?></span></td>
                         <td><?=$u['vtitle']?></td>
-                        <td><button type="button" class="btn btn-outline-info" <?php if(file_exists($uref_doc)){?> onclick="window.open('<?=$uref_doc?>')" <?php } ?>>View</button></td>
+                        <td><?php if(file_exists($uref_doc)){?><button type="button" class="btn btn-outline-info"  onclick="window.open('<?=$uref_doc?>')" >View</button><?php } ?></td>
                         <td>                          
                           <a href="index.php?action=edit-new-live-sessions&id=<?=$u['id']?>" class="btn btn-warning btn-icon" data-toggle="tooltip" data-placement="top" title="Edit">
                             <i data-feather="edit-2" class="mt-2"></i>
@@ -114,7 +118,6 @@ $gclass=$_GET['class'];
                         <th class="pt-0">Time</th>
                         <th class="pt-0">Title</th>
                         <th class="pt-0">Document</th>
-                        <th class="pt-0">Total Views</th>
                         
                         <th class="pt-0">Action</th>
                       </tr>
@@ -131,7 +134,6 @@ $gclass=$_GET['class'];
                         <td><span class="badge badge-success"><?=date('H:iA',strtotime($p['sub_start_at']))?> to <?=date('H:iA',strtotime($p['sub_end_at']))?></span></td>
                         <td><?=$p['vtitle']?></td>
                         <td><?php if(file_exists($uref_doc)){?><button type="button" class="btn btn-outline-info"  onclick="window.open('<?=$uref_doc?>')" >View</button><?php } ?></td>
-                        <td><span class="badge badge-info"><?=$p['totalwatched']?></span></td>
                         <td>                          
                           <a href="index.php?action=live-video&id=<?=$p['id']?>" class="btn btn-danger btn-icon" data-toggle="tooltip" data-placement="top" title="View Video">
                             <i data-feather="video" class="mt-2"></i>

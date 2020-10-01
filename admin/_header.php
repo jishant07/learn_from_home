@@ -2,18 +2,16 @@
 				<a href="#" class="sidebar-toggler">
 					<i data-feather="menu"></i>
 				</a>
-				<div class="navbar-content">
-					
-					<ul class="navbar-nav">
-						
-						
+				<div class="navbar-content">					
+					<ul class="navbar-nav">						
+						<?php if($_SESSION['u_type']=='teacher'){ ?>
 						<li class="nav-item">
 							<a class="nav-link " onclick="openNav()" href="#" role="button" >
 								<i data-feather="message-square" class="icon-lg"></i>
-							</a>
-							
+							</a>							
 						</li>
-						<li class="nav-item dropdown nav-notifications">
+						<?php } ?>
+						<!--li class="nav-item dropdown nav-notifications">
 							<a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<i data-feather="bell"></i>
 								<div class="indicator">
@@ -23,7 +21,7 @@
 							<div class="dropdown-menu" aria-labelledby="notificationDropdown">
 								
 								<div class="dropdown-body">
-									<!--a href="javascript:;" class="dropdown-item">
+									<a href="javascript:;" class="dropdown-item">
 										
 										<div class="content">
 											<p>New customer registered </p>
@@ -57,21 +55,28 @@
 											<p>Download completed</p>
 											<p class="sub-text text-muted">6 hrs ago</p>
 										</div>
-									</a-->
+									</a>
 								</div>
 								<div class="dropdown-footer d-flex align-items-center justify-content-center">
 									<a href="javascript:;">View all</a>
 								</div>
 							</div>
-						</li>
+						</li-->
 						<li class="nav-item dropdown nav-profile">
 							<a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<img src="../uploads/teacher/<?=$_SESSION['pic']?>" alt="profile">
+							<?php 
+							if($_SESSION['pic']!=''){
+								$pic = "../uploads/teacher/".$_SESSION['pic'];
+								if(!file_exists($pic)) $pic="../uploads/avtar.png";
+							}
+							else $pic="../uploads/avtar.png";
+							?>
+								<img src="<?=$pic?>" alt="profile">
 							</a>
 							<div class="dropdown-menu" aria-labelledby="profileDropdown">
 								<div class="dropdown-header d-flex flex-column align-items-center">
 									<div class="figure mb-3">
-										<img src="../uploads/teacher/<?=$_SESSION['pic']?>" alt="">
+										<img src="<?=$pic?>" alt="">
 									</div>
 									<div class="info text-center">
 										<p class="name font-weight-bold mb-0"><?=$_SESSION['username']?></p>

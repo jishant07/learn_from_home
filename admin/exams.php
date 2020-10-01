@@ -1,6 +1,6 @@
 <?php 
 $classn = getClassName($_GET['class']);
-
+//unset($_SESSION['evid']);
 $arr= array($classn=>'','Exams'=>'');
 tmp_topBreadCrumb($arr);
 $subjectid=$_GET['subject'];$subjectname = getSubject($_GET['subject']);
@@ -24,7 +24,7 @@ $gclass=$_GET['class'];
                       <tr>
                         <th class="pt-0">Date</th>
                         <th class="pt-0">Time</th>
-                        <th class="pt-0">Created by</th>
+                        <!--th class="pt-0">Created by</th-->
                         <th class="pt-0">Total Questions </th>
                         <th class="pt-0">Total Marks</th>
                         <th class="pt-0">Action</th>
@@ -37,7 +37,7 @@ $gclass=$_GET['class'];
                       <tr>
                         <td><?=date('d M Y',strtotime($e['opendate']))?></td>
                         <td><span class="badge badge-info"><?=date('H:i A',strtotime($e['opendate']))?> to <?=date('H:i A',strtotime($e['closedate']))?></span></td>
-                        <td><span class="badge badge-success">You</span></td>
+                        <!--td><span class="badge badge-success">You</span></td-->
                         <td><?=$e['totquestions']?> Questions</td>
                         <td><?=$e['totmarks']?> Marks</td>
                         <td>
@@ -75,7 +75,7 @@ $gclass=$_GET['class'];
                       <tr>
                         <th class="pt-0">Date</th>
                         <th class="pt-0">Time</th>
-                        <th class="pt-0">Created by</th>
+                        <!--th class="pt-0">Created by</th-->
                         <th class="pt-0">Total Questions </th>
                         <th class="pt-0">Total Marks</th>
                         <th class="pt-0">Action</th>
@@ -93,7 +93,7 @@ $gclass=$_GET['class'];
                       <tr>
                         <td><?=date('d M Y',strtotime($e['opendate']))?></td>
                         <td><span class="badge badge-info"><?=date('H:i A',strtotime($e['opendate']))?> to <?=date('H:i A',strtotime($e['closedate']))?></span></td>
-                        <td><span class="badge badge-success">Admin</span></td>
+                        <!--td><span class="badge badge-success">Admin</span></td-->
                         <td><?=$e['totquestions']?> Questions</td>
                         <td><?=$e['totmarks']?> Marks</td>
                         <td>

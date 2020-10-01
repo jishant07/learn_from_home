@@ -15,6 +15,15 @@ function saveNotification($vals){
 	$res = mysqli_query($conn,$sql);
 }
 
+function save_image($inPath, $outPath) {
+    $in = fopen($inPath, "rb");
+    $out = fopen($outPath, "wb");
+    while ($chunk = fread($in, 8192)) {
+        fwrite($out, $chunk, 8192);
+    }
+    fclose($in);
+    fclose($out);
+}
 
 function getTeacherClasses($tid=''){
 	global $conn;
@@ -31,6 +40,20 @@ function getTeacherClasses($tid=''){
 	//print_r($arr);
 	return $arr;
 }
+
+function getTeacherClassesNew(){
+	global $conn;
+	$tid = $_SESSION['tid'];
+	$sql="SELECT DISTINCT(classroom) FROM teacher_assign WHERE teacher_id='$tid'";
+	$sql="SELECT t_classname FROM teachers WHERE t_id='$tid'";
+	$res = mysqli_query($conn,$sql);
+	$arr = array();
+	$row = mysqli_fetch_array($res);
+	$arr = explode(',',$row['t_classname']);
+	return $arr;
+}
+
+
 
 function getTeacherSubjectByClasses($tid){
 	global $conn;
@@ -96,6 +119,33 @@ function getClassTeachers(& $clid){
 	return $arr;
 }
 
+function getAllClassTeachers(& $classes){
+	global $conn;
+	$arr=array();
+	$arr1=array();
+	$i=0;
+	
+	for($c=0;$c<count($classes);$c++){
+		$clid=$classes[$c];
+		$sq="SELECT t_id,t_code,t_name,t_lastname,t_pic FROM teachers WHERE FIND_IN_SET('$clid' , t_classname) ";
+		$sql = $conn->query($sq);
+		while($row = $sql->fetch_assoc()){
+			if(in_array($row['t_id'],$arr1)) continue;
+			$arr[$i]['t_id']= $row['t_id'];
+			$arr1[]= $row['t_id'];
+			$arr[$i]['t_code']= $row['t_code'];
+			$arr[$i]['t_name']= $row['t_name'].' '.$row['t_lastname'];
+			if($row['t_pic']!='')	
+			$arr[$i]['t_pic']= '../../uploads/teacher/'.$row['t_pic'];	
+			else $arr[$i]['t_pic']= '../../uploads/avtar.png';
+			$i++;
+		}
+	}
+	
+	return $arr;
+}
+
+
 function getAssignSubjectByTeacher(& $tid,& $cid){
 	global $conn;
 	$sql="select subject,subject_name from teacher_assign a,subjects s where teacher_id='$tid' and classroom='$cid' and a.subject=subject_id";
@@ -103,6 +153,29 @@ function getAssignSubjectByTeacher(& $tid,& $cid){
 	return mysqli_fetch_all($res,MYSQLI_ASSOC);
 	
 }
+function getAllClassStudents($classes){
+	global $conn;
+	//for($c=0;$c<count($classes); $c++){
+	$classes = implode(',',$classes);
+	$sql="select std_id,ecode,roll_no,concat(student_name,' ',student_lastname) as sname,image,gender from students where dept_id in ($classes) and status=1";
+	$res=mysqli_query($conn,$sql);
+	$i=0;
+	$f=0;
+	$m=0;
+	while($row=mysqli_fetch_array($res)){
+	$arr[$i]['std_id']=$row['std_id'];
+	$arr[$i]['ecode']=$row['ecode'];
+	$arr[$i]['gender']=$row['gender'];
+	$arr[$i]['roll_no']=$row['roll_no'];
+	$arr[$i]['student_name']=$row['sname'];
+	if($row['image']!='')
+	$arr[$i]['image']='../uploads/images/students/'.$row['image'];
+	else $arr[$i]['image']='../uploads/avtar.png';
+	$i++;
+	}
+	
+	return $arr;
+}	
 function getAllStudents(& $class){
 	global $conn;
 	$sql="select std_id,ecode,roll_no,student_name,image,gender from students where dept_id='$class' and status=1";
@@ -137,7 +210,7 @@ function getSubject(& $id){
 
 function getStudentInfo(& $id){
 	global $conn;
-	$sql="select student_name,student_lastname,image from students where ecode='$id'";
+	$sql="select * from students where (ecode='$id' or std_id='$id')";
 	$res = mysqli_query($conn,$sql);
 	return mysqli_fetch_assoc($res);	
 }
@@ -388,12 +461,14 @@ function addVideo(){
 function courseAddVideo(){
 	global $conn;
 	//print_r($_FILES);exit;
+	$u_type = $_SESSION['u_type'];
 	$vid_class = $_POST['vid_class'];
 	$vtitle = addslashes(trim($_POST['title']));
 	$description = addslashes(trim($_POST['description']));
 	$vid_teacher = $_SESSION['tid'];
 	$vlink = '';
-	
+	$sheduledate=$_POST['sheduledate'].' '.date('H:i:s',strtotime($_POST['sheduletime']));
+
 	
 	$vid_sub = $_POST['vid_sub'];
 	$vid_format = $_POST['livevideo'];
@@ -402,17 +477,18 @@ function courseAddVideo(){
 		$vlink = trim($_POST['sessionvideo']);
 		$vid_format='link';
 	}
-	$sql_vac ="INSERT INTO courses_videos SET title='$vtitle',description='$description',vid_format='$vid_format', vlink='$vlink', teacher='$vid_teacher' , class='$vid_class',subject='$vid_sub'";
+	$date=date('Y-m-d H:i:s');
+	$sql_vac ="INSERT INTO courses_videos SET title='$vtitle',description='$description',vid_format='$vid_format', vlink='$vlink', teacher='$vid_teacher' , class='$vid_class',subject='$vid_sub',sheduledate='$sheduledate',createdby='$u_type',created='$date'";
 	//echo $sql_vac;exit;
-
+	$course = $_POST['course'];
 	if ($conn->query($sql_vac) == true) {
 		$lastid=$conn->insert_id;
-		$cvideos = getVideoInCourse($vid_class);
+		$cvideos = getVideoInCourse($course);
 		if($cvideos==''){
-			$conn->query("UPDATE courses SET videos='$lastid' WHERE id='$vid_class'");	
+			$conn->query("UPDATE courses SET videos='$lastid' WHERE id='$course'");	
 		} else{
 			$cvideos = $cvideos.','.$lastid;
-			$conn->query("UPDATE courses SET videos='$cvideos' WHERE id='$vid_class'");	
+			$conn->query("UPDATE courses SET videos='$cvideos' WHERE id='$course'");	
 		}
 		$comments=$vtitle." course video is uploaded.";		
 		$arr=array('from_id'=>$vid_teacher,'from_type'=>$_SESSION['u_type'],'to_id'=>'','to_type'=>'student','page'=>'history-videos&id='.$lastid,'tableid'=>$lastid,'tablename'=>'courses_videos','comments'=>$comments,'status'=>'1');
@@ -489,7 +565,7 @@ function courseUpdateVideo(){
 	$description = addslashes(trim($_POST['description']));
 	$vid_teacher = $_POST['vid_teacher'];
 	$vlink = '';
-	
+	$sheduledate=$_POST['sheduledate'].' '.date('H:i:s',strtotime($_POST['sheduletime']));
 	
 	$vid_sub = $_POST['vid_sub'];
 	$vid_format = $_POST['livevideo'];
@@ -498,7 +574,7 @@ function courseUpdateVideo(){
 		$vlink = trim($_POST['sessionvideo']);
 		$vid_format='link';
 	}
-	$sql_vac = "UPDATE courses_videos SET title='$vtitle', description='$description',vid_format='$vid_format', vlink='$vlink', teacher='$vid_teacher' , subject='$vid_sub' WHERE id='$vid_id'  ";
+	$sql_vac = "UPDATE courses_videos SET title='$vtitle', description='$description',vid_format='$vid_format', vlink='$vlink', teacher='$vid_teacher' , subject='$vid_sub',sheduledate='$sheduledate' WHERE id='$vid_id'  ";
 	//echo $sql_vac;exit;
 
 	if ($conn->query($sql_vac) == true) {	
@@ -648,7 +724,13 @@ function getVideo(& $id){
 	$arr['vid_teacher']=$row_vid['vid_teacher'] ;
 	$arr['vdesc']=stripslashes(trim($row_vid['vdesc']));
 	$arr['aws_link']=$row_vid['aws_link'] ;
-	$arr['ref_doc']="../uploads/videos/refdoc/".$row_vid['ref_doc'] ;
+	if($row_vid['ref_doc']!=''){
+		$refdoc="../uploads/videos/refdoc/".$row_vid['ref_doc'] ;
+		if(!file_exists($refdoc)) $refdoc='';
+		$arr['ref_doc']=$refdoc;
+	
+	}
+	else $arr['ref_doc']='';
 	//$arr['vthumb']=$filelocation.'uploads/images/videothumb/'.$row_vid['vthumb'];
 	$arr['sub_start_at']=$row_vid['sub_start_at'] ;
 	$arr['sub_end_at']=$row_vid['sub_end_at'] ;
@@ -755,6 +837,16 @@ function updateCourse(){
 			$conn->query($update_record);
 		}		
 	}
+}
+
+function courseEditPreference(){
+	global $conn;
+	//print_r($_POST);exit;
+	extract($_POST);
+	$preferences = implode(',',$matchprefs);	
+	$sql = "UPDATE courses SET preferences='$preferences' where id='$id'";
+	$res = mysqli_query($conn,$sql);
+	
 }
 
 function getCourseVideo(& $id){
@@ -896,7 +988,7 @@ function getDocument(& $id){
 }	
 function getDocuments(& $class, & $subject){
 	global $conn;
-	$sql = "SELECT * FROM study_documents where class='$class' and subject='$subject' order by id desc";
+	 $sql = "SELECT * FROM study_documents where class='$class' and subject='$subject' order by id desc";
 	$res = mysqli_query($conn,$sql);
 	$arr=array();
 	$i=0;
@@ -918,8 +1010,9 @@ function addDocument(){
 	global $conn;
 	extract($_POST);
 	//print_r($_FILES);exit;
+	$createdby=$_SESSION['u_type'];
 	$name = addslashes(trim($name));
-	$sql ="insert into study_documents set name='$name',class='$class',subject='$subject',createdby='teacher',created=NOW(),status='1'";
+	$sql ="insert into study_documents set name='$name',class='$class',subject='$subject',createdby='$createdby',created=NOW(),status='1'";
 	$res = mysqli_query($conn,$sql);
 	$id=mysqli_insert_id($conn);
 	$comments=$name." document is uploaded. ";	
@@ -1328,6 +1421,13 @@ function deleteSubject(& $id){
 	mysqli_query($conn,$sql);
 }
 
+function getSectionName(& $secid){
+	global $conn;
+	$sql="SELECT name FROM `tbl_section` WHERE id='$secid'";
+	$res = mysqli_query($conn,$sql);
+	$row = mysqli_fetch_array($res);
+	return $row['name'];
+}
 function getExamDetails(& $eid){
 	global $conn;
 	$sql="SELECT * FROM `tbl_fillblank` WHERE evid='$eid' ORDER BY `id` DESC";
@@ -1338,6 +1438,7 @@ function getExamDetails(& $eid){
 		  $arr[$i]['id']=$row['id'];
 		  $arr[$i]['question']=$row['question'];
 		  $arr[$i]['answer']=$row['answer'];
+		  $arr[$i]['section']=$row['section'];
 		  $arr[$i]['marks']=$row['marks'];
 		  $arr[$i]['referdoc']=$row['referdoc'];
 		  $arr[$i]['uploadflag']=$row['uploadflag'];
@@ -1357,6 +1458,7 @@ function getExamDetails(& $eid){
 		  $arr[$i]['cols2']=$row['cols2'];
 		  $arr[$i]['answer']=$row['answer'];
 		  $arr[$i]['marks']=$row['marks'];
+		  $arr[$i]['section']=$row['section'];
 		  $arr[$i]['referdoc']=$row['referdoc'];
 		  $arr[$i]['uploadflag']=$row['uploadflag'];
 		  $arr[$i]['description']=stripslashes($row['description']);
@@ -1374,6 +1476,7 @@ function getExamDetails(& $eid){
 		  $arr[$i]['options']=$row['options'];
 		  $arr[$i]['answer']=$row['answer'];
 		  $arr[$i]['marks']=$row['marks'];
+		  $arr[$i]['section']=$row['section'];
 		  $arr[$i]['referdoc']=$row['referdoc'];
 		  $arr[$i]['uploadflag']=$row['uploadflag'];
 		  $arr[$i]['description']=stripslashes($row['description']);
@@ -1390,6 +1493,7 @@ function getExamDetails(& $eid){
 		  $arr[$i]['options']=$row['options'];
 		  $arr[$i]['answer']=$row['answer'];
 		  $arr[$i]['marks']=$row['marks'];
+		  $arr[$i]['section']=$row['section'];
 		  $arr[$i]['referdoc']=$row['referdoc'];
 		  $arr[$i]['uploadflag']=$row['uploadflag'];
 		  $arr[$i]['description']=stripslashes($row['description']);
@@ -1405,6 +1509,7 @@ function getExamDetails(& $eid){
 		  $arr[$i]['question']=$row['question'];
 		  $arr[$i]['marks']=$row['marks'];
 		  $arr[$i]['referdoc']=$row['document'];
+		  $arr[$i]['section']=$row['section'];
 		  $arr[$i]['uploadflag']=$row['uploadflag'];
 		  $arr[$i]['description']=stripslashes($row['answer']);
 		  $arr[$i]['qtype']='tbl_questiondoc';
@@ -1421,6 +1526,7 @@ function getExamDetails(& $eid){
 		  $arr[$i]['question']=$row['question'];
 		  $arr[$i]['answer']=$row['answer'];
 		  $arr[$i]['marks']=$row['marks'];
+		  $arr[$i]['section']=$row['section'];
 		  $arr[$i]['referdoc']=$row['document'];
 		  $arr[$i]['uploadflag']=$row['uploadflag'];
 		  $arr[$i]['description']=stripslashes($row['answer']);
@@ -1433,11 +1539,11 @@ function getExamDetails(& $eid){
 	return $arr;
 }
 
-
 function getAllExams(){
 	global $conn;
 	$tid = $_SESSION['tid'];
-	$sql="select * from tbl_evolution where opendate>=NOW() order by id desc";
+	$today=date('Y-m-d H:i:s');
+	$sql="select * from tbl_evolution where opendate>='$today' order by id desc";
 	$res = mysqli_query($conn,$sql);
 	if(mysqli_num_rows($res)){
 		return mysqli_fetch_all($res,MYSQLI_ASSOC);
@@ -1449,12 +1555,14 @@ function getAllExams(){
 function getPrevClassExams(& $class,& $subject){
 	global $conn;
 	$tid = $_SESSION['tid'];
+	$today=date('Y-m-d H:i:s');
 	if($_SESSION['u_type']=='teacher'){
-		$sql="select * from tbl_evolution where class='$class' and subject='$subject' and teacher='$tid' and closedate<NOW()";
+		$sql="select * from tbl_evolution where class='$class' and subject='$subject' and teacher='$tid' and closedate<'$today'";
 	}
 	else{
-		$sql="select * from tbl_evolution where class='$class' and subject='$subject' and closedate<NOW()";
+		$sql="select * from tbl_evolution where class='$class' and subject='$subject' and closedate<'$today'";
 	}
+	//echo $sql; 
 	$res = mysqli_query($conn,$sql);
 	if(mysqli_num_rows($res)){
 		return mysqli_fetch_all($res,MYSQLI_ASSOC);
@@ -1465,13 +1573,16 @@ function getPrevClassExams(& $class,& $subject){
 function getClassExams(& $class,& $subject){
 	global $conn;
 	$tid = $_SESSION['tid'];
-	if($_SESSION['u_type']=='teacher'){
-		$sql="select * from tbl_evolution where class='$class' and subject='$subject' and teacher='$tid' and opendate>=NOW()";
+	$today=date('Y-m-d H:i:s');
+	$sql="select * from tbl_evolution where class='$class' and subject='$subject' and opendate>='$today'";
+	/*if($_SESSION['u_type']=='teacher'){
+		$sql="select * from tbl_evolution where class='$class' and subject='$subject' and opendate>='$today'";
 	}
 	else{
-		$sql="select * from tbl_evolution where class='$class' and subject='$subject' and opendate>=NOW()";
+		$sql="select * from tbl_evolution where class='$class' and subject='$subject' and (opendate>='$today' and closedate<='$today')";
 		//echo $sql;exit;
-	}
+	}*/
+	//echo $sql;
 	$res = mysqli_query($conn,$sql);
 	if(mysqli_num_rows($res)){
 		return mysqli_fetch_all($res,MYSQLI_ASSOC);
@@ -1561,6 +1672,24 @@ function getTeacher(& $id){
 	$res = mysqli_query($conn,$sql);
 	return mysqli_fetch_assoc($res);	
 }
+
+function getTeacherNamePic(& $id){
+	global $conn;
+	$sql = "select concat(t_name,' ',t_lastname) as tname,t_pic from teachers where t_id ='$id'";
+	$res = mysqli_query($conn,$sql);
+	$row = mysqli_fetch_assoc($res);
+	$arr['name']=$row['tname'];	
+	$pic=$row['t_pic'];	
+	if($pic!=''){
+		$tpic = '../uploads/teacher/'.$pic;
+		if(!file_exists($tpic)) $tpic='../uploads/avtar.png';
+	}
+	else $tpic='../uploads/avtar.png';
+	$arr['tpic']=$tpic;
+	return $arr;	
+}
+
+
 function updateProfile(){
 	global $conn;
 	$tid=$_SESSION['tid'];
@@ -1568,6 +1697,7 @@ function updateProfile(){
 	if($usertype=='admin' && $_SESSION['u_type']=='admin')
 	$sql = "update teachers set t_contact='$t_contact',t_phone='$t_phone',t_name='$t_name',t_lastname='$t_lastname',t_dob='$t_dob',t_gender='$t_gender',t_address='$t_address',t_contact='$t_contact',t_phone='$t_phone' where t_id ='$tid'";
 	else $sql = "update teachers set t_contact='$t_contact',t_phone='$t_phone' where t_id ='$tid'";
+	///echo $sql;exit;
 	if(mysqli_query($conn,$sql)){
 		if($_FILES['myDropify']['name']!=''){
 		$thumb = $tid."_".$_FILES['myDropify']['name'];
@@ -1653,7 +1783,8 @@ function addTeacher(){
 	$t_name=addslashes(trim($t_name));
 	$t_lastname=addslashes(trim($t_lastname));
 	$class=implode(',',$class);
-	$sql = "insert into teachers set t_name='$t_name',t_lastname='$t_lastname',t_classname='$class',t_dob='$t_dob',t_gender='$t_gender',t_address='$t_address',t_contact='$t_contact',t_phone='$t_phone',t_createdat=NOW()";
+	$cdate = date('Y-m-d H:i:s');
+	$sql = "insert into teachers set t_name='$t_name',t_lastname='$t_lastname',t_classname='$class',t_dob='$t_dob',t_gender='$t_gender',t_address='$t_address',t_contact='$t_contact',t_phone='$t_phone',t_createdat='$cdate'";
 	$res = mysqli_query($conn,$sql);
 	$lastid = mysqli_insert_id($conn);
 	for($c=0; $c<count($class);$c++){
@@ -1706,7 +1837,14 @@ function deleteStudent(& $id){
 
 function getAllStudentsNew(){
 	global $conn;
-	$sql = "select * from students order by std_id desc limit 10";
+	if($_SESSION['u_type']=='teacher'){
+		$tclasses = getTeacherClassesNew();
+		$nclasses = implode("','",$tclasses);	
+		$sql = "select * from students where dept_id in ('$nclasses') order by dept_id ";
+	}	
+	else{	
+	$sql = "select * from students order by dept_id ";
+	}
 	$res = mysqli_query($conn,$sql);
 	return mysqli_fetch_all($res,MYSQLI_ASSOC);	
 }
@@ -1721,13 +1859,18 @@ function getStudent(& $id){
 function addStudent(){
 	global $conn;
 	extract($_POST);
-	$sql = "insert into students set student_name='$student_name',student_lastname='$student_lastname',father_name='$father_name',father_contact='$father_contact',mother_name='$mother_name',mother_contact='$mother_contact',address='$address',email='$email',date_birth='$date_birth',gender='$gender',dept_id='$class' ";
+	//print_r($_POST);
+	//$url = $_POST['url'];
+   //save_image($url, '../uploads/images/students/sss.jpg');
+   $jdate = date('Y-m-d');
+	$sql = "insert into students set student_name='$student_name',student_lastname='$student_lastname',father_name='$father_name',father_contact='$father_contact',mother_name='$mother_name',mother_contact='$mother_contact',address='$address',email='$email',date_birth='$date_birth',date_join='$jdate',gender='$gender',dept_id='$class' ";
 	if(mysqli_query($conn,$sql)){
 		$lastid = mysqli_insert_id($conn);
 		$ecode = "ST0".$lastid;
 		$roolno = $lastid;
 		$sqlu= "update students set roll_no='$roolno', ecode='$ecode' where std_id='$lastid'";
-		mysqli_query($conn,$sqlu);		
+		mysqli_query($conn,$sqlu);
+		//save_image($canvascrp, '../uploads/images/students/' . $ecode . '.jpg');		
 		if($_FILES['myDropify']['name']!=''){
 			$thumb = $lastid."_".$_FILES['myDropify']['name'];
 			$ufile = '../uploads/images/students/'.$thumb;
@@ -1735,6 +1878,9 @@ function addStudent(){
 				$update_record = "UPDATE students SET `image`='$thumb' WHERE `std_id`='$lastid'";
 				$conn->query($update_record);
 			}
+			// $url = $_POST['url'];
+			//save_image($canvascrp, '../uploads/images/students/' . $ecode . '.jpg');
+			
 		}		
 	}	
 }
@@ -1757,7 +1903,11 @@ function updateStudent(){
 
 function getAlLiveSessions(){
 	global $conn,$filelocation;
-	$sql="select vid_id,vtitle,vdesc,vid_class,vthumb,t_pic,vid_teacher,subject_name,t_name,sub_start_at,sub_end_at from video v,subjects s,teachers t where vid_type='live' and s.subject_id=vid_sub and vid_teacher=t.t_id and v.enb='1'  and sub_end_at>=NOW() order by sub_start_at desc ";
+	$today = date('Y-m-d H:i:s');
+	$tid = $_SESSION['tid'];
+	$u_type = $_SESSION['u_type'];
+	if($u_type=='teacher') $cond = " and vid_teacher='$tid' "; else $cond ='';
+	$sql="select vid_id,vtitle,vdesc,vid_class,vthumb,t_pic,vid_teacher,subject_name,t_name,sub_start_at,sub_end_at from video v,subjects s,teachers t where vid_type='live' and s.subject_id=vid_sub and vid_teacher=t.t_id and v.enb='1'  and sub_end_at>='$today' $cond order by sub_start_at asc ";
 	$res = mysqli_query($conn,$sql);
 	$arr=array();
 	$i=0;
@@ -2053,3 +2203,170 @@ function examDelete($id){
 	$sql="delete from tbl_questiondoc where evid='$id'";
 	mysqli_query($conn,$sql);	
 }
+
+function chkExamAttendance($evid,$student){
+	global $conn;
+	$sql="select * from exam_attendance where examid='$evid' and student='$student'";
+	$res = mysqli_query($conn,$sql);
+	if(mysqli_num_rows($res)>0) return true; else return false;
+}
+function getChatMessage($sender,$receiver,$chatwindow){
+	global $conn;
+	$sql="select id from chat_message where sender='$sender' and receiver='$receiver' and chatwindow='$chatwindow' and status='0'";
+	$res = mysqli_query($conn,$sql);
+	return mysqli_num_rows($res);
+} 
+
+function removeChatMessage(){
+	global $conn;
+	extract($_GET);
+	$sql="update chat_message set status='1' where sender='$sender' and receiver='$receiver' and chatwindow='$chatwindow'";
+	$res = mysqli_query($conn,$sql);
+	return mysqli_num_rows($res);
+} 
+
+function getOpenChatMessage(& $classes){
+	global $conn;
+	$nclasses = implode("','",$classes);
+	$sql="select count(id) as cnt,receiver from chat_message where receiver in ('$nclasses') and chatwindow='2' and status='0' group by receiver";	
+	$res = mysqli_query($conn,$sql);
+	$ar=array();
+	//$i=0;
+	while($row=mysqli_fetch_array($res)){
+		$receiver = $row['receiver'];
+		$ar[$receiver]=$row['cnt'];
+		//$ar[$receiver]['receiver']=$row['receiver'];
+		//$i++;
+		
+	}
+	return $ar;
+	
+}
+
+function getRemoveOpenChatMessage(& $chatid){
+	global $conn;
+	$chatids = implode("','",$chatid);
+	$uid=$_SESSION['tid'];
+	$nclasses = implode("','",$classes);
+	$sql="select chatid from open_chat_status where chatid in ('$chatids') and uid='$uid'";	
+	$res = mysqli_query($conn,$sql);
+	$ar=array();
+	while($row=mysqli_fetch_array($res)){
+		$ar[]=$row['chatid'];		
+	}
+	return $ar;
+	
+}
+
+function getStudentStats(& $sid){
+	global $conn;
+	$sql = "SELECT * FROM session_watching WHERE student='$sid'";
+	$res = mysqli_query($conn,$sql);
+	$rows = mysqli_num_rows($res);
+	$stats['live_session']=$rows;
+	
+	$sql = "SELECT id FROM tbl_answer WHERE studid='$sid' and evid='0'";
+	$res = mysqli_query($conn,$sql);
+	$rows = mysqli_num_rows($res);
+	$stats['assignment']=$rows;
+	
+	$sql = "SELECT id FROM tbl_answer WHERE studid='$sid' and evid!='0' group by evid";
+	$res = mysqli_query($conn,$sql);
+	$rows = mysqli_num_rows($res);
+	$stats['exams']=$rows;
+	
+	return $stats;
+}
+
+function getStatsLiveSession(& $class){
+	global $conn;
+	$cond = "";
+	if(isset($_GET['month']) && $_GET['month']!=''){
+	$date = date('Y').'-'.$_GET['month'];//exit;
+	$cond = " and DATE_FORMAT(sub_start_at ,'%Y-%m') ='$date' ";
+	}
+	$sql = "SELECT sub_start_at,sub_end_at,vid_teacher,vid_sub,vid_id FROM video WHERE vid_class='$class' $cond";
+	$res = mysqli_query($conn,$sql);
+	return mysqli_fetch_all($res,MYSQLI_ASSOC);
+}
+
+function getCheckPresetLiveSession($studid,$video){
+	global $conn;
+	$sql = "SELECT * FROM session_watching WHERE student='$studid' and video='$video'";
+	$res = mysqli_query($conn,$sql);
+	return mysqli_num_rows($res);
+}
+function getStatsAssignmentFreeText(& $class){
+	global $conn;
+	//print_r($_GET);
+	$cond = "";
+	if(isset($_GET['month']) && $_GET['month']!=''){
+	$date = date('Y').'-'.$_GET['month'];//exit;
+	$cond = " and DATE_FORMAT(closedate ,'%Y-%m') ='$date' ";
+	}	
+	$sql = "SELECT closedate,subject,id FROM tbl_freetext WHERE class='$class' and evid='0' $cond";
+	$res = mysqli_query($conn,$sql);
+	return mysqli_fetch_all($res,MYSQLI_ASSOC);
+}
+
+function getStatsAssignmentDoc(& $class){
+	global $conn;
+	$cond = "";
+	if(isset($_GET['month']) && $_GET['month']!=''){
+	$date = date('Y').'-'.$_GET['month'];//exit;
+	$cond = " and DATE_FORMAT(closedate ,'%Y-%m') ='$date' ";
+	}
+	$sql = "SELECT closedate,subject,id FROM tbl_questiondoc WHERE class='$class' and evid='0' $cond";
+	$res = mysqli_query($conn,$sql);
+	return mysqli_fetch_all($res,MYSQLI_ASSOC);
+}
+
+function getCheckPresetFreeAssignemnt($studid,$id){
+	global $conn;
+	$sql = "SELECT * FROM tbl_answer WHERE studid='$studid' and question='$id' and question_type='tbl_freetext'";
+	$res = mysqli_query($conn,$sql);
+	if(mysqli_num_rows($res)>0){
+	$row=mysqli_fetch_array($res);
+	return $row['id'];
+	}	
+}
+
+function getCheckPresetDocAssignemnt($studid,$id){
+	global $conn;
+	$sql = "SELECT * FROM tbl_answer WHERE studid='$studid' and question='$id' and question_type='tbl_questiondoc'";
+	$res = mysqli_query($conn,$sql);
+	if(mysqli_num_rows($res)>0){
+	$row=mysqli_fetch_array($res);
+	return $row['id'];
+	}
+}
+
+function getStatsExams(& $class){
+	global $conn;
+	$cond = "";
+	if(isset($_GET['month']) && $_GET['month']!=''){
+	$date = date('Y').'-'.$_GET['month'];//exit;
+	$cond = " and DATE_FORMAT(closedate ,'%Y-%m') ='$date' $cond";
+	}
+	$sql="select * from tbl_evolution where class='$class' $cond order by id desc";
+	$res = mysqli_query($conn,$sql);
+	if(mysqli_num_rows($res)){
+		return mysqli_fetch_all($res,MYSQLI_ASSOC);
+	}
+	else return array();	
+}	
+
+function getMarksPerExam(& $id){
+	global $conn;
+	$sql="select sum(marks) as totmarks from tbl_answer where evid='$id'";
+	$res = mysqli_query($conn,$sql);
+	$row = mysqli_fetch_array($res);
+	return $row['totmarks'];	
+}	
+
+function chkSubmitPerExam(& $id,& $stdid){
+	global $conn;
+	$sql="select id from tbl_answer where evid='$id' and studid='$stdid'";
+	$res = mysqli_query($conn,$sql);
+	return mysqli_num_rows($res);
+}	

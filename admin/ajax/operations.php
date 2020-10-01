@@ -1,7 +1,7 @@
 <?php
 session_start();
 include_once('../../model/config.php');
-include_once('functions/functions.php');
+include_once('../functions/functions.php');
 error_reporting(0);
 
 extract($_GET);
@@ -10,6 +10,9 @@ extract($_POST);
 //print_r($_FILES);
 $tid = $_SESSION['tid'];
 if($type=='evolution'){
+	$sqlc="SELECT id FROM tbl_evolution WHERE class='$class' AND date_format(opendate,'%Y-%m-%d')='$sdate'";
+	$resc = mysqli_query($conn,$sqlc);
+	if(mysqli_num_rows($resc)==0){	
 	$starttime = date('H:i:s',strtotime($starttime));
 	$endtime = date('H:i:s',strtotime($endtime));
 	$newopendate=$sdate.' '.$starttime;
@@ -21,12 +24,20 @@ if($type=='evolution'){
 	$_SESSION['evid'] = $id;
 	$_SESSION['tot_marks']=0;
 	$_SESSION['qcount']=0;
+	$arr['message']='';
 	$arr['evid']=$id;
+	
 	$comments="Exam is given";		
-		$arr=array('from_id'=>$_SESSION['tid'],'from_type'=>$_SESSION['u_type'],'to_id'=>'','to_type'=>'student','page'=>'exams&id='.$id,'tableid'=>$id,'tablename'=>'tbl_evolution','comments'=>$comments,'status'=>'1');
-	saveNotification($arr);
-	echo json_encode($arr);
+		$arrnot=array('from_id'=>$_SESSION['tid'],'from_type'=>$_SESSION['u_type'],'to_id'=>'','to_type'=>'student','page'=>'exams&id='.$id,'tableid'=>$id,'tablename'=>'tbl_evolution','comments'=>$comments,'status'=>'1');
+	saveNotification($arrnot);
+	
 	}
+	} else {
+		$arr['message']="You have already created exam for this date";
+		$arr['evid']='';
+	}
+	//print_r($arr);
+	echo json_encode($arr);
 }
 if(isset($_GET['evid']) && $_GET['evid']!=''){
 	$evid = $_GET['evid'];
