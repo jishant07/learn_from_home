@@ -23,7 +23,6 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.core.text.HtmlCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,10 +35,6 @@ import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.PDF.PDFViewer
 import com.amuze.learnfromhome.StudentActivity.ChatApplication
 import com.amuze.learnfromhome.ViewModel.VModel
-import com.android.volley.Request
-import com.android.volley.VolleyError
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.github.nkzawa.emitter.Emitter
 import com.github.nkzawa.socketio.client.Socket
@@ -121,7 +116,16 @@ class PlayerActivity : AppCompatActivity() {
             "lfh",
             Context.MODE_PRIVATE
         )
-        //live__body_text
+        when (page) {
+            "watchlist" -> {
+                watchlist.text = "Watchlisted"
+                Picasso.get().load(R.drawable.added_watchlist).into(watchlist_image)
+            }
+            else -> {
+                watchlist.text = "Watchlist"
+                Picasso.get().load(R.drawable.add_watchlist).into(watchlist_image)
+            }
+        }
         editor = sharedPreferences.edit()
         imageString = sharedPreferences.getString("userpic", "")!!
         playerView = findViewById(R.id.player_view)
@@ -479,7 +483,7 @@ class PlayerActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun loadCourseData(string: String) {
-        vModel.getVCourse(string).observe(this, androidx.lifecycle.Observer {
+        vModel.getVCourse(string).observe(this, {
             it?.let { resource ->
                 try {
                     when (resource.status) {
@@ -792,7 +796,7 @@ class PlayerActivity : AppCompatActivity() {
                 continueid,
                 (simpleExoPlayer.currentPosition / 1000).toString(),
                 (simpleExoPlayer.duration / 1000).toString()
-            ).observe(this@PlayerActivity, Observer {
+            ).observe(this@PlayerActivity, {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
@@ -1026,53 +1030,6 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-//    private fun addWatchList(id: String, courseid: String) {
-//        Log.d(TAG, "addW:$id::$courseid")
-//        CoroutineScope(Dispatchers.IO).launch {
-//            withContext(Dispatchers.Main) {
-//                try {
-//                    val url: String = when {
-//                        courseid.isNotEmpty() -> {
-//                            "https://flowrow.com/lfh/appapi.php?" +
-//                                    "action=list-gen&category=addwatchlist&emp_code=${Utils.userId}&classid=1" +
-//                                    "&course=$courseid&id=$id"
-//                        }
-//                        else -> {
-//                            "https://flowrow.com/lfh/appapi.php?" +
-//                                    "action=list-gen&category=removewatchlist&emp_code=${Utils.userId}&classid=1&" +
-//                                    "id=$id"
-//                        }
-//                    }
-//                    Log.d(TAG, "addWatchList:$url")
-//                    val queue = Volley.newRequestQueue(applicationContext)
-//                    val stringRequest1 = StringRequest(
-//                        Request.Method.GET,
-//                        url,
-//                        { response ->
-//                            when (response) {
-//                                "You have already added" -> {
-//                                    Toast.makeText(
-//                                        applicationContext,
-//                                        response, Toast.LENGTH_LONG
-//                                    )
-//                                        .show()
-//                                }
-//                                else -> {
-//                                    Log.d(TAG, "addWatchList:$response")
-//                                }
-//                            }
-//                        },
-//                        { error: VolleyError? ->
-//                            Log.d(TAG, "addWatchList:$error")
-//                        })
-//                    queue.add(stringRequest1)
-//                } catch (e: Exception) {
-//                    e.localizedMessage
-//                }
-//            }
-//        }
-//    }
-
     private fun addWatchList(id: String, courseid: String) {
         val url: String = when {
             courseid.isNotEmpty() -> {
@@ -1093,7 +1050,15 @@ class PlayerActivity : AppCompatActivity() {
                         Log.d(TAG, "addWatchList:${it.status}")
                     }
                     Status.SUCCESS -> {
-                        Log.d(TAG, "addWatchList:${it.data}")
+                        when (it.data) {
+                            "You have already added" -> {
+                                Toast.makeText(applicationContext, it.data, Toast.LENGTH_LONG)
+                                    .show()
+                            }
+                            else -> {
+                                Log.d(TAG, "addWatchList:${it.data}")
+                            }
+                        }
                     }
                     Status.ERROR -> {
                         Log.d(TAG, "addWatchList:${it.message}")
@@ -1145,6 +1110,7 @@ class PlayerActivity : AppCompatActivity() {
         private lateinit var videoID: String
         private lateinit var courseUrl: String
         private var live_start_flag: String = ""
+        var page = ""
         var videoflag = "videos"
         var id = ""
         var cid = ""
