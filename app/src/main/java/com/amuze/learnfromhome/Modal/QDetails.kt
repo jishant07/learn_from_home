@@ -30,5 +30,8 @@ data class QDetails(
     var marks: String,
     @SerializedName("qtype")
     @Expose
-    var qtype: String
+    var qtype: String,
+    @SerializedName("ansid")
+    @Expose
+    var ansid: String
 )

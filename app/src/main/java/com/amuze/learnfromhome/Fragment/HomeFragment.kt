@@ -304,7 +304,19 @@ class HomeFragment : Fragment() {
                 intent.putExtra("id", clist[position].id)
                 intent.putExtra("cid", clist[position].cid)
                 PlayerActivity.cid = clist[position].cid
-                PlayerActivity.documentUrl = clist[position].doc
+                try {
+                    when {
+                        clist[position].doc.isNullOrEmpty() -> {
+                            PlayerActivity.documentUrl = ""
+                        }
+                        else -> {
+                            PlayerActivity.documentUrl = clist[position].doc!!
+                        }
+                    }
+                } catch (e: Exception) {
+                    PlayerActivity.documentUrl = ""
+                    e.printStackTrace()
+                }
                 PlayerActivity.id = clist[position].id
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)

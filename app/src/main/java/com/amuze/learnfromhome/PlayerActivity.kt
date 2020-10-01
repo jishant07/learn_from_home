@@ -1026,39 +1026,81 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+//    private fun addWatchList(id: String, courseid: String) {
+//        Log.d(TAG, "addW:$id::$courseid")
+//        CoroutineScope(Dispatchers.IO).launch {
+//            withContext(Dispatchers.Main) {
+//                try {
+//                    val url: String = when {
+//                        courseid.isNotEmpty() -> {
+//                            "https://flowrow.com/lfh/appapi.php?" +
+//                                    "action=list-gen&category=addwatchlist&emp_code=${Utils.userId}&classid=1" +
+//                                    "&course=$courseid&id=$id"
+//                        }
+//                        else -> {
+//                            "https://flowrow.com/lfh/appapi.php?" +
+//                                    "action=list-gen&category=removewatchlist&emp_code=${Utils.userId}&classid=1&" +
+//                                    "id=$id"
+//                        }
+//                    }
+//                    Log.d(TAG, "addWatchList:$url")
+//                    val queue = Volley.newRequestQueue(applicationContext)
+//                    val stringRequest1 = StringRequest(
+//                        Request.Method.GET,
+//                        url,
+//                        { response ->
+//                            when (response) {
+//                                "You have already added" -> {
+//                                    Toast.makeText(
+//                                        applicationContext,
+//                                        response, Toast.LENGTH_LONG
+//                                    )
+//                                        .show()
+//                                }
+//                                else -> {
+//                                    Log.d(TAG, "addWatchList:$response")
+//                                }
+//                            }
+//                        },
+//                        { error: VolleyError? ->
+//                            Log.d(TAG, "addWatchList:$error")
+//                        })
+//                    queue.add(stringRequest1)
+//                } catch (e: Exception) {
+//                    e.localizedMessage
+//                }
+//            }
+//        }
+//    }
+
     private fun addWatchList(id: String, courseid: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    val url: String = when {
-                        courseid.isNotEmpty() -> {
-                            "https://flowrow.com/lfh/appapi.php?" +
-                                    "action=list-gen&category=addwatchlist&emp_code=${Utils.userId}&classid=1" +
-                                    "&course=$courseid&id=$id"
-                        }
-                        else -> {
-                            "https://flowrow.com/lfh/appapi.php?" +
-                                    "action=list-gen&category=removewatchlist&emp_code=${Utils.userId}&classid=1&" +
-                                    "id=$id"
-                        }
-                    }
-                    Log.d(TAG, "addWatchList:$url")
-                    val queue = Volley.newRequestQueue(applicationContext)
-                    val stringRequest1 = StringRequest(
-                        Request.Method.GET,
-                        url,
-                        { response ->
-                            Log.d(TAG, "addWatchList:$response")
-                        },
-                        { error: VolleyError? ->
-                            Log.d(TAG, "addWatchList:$error")
-                        })
-                    queue.add(stringRequest1)
-                } catch (e: Exception) {
-                    e.localizedMessage
-                }
+        val url: String = when {
+            courseid.isNotEmpty() -> {
+                "https://flowrow.com/lfh/appapi.php?" +
+                        "action=list-gen&category=addwatchlist&emp_code=${Utils.userId}&classid=1" +
+                        "&course=$courseid&id=$id"
+            }
+            else -> {
+                "https://flowrow.com/lfh/appapi.php?" +
+                        "action=list-gen&category=removewatchlist&emp_code=${Utils.userId}&classid=1&" +
+                        "id=$id"
             }
         }
+        vModel.watchList(applicationContext, url).observe(this, {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.LOADING -> {
+                        Log.d(TAG, "addWatchList:${it.status}")
+                    }
+                    Status.SUCCESS -> {
+                        Log.d(TAG, "addWatchList:${it.data}")
+                    }
+                    Status.ERROR -> {
+                        Log.d(TAG, "addWatchList:${it.message}")
+                    }
+                }
+            }
+        })
     }
 
     private fun setCourseText(videoCourse: VideoCourse) {

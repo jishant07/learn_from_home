@@ -30,12 +30,12 @@ import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.Modal.LTask
 import com.amuze.learnfromhome.Modal.Task
 import com.amuze.learnfromhome.Network.Status
+import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.activity_student_task.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.task_assignment.view.*
 import kotlinx.android.synthetic.main.task_item.view.*
 import kotlinx.android.synthetic.main.task_item1.view.*
@@ -73,6 +73,7 @@ class StudentTask : AppCompatActivity() {
         }
         see_all.setOnClickListener {
             val sIntent = Intent(context, ActivityPage::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(sIntent)
         }
         sTask_back.setOnClickListener {
@@ -472,12 +473,25 @@ class StudentTask : AppCompatActivity() {
 
     private fun deleteTask(id: String) {
         try {
-            vModel.getDeleteTaskLiveData(applicationContext, id).observe(this, {
-                it.let {
-                    Log.d(TAG, "deleteTask:$it")
-                    when (it) {
-                        "success" -> {
-                            loadTask()
+            val url =
+                "https://www.flowrow.com/lfh/appapi.php?action=list-gen&category=deletetask" +
+                        "&emp_code=${Utils.userId}&classid=1&taskid=$id"
+            vModel.dTaskLiveData(applicationContext, url).observe(this, {
+                it?.let { resource ->
+                    when (resource.status) {
+                        Status.LOADING -> {
+                            Log.d(TAG, "deleteTask:${it.status}")
+                        }
+                        Status.SUCCESS -> {
+                            Log.d(TAG, "deleteTask:${it.data}")
+                            when (it.data) {
+                                "success" -> {
+                                    loadTask()
+                                }
+                            }
+                        }
+                        Status.ERROR -> {
+                            Log.d(TAG, "deleteTask:${it.message}")
                         }
                     }
                 }

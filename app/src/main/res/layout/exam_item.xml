@@ -20,6 +20,7 @@
         android:textColor="@color/text_dark_white"
         android:textSize="15sp"
         android:textStyle="bold"
+        android:visibility="gone"
         tools:ignore="HardcodedText" />
 
     <LinearLayout

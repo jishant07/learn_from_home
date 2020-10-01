@@ -8,7 +8,6 @@ import com.amuze.learnfromhome.Modal.Assignments.SingleAssign
 import com.amuze.learnfromhome.Modal.Classroom.ClassroomData
 import com.amuze.learnfromhome.Modal.Exams.EPrev
 import com.amuze.learnfromhome.Modal.Exams.EPrevious
-import com.amuze.learnfromhome.Modal.Exams.Exams
 import com.amuze.learnfromhome.Modal.Exams.SingleExams
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -61,9 +60,8 @@ interface WebApi {
         @Query("action") action: String,
         @Query("category") category: String,
         @Query("emp_code") empcode: String,
-        @Query("classid") classid: String,
-        @Query("cid") cid: String
-    ): Response<Exams>
+        @Query("classid") classid: String
+    ): Response<List<QDetails>>
 
     @GET("appapi.php?")
     suspend fun getPrevExams(

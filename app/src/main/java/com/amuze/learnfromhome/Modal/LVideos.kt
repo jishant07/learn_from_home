@@ -21,5 +21,5 @@ data class LVideos(
     var sname: String,
     @SerializedName("document")
     @Expose
-    var doc: String
+    var doc: String?
 )

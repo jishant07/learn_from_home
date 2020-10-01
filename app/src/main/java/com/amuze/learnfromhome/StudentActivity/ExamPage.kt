@@ -1,4 +1,4 @@
-@file:Suppress("PackageName")
+@file:Suppress("PackageName", "PrivatePropertyName", "SpellCheckingInspection", "DEPRECATION")
 
 package com.amuze.learnfromhome.StudentActivity
 
@@ -13,13 +13,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.Modal.QDetails
 import com.amuze.learnfromhome.Modal.Task
+import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
 import kotlinx.android.synthetic.main.activity_exam_page.*
@@ -189,9 +189,15 @@ class ExamPage : AppCompatActivity() {
                 intent.putExtra("flag", "prev")
                 intent.putExtra("title", sList[position].question)
                 intent.putExtra("desc", sList[position].answer)
-                intent.putExtra("id",sList[position].id)
-                intent.putExtra("type",sList[position].qtype)
-                intent.putExtra("subj", "Marathi")
+                intent.putExtra("id", sList[position].id)
+                intent.putExtra("type", sList[position].qtype)
+                intent.putExtra("subj", sList[position].section)
+                intent.putExtra("ansid", sList[position].ansid)
+                try {
+                    NTaskUpload.submitflag = sList[position].ansid
+                } catch (e: Exception) {
+                    NTaskUpload.submitflag = "null"
+                }
                 context.startActivity(intent)
 
             }
@@ -240,41 +246,35 @@ class ExamPage : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun loadExamData() {
-        vModel.getExams().observe(this@ExamPage, Observer {
-            try {
-                when {
-                    it.data?.body()!!.qdetails.isNullOrEmpty() -> {
-                        headd_title.text = "You have 0 Questions Today!!"
-                        headd_subtitle.text = "0 unfinished question"
-                        crct_no.text = "0"
-                        wrng_no.text = "0"
-                        nsubmit_no.text = "0"
-                        total_count.text = "0"
+        vModel.getExams().observe(this, {
+            it?.let { resource ->
+                try {
+                    when (resource.status) {
+                        Status.LOADING -> {
+                            setNullText()
+                        }
+                        Status.SUCCESS -> {
+                            headd_title.text =
+                                "You have ${it.data!!.body()?.size} Questions Today!!"
+                            headd_subtitle.text =
+                                "${it.data.body()?.size} unfinished question"
+                            crct_no.text = "0"
+                            wrng_no.text = "2"
+                            nsubmit_no.text = "2"
+                            total_count.text = "${it.data.body()?.size}"
+                            headd_title.visibility = View.VISIBLE
+                            relative_body.visibility = View.VISIBLE
+                            eTitle.text = getString(R.string.last_exam_score)
+                            loadExams(it.data.body()!!)
+                        }
+                        Status.ERROR -> {
+                            setNullText()
+                        }
                     }
-                    it.data.body()!!.qdetails.isNotEmpty() -> {
-                        Log.d(TAG, "onCreate:${it.data.body()}")
-                        headd_title.text =
-                            "You have ${it.data.body()!!.qdetails.size} Questions Today!!"
-                        headd_subtitle.text =
-                            "${it.data.body()!!.qdetails.size} unfinished question"
-                        crct_no.text = "0"
-                        wrng_no.text = "2"
-                        nsubmit_no.text = "2"
-                        total_count.text = "${it.data.body()!!.qdetails.size}"
-                        headd_title.visibility = View.VISIBLE
-                        relative_body.visibility = View.VISIBLE
-                        eTitle.text = getString(R.string.last_exam_score)
-                        loadExams(it.data.body()!!.qdetails)
-                    }
+                } catch (e: Exception) {
+                    Log.d(TAG, "onCreate:$e")
+                    setNullText()
                 }
-            } catch (e: Exception) {
-                Log.d(TAG, "onCreate:$e")
-                headd_title.text = "You have 0 Questions Today!!"
-                headd_subtitle.text = "0 unfinished question"
-                crct_no.text = "0"
-                wrng_no.text = "0"
-                nsubmit_no.text = "0"
-                total_count.text = "0"
             }
         })
     }
@@ -283,6 +283,16 @@ class ExamPage : AppCompatActivity() {
         slist.clear()
         slist.addAll(list)
         sadapter.notifyDataSetChanged()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setNullText() {
+        headd_title.text = "You have 0 Questions Today!!"
+        headd_subtitle.text = "0 unfinished question"
+        crct_no.text = "0"
+        wrng_no.text = "0"
+        nsubmit_no.text = "0"
+        total_count.text = "0"
     }
 
     override fun onResume() {

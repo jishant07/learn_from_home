@@ -22,6 +22,7 @@ import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.Modal.LTask
 import com.amuze.learnfromhome.Modal.Subject
 import com.amuze.learnfromhome.Network.Status
+import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
 import kotlinx.android.synthetic.main.activity_page.*
@@ -50,23 +51,9 @@ class ActivityPage : AppCompatActivity() {
         setContentView(R.layout.activity_page)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
-        vModel.getTask().observe(this, {
-            it?.let { resource ->
-                when (resource.status) {
-                    Status.SUCCESS -> {
-                        Log.d(TAG, "onCreate:${resource.data!!.body()}")
-                        val list = resource.data.body()!!.reversed()
-                        tList.clear()
-                        tList.addAll(list)
-                        addTask(list)
-                        addSlider(list)
-                    }
-                    else -> {
-                        Log.d(TAG, "onCreate:Error")
-                    }
-                }
-            }
-        })
+        dateList.clear()
+        filteredList.clear()
+        loadAllTask()
         activity_back.setOnClickListener {
             val intent = Intent(applicationContext, HomePage::class.java)
             startActivity(intent)
@@ -132,6 +119,7 @@ class ActivityPage : AppCompatActivity() {
             val mydate: Date = SimpleDateFormat("yyyy-M-d").parse(dateString)!!
             val c = Calendar.getInstance()
             c.time = mydate
+            Log.d(TAG, "onBindViewHolder:${sList[position].name}")
             when (c[Calendar.DAY_OF_WEEK]) {
                 1
                 -> {
@@ -210,7 +198,7 @@ class ActivityPage : AppCompatActivity() {
         }
     }
 
-    class CustomAdapter1(private val sList: ArrayList<LTask>) :
+    inner class CustomAdapter1(private val slist: ArrayList<LTask>) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         private var checkFlag = false
@@ -228,14 +216,14 @@ class ActivityPage : AppCompatActivity() {
         }
 
         override fun getItemCount(): Int {
-            return sList.size
+            return slist.size
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            holder.itemView.head_title.text = sList[position].time
-            holder.itemView.head_title1.text = sList[position].taskname
+            holder.itemView.head_title.text = slist[position].time
+            holder.itemView.head_title1.text = slist[position].taskname
             myColor = try {
-                Color.parseColor(sList[position].color)
+                Color.parseColor(slist[position].color)
             } catch (e: Exception) {
                 Color.parseColor("#000000")
             }
@@ -258,20 +246,27 @@ class ActivityPage : AppCompatActivity() {
             }
             holder.itemView.edittask.setOnClickListener {
                 val intent = Intent(context, CreateTask::class.java)
-                CreateTask.taskID = sList[position].id
-                intent.putExtra("title", sList[position].taskname)
-                intent.putExtra("desc", sList[position].taskname)
-                intent.putExtra("flag", sList[position].allday)
-                intent.putExtra("dtime", sList[position].time)
-                intent.putExtra("date", sList[position].taskdate)
-                intent.putExtra("color", sList[position].color)
+                CreateTask.taskID = slist[position].id
+                intent.putExtra("title", slist[position].taskname)
+                intent.putExtra("desc", slist[position].taskname)
+                intent.putExtra("flag", slist[position].allday)
+                intent.putExtra("dtime", slist[position].time)
+                intent.putExtra("date", slist[position].taskdate)
+                intent.putExtra("color", slist[position].color)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
+            }
+            holder.itemView.deletetask.setOnClickListener {
+                try {
+                    deleteTask(slist[position].id)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
             (holder as MyViewHolder).bindItems()
         }
 
-        class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             @Suppress("UNUSED_VARIABLE")
             fun bindItems() {
                 val no = itemView.findViewById<TextView>(R.id.number)
@@ -281,18 +276,46 @@ class ActivityPage : AppCompatActivity() {
         }
     }
 
+    private fun loadAllTask() {
+        vModel.getTask().observe(this, {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.LOADING -> {
+                        Log.d(TAG, "loadAllTask:${it.status}")
+                    }
+                    Status.SUCCESS -> {
+                        Log.d(TAG, "loadAllTask:${resource.data?.body()}")
+                        tList.clear()
+                        filteredList.clear()
+                        slList.clear()
+                        tList.addAll(resource.data!!.body()!!.reversed())
+                        addTask(tList)
+                        addSlider(tList)
+                    }
+                    Status.ERROR -> {
+                        Log.d(TAG, "onCreate:${it.message}")
+                    }
+                }
+            }
+        })
+    }
+
     private fun filterTask(string: String) {
         try {
             Log.d(TAG, "filterTask:$string")
+            filteredSlide.clear()
             val filtered = tList.filter { it.taskdate == string }
             val distinct = filtered.distinct().toList()
-            addTask(distinct)
+            Log.d(TAG, "filterTask:$distinct")
+            filteredSlide.addAll(distinct)
+            addTask(filteredSlide)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     private fun addTask(list: List<LTask>) {
+        Log.d(TAG, "addTask:$list")
         try {
             slList.clear()
             slList.addAll(list)
@@ -303,7 +326,10 @@ class ActivityPage : AppCompatActivity() {
     }
 
     private fun addSlider(list: List<LTask>) {
+        Log.d(TAG, "addSlider:$list")
         try {
+            filteredList.clear()
+            dateList.clear()
             val listIterator = list.listIterator()
             while (listIterator.hasNext()) {
                 val i = listIterator.next()
@@ -311,6 +337,38 @@ class ActivityPage : AppCompatActivity() {
             }
             filteredList.addAll(dateList.distinct().toList())
             sadapter.notifyDataSetChanged()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun deleteTask(id: String) {
+        try {
+            val url =
+                "https://www.flowrow.com/lfh/appapi.php?action=list-gen&category=deletetask" +
+                        "&emp_code=${Utils.userId}&classid=1&taskid=$id"
+            vModel.dTaskLiveData(applicationContext, url).observe(this, {
+                it?.let { resource ->
+                    when (resource.status) {
+                        Status.LOADING -> {
+                            Log.d(TAG, "deleteTask:${it.status}")
+                        }
+                        Status.SUCCESS -> {
+                            when (it.data) {
+                                "success" -> {
+                                    finish()
+                                    overridePendingTransition(0, 0)
+                                    startActivity(intent)
+                                    overridePendingTransition(0, 0)
+                                }
+                            }
+                        }
+                        Status.ERROR -> {
+                            Log.d(TAG, "deleteTask:${it.message}")
+                        }
+                    }
+                }
+            })
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -330,6 +388,7 @@ class ActivityPage : AppCompatActivity() {
 
     companion object {
         lateinit var context: Context
+        var filteredSlide: ArrayList<LTask> = ArrayList()
         var dateList: ArrayList<Subject> = ArrayList()
         var currentPosition = 0
     }

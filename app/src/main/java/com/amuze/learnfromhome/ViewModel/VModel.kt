@@ -1,4 +1,4 @@
-@file:Suppress("PackageName", "unused", "PrivatePropertyName")
+@file:Suppress("PackageName", "PrivatePropertyName")
 
 package com.amuze.learnfromhome.ViewModel
 
@@ -16,6 +16,8 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.coroutines.*
 import okhttp3.MultipartBody
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class VModel : ViewModel() {
 
@@ -52,12 +54,6 @@ class VModel : ViewModel() {
         }
     }
 
-    private val deleteTaskData: MutableLiveData<String> by lazy {
-        MutableLiveData<String>().also {
-            deleteTask(dTaskID)
-        }
-    }
-
     fun getLogin(
         context: Context,
         usertype: String,
@@ -81,12 +77,6 @@ class VModel : ViewModel() {
         vContext = context
         chatMsg = string
         return chatMutableData
-    }
-
-    fun getDeleteTaskLiveData(context: Context, id: String): LiveData<String> {
-        vContext = context
-        dTaskID = id
-        return deleteTaskData
     }
 
     private fun loadLogin() {
@@ -174,28 +164,25 @@ class VModel : ViewModel() {
         }
     }
 
-    private fun deleteTask(id: String) {
-        CoroutineScope(Dispatchers.Main).launch {
-            withContext(Dispatchers.IO) {
-                try {
-                    val queue = Volley.newRequestQueue(vContext)
-                    val url =
-                        "https://www.flowrow.com/lfh/appapi.php?action=list-gen&category=deletetask" +
-                                "&emp_code=${Utils.userId}&classid=1&taskid=$id"
-                    val stringRequest1 = StringRequest(
-                        Request.Method.GET,
-                        url,
-                        { response ->
-                            deleteTaskData.value = response
-                        },
-                        { error: VolleyError? ->
-                            deleteTaskData.value = error.toString()
-                        })
-                    queue.add(stringRequest1)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+    fun watchList(context: Context, url: String) = liveData(Dispatchers.IO) {
+        vContext = context
+        watchURL = url
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = getData()))
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
+        }
+    }
+
+    fun dTaskLiveData(context: Context, url: String) = liveData(Dispatchers.IO) {
+        vContext = context
+        dTaskURL = url
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = getDTask()))
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
         }
     }
 
@@ -453,6 +440,35 @@ class VModel : ViewModel() {
         }
     }
 
+    private suspend fun getData() = suspendCoroutine<String> {
+        val queue = Volley.newRequestQueue(vContext)
+        val stringRequest1 = StringRequest(
+            Request.Method.GET,
+            watchURL,
+            { response ->
+                Log.d(TAG, "getData:$response")
+            },
+            { error: VolleyError? ->
+                Log.d(TAG, "getData:$error")
+            })
+        queue.add(stringRequest1)
+    }
+
+    private suspend fun getDTask() = suspendCoroutine<String> { cont ->
+        val queue = Volley.newRequestQueue(vContext)
+        val stringRequest1 = StringRequest(
+            Request.Method.GET,
+            dTaskURL,
+            { response ->
+                Log.d(TAG, "getDTask:$response")
+                cont.resume(response)
+            },
+            { error: VolleyError? ->
+                Log.d(TAG, "getDTask:$error")
+            })
+        queue.add(stringRequest1)
+    }
+
     private suspend fun getSTask() = service1.getTask(
         "list-gen",
         "tasks",
@@ -499,8 +515,7 @@ class VModel : ViewModel() {
         "list-gen",
         "exams",
         Utils.userId,
-        "1",
-        "2"
+        "1"
     )
 
     private suspend fun getSPrevExam() = service1.getPrevExams(
@@ -663,7 +678,7 @@ class VModel : ViewModel() {
         private lateinit var uPassword: String
         private lateinit var oldPassword: String
         private lateinit var newPassword: String
-        private lateinit var dTaskID: String
-        private var API_URL = "https://www.flowrow.com/lfh/appapi.php?action=list-gen&"
+        private lateinit var dTaskURL: String
+        private lateinit var watchURL: String
     }
 }

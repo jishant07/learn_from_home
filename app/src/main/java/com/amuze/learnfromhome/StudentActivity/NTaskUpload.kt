@@ -1,6 +1,6 @@
 @file:Suppress(
     "PackageName", "PrivatePropertyName", "unused", "UNUSED_VARIABLE",
-    "SpellCheckingInspection"
+    "SpellCheckingInspection", "DEPRECATION"
 )
 
 package com.amuze.learnfromhome.StudentActivity
@@ -21,7 +21,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.Modal.FileUtils.FilePath.getFileName
@@ -129,8 +128,9 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
 
     @SuppressLint("SetTextI18n")
     private fun loadSingleAssign(string: String, string1: String) {
+        Log.d(TAG, "loadSingleAssign:$string::$string1")
         vModel.getSingleAssignment(string, string1)
-            .observe(this@NTaskUpload, Observer {
+            .observe(this@NTaskUpload, {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
@@ -167,14 +167,14 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
     @SuppressLint("SetTextI18n")
     private fun getSingleExams(string: String, string1: String) {
         vModel.getSExams(string, string1)
-            .observe(this@NTaskUpload, Observer {
+            .observe(this@NTaskUpload, {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
                             upload_page_body.visibility = View.VISIBLE
                             taskProgress.visibility = View.GONE
-                            when (it.data?.body()!!.uploadflg) {
-                                "1" -> {
+                            when (submitflag) {
+                                "null" -> {
                                     correct_txt.text = "Submit your Answer"
                                 }
                                 else -> {
@@ -183,7 +183,7 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                                         .into(corrct_img)
                                 }
                             }
-                            correct_marks.text = "${it.data.body()!!.marks}marks"
+                            correct_marks.text = "${it.data?.body()!!.marks}marks"
                             flag.text = it.data.body()!!.question
                             val colData = it.data.body()!!.cols1
                             val colData1 = it.data.body()!!.cols2
@@ -330,5 +330,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
         private var notificationId = 0
         const val CHANNEL_ID = "download_progress_notification"
         var progress = 0
+        var submitflag = ""
     }
 }

@@ -57,8 +57,10 @@
                 android:id="@+id/correct_relative"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:padding="6dp">
+                android:paddingStart="2dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="6dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
