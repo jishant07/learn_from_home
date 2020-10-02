@@ -27,5 +27,11 @@ data class SingleAssign(
     var doc: String,
     @SerializedName("uploadflag")
     @Expose
-    var uflag: String
+    var uflag: String,
+    @SerializedName("evid")
+    @Expose
+    var evid: String,
+    @SerializedName("submit_status")
+    @Expose
+    var sStatus: String
 )

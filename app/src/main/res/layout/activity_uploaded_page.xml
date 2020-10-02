@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".StudentActivity.NTaskUpload">
+    tools:context=".StudentActivity.UploadedPage">
 
     <RelativeLayout
         android:id="@+id/header_relative"
@@ -16,7 +16,7 @@
         android:visibility="visible">
 
         <ImageView
-            android:id="@+id/upload_back"
+            android:id="@+id/uploaded_back"
             android:layout_width="25sp"
             android:layout_height="20sp"
             android:layout_centerVertical="true"
@@ -25,12 +25,12 @@
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/uploadtxt"
+            android:id="@+id/uploadedtxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginStart="15dp"
-            android:layout_toEndOf="@id/upload_back"
+            android:layout_toEndOf="@id/uploaded_back"
             android:text="UPLOAD ACTIVITY"
             android:textColor="@color/accent_black"
             android:textSize="20sp"
@@ -60,7 +60,8 @@
                 android:paddingStart="2dp"
                 android:paddingTop="6dp"
                 android:paddingEnd="4dp"
-                android:paddingBottom="6dp">
+                android:paddingBottom="6dp"
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -195,109 +196,8 @@
                 android:textColor="@color/accent_black"
                 android:textSize="16sp"
                 android:textStyle="normal"
-                android:visibility="gone"
+                android:visibility="visible"
                 tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/ytextarea"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/edit_text_rounded"
-                android:backgroundTint="@color/light_background"
-                android:gravity="top"
-                android:inputType="text|textMultiLine"
-                android:paddingStart="18dp"
-                android:paddingTop="15dp"
-                android:text="Description "
-                android:textColor="@color/accent_black"
-                tools:ignore="HardcodedText,RtlSymmetry" />
-
-
-            <RelativeLayout
-                android:id="@+id/upload_body"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
-
-                <LinearLayout
-                    android:id="@+id/upload_relative"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/border_rounded"
-                    android:backgroundTint="@color/accent_yellow"
-                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                    android:orientation="horizontal"
-                    android:paddingStart="15dp"
-                    android:paddingTop="5dp"
-                    android:paddingEnd="15dp"
-                    android:paddingBottom="5dp">
-
-                    <ImageView
-                        android:layout_width="23dp"
-                        android:layout_height="23dp"
-                        android:src="@drawable/ref_document" />
-
-                    <TextView
-                        android:id="@+id/upload_document"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="3dp"
-                        android:layout_marginTop="1dp"
-                        android:padding="1dp"
-                        android:text="Upload. Document"
-                        android:textColor="@color/whitebg"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        tools:ignore="HardcodedText" />
-
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/delete_doc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="20dp"
-                    android:src="@drawable/delete_document"
-                    android:visibility="gone"
-                    tools:ignore="ContentDescription" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/upload_linear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="15sp"
-                android:layout_marginEnd="5sp"
-                android:background="@drawable/edit_text_rounded"
-                android:backgroundTint="@color/light_background"
-                android:orientation="horizontal"
-                android:paddingStart="15dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="15dp"
-                android:paddingBottom="8dp"
-                android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="17dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/upload" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10sp"
-                    android:text="UPLOAD"
-                    android:textColor="@color/accent_black"
-                    android:textSize="14sp"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/yourAns"
@@ -308,7 +208,7 @@
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:visibility="gone"
+                android:visibility="visible"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -323,27 +223,9 @@
                 android:backgroundTint="@color/accent_edit_border"
                 android:gravity="center"
                 android:padding="10dp"
-                android:visibility="gone"
                 android:text="@string/dumpText"
                 android:textColor="@color/accent_black"
                 android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/submit_answer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16sp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="26sp"
-                android:background="@drawable/edit_text_rounded"
-                android:backgroundTint="@color/accent_pink"
-                android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                android:text="SUBMIT"
-                android:textColor="@color/light_background"
-                android:textSize="18sp"
-                android:textStyle="normal"
-                tools:ignore="HardcodedText" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

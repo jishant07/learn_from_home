@@ -136,24 +136,23 @@ class Assignment : AppCompatActivity() {
             holder.itemView.subject_tag.text = slist[position].subject_name
             holder.itemView.header_tag.text =
                 slist[position].question
-//            when (slist[position].freestatus) {
-//                "1" -> {
-//                    holder.itemView.submit_tag.visibility = View.VISIBLE
-//                    holder.itemView.submit_tag.text = "Pending"
-//                }
-//                else -> {
-//                    holder.itemView.submit_tag.visibility = View.GONE
-//                    holder.itemView.assignmentSubmit.visibility = View.VISIBLE
-//                }
-//            }
-            holder.itemView.submit_tag.visibility = View.VISIBLE
-            holder.itemView.submit_tag.text = "Pending"
+            Log.d("onBindViewHolder", ":${slist[position].sStatus}")
+            when (slist[position].sStatus) {
+                "Submitted" -> {
+                    holder.itemView.submit_tag.visibility = View.GONE
+                    holder.itemView.assignmentSubmit.visibility = View.VISIBLE
+                }
+                else -> {
+                    holder.itemView.submit_tag.visibility = View.VISIBLE
+                    holder.itemView.submit_tag.text = "Pending"
+                }
+            }
             holder.itemView.assignmentbody.setOnClickListener {
                 val intent = Intent(context, NTaskUpload::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.putExtra("flag", "normal")
-                intent.putExtra("id",slist[position].id)
-                intent.putExtra("type",slist[position].type)
+                intent.putExtra("id", slist[position].id)
+                intent.putExtra("type", slist[position].type)
                 intent.putExtra("title", slist[position].question)
                 intent.putExtra("desc", slist[position].closedate)
                 intent.putExtra("subj", slist[position].subject_name)

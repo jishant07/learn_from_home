@@ -24,5 +24,11 @@ data class NAssignments(
     var closedate: String,
     @SerializedName("type")
     @Expose
-    var type: String
+    var type: String,
+    @SerializedName("document")
+    @Expose
+    var doc: String,
+    @SerializedName("submit_status")
+    @Expose
+    var sStatus: String
 )

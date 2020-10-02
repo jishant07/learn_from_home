@@ -18,6 +18,7 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -73,7 +74,15 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                 utitle.visibility = View.VISIBLE
                 udesc.visibility = View.VISIBLE
                 flag.visibility = View.VISIBLE
-                upload_body.visibility = View.VISIBLE
+                when {
+                    intent.getStringExtra("type")!!
+                        .toString().contains("doc") -> {
+                        upload_body.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        upload_body.visibility = View.GONE
+                    }
+                }
                 getSingleExams(
                     intent.getStringExtra("id")!!,
                     intent.getStringExtra("type")!!.toString()
@@ -140,14 +149,32 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                                 flag.text = it.data?.body()!!.sname
                                 utitle.text = it.data.body()!!.questn
                                 udesc.text = "Submit before ${it.data.body()!!.cdate}"
+                                docurl = it.data.body()!!.doc
+                                try {
+                                    val submitstatus = it.data.body()!!.sStatus
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
                                 refer_doc.setOnClickListener {
-                                    val intent = Intent(applicationContext, PDFViewer::class.java)
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    intent.putExtra(
-                                        "url",
-                                        "https://www.flowrow.com/lfh/uploads/my_books/9904History-Class.pdf"
-                                    )
-                                    startActivity(intent)
+                                    try {
+                                        when {
+                                            docurl.isNotEmpty() -> {
+                                                val intent = Intent(
+                                                    applicationContext,
+                                                    PDFViewer::class.java
+                                                )
+                                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                                intent.putExtra(
+                                                    "url",
+                                                    docurl
+                                                )
+                                                startActivity(intent)
+                                            }
+                                        }
+                                    } catch (e: Exception) {
+                                        showToast()
+                                        e.printStackTrace()
+                                    }
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -166,6 +193,7 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
 
     @SuppressLint("SetTextI18n")
     private fun getSingleExams(string: String, string1: String) {
+        Log.d(TAG, "getSingleExams:$string::$string1")
         vModel.getSExams(string, string1)
             .observe(this@NTaskUpload, {
                 it?.let { resource ->
@@ -184,19 +212,33 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                                 }
                             }
                             correct_marks.text = "${it.data?.body()!!.marks}marks"
+                            docurl = it.data.body()!!.refer
                             flag.text = it.data.body()!!.question
                             val colData = it.data.body()!!.cols1
                             val colData1 = it.data.body()!!.cols2
                             utitle.visibility = View.GONE
                             udesc.visibility = View.GONE
                             refer_doc.setOnClickListener {
-                                val intent = Intent(applicationContext, PDFViewer::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                intent.putExtra(
-                                    "url",
-                                    "https://www.flowrow.com/lfh/uploads/my_books/9904History-Class.pdf"
-                                )
-                                startActivity(intent)
+                                try {
+                                    when {
+                                        docurl.isNotEmpty() -> {
+                                            val intent =
+                                                Intent(applicationContext, PDFViewer::class.java)
+                                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                            intent.putExtra(
+                                                "url",
+                                                docurl
+                                            )
+                                            startActivity(intent)
+                                        }
+                                        else -> {
+                                            showToast()
+                                        }
+                                    }
+                                } catch (e: Exception) {
+                                    showToast()
+                                    e.printStackTrace()
+                                }
                             }
                         }
                         Status.ERROR -> {
@@ -323,6 +365,14 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun showToast() {
+        Toast.makeText(
+            applicationContext,
+            "No Document Available",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
     companion object {
         var TAG = "NTaskUpload"
         private var mNotifyManager: NotificationManagerCompat? = null
@@ -331,5 +381,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
         const val CHANNEL_ID = "download_progress_notification"
         var progress = 0
         var submitflag = ""
+        var docurl = ""
     }
 }
