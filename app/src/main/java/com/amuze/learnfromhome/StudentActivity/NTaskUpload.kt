@@ -150,25 +150,12 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                                 utitle.text = it.data.body()!!.questn
                                 udesc.text = "Submit before ${it.data.body()!!.cdate}"
                                 docurl = it.data.body()!!.doc
-                                try {
-                                    val submitstatus = it.data.body()!!.sStatus
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
+                                val submitstatus = it.data.body()!!.sStatus
                                 refer_doc.setOnClickListener {
                                     try {
                                         when {
                                             docurl.isNotEmpty() -> {
-                                                val intent = Intent(
-                                                    applicationContext,
-                                                    PDFViewer::class.java
-                                                )
-                                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                                intent.putExtra(
-                                                    "url",
-                                                    docurl
-                                                )
-                                                startActivity(intent)
+                                                startPDFAct()
                                             }
                                         }
                                     } catch (e: Exception) {
@@ -222,14 +209,7 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                                 try {
                                     when {
                                         docurl.isNotEmpty() -> {
-                                            val intent =
-                                                Intent(applicationContext, PDFViewer::class.java)
-                                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                            intent.putExtra(
-                                                "url",
-                                                docurl
-                                            )
-                                            startActivity(intent)
+                                            startPDFAct()
                                         }
                                         else -> {
                                             showToast()
@@ -371,6 +351,16 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
             "No Document Available",
             Toast.LENGTH_LONG
         ).show()
+    }
+
+    private fun startPDFAct() {
+        val intent = Intent(applicationContext, PDFViewer::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putExtra(
+            "url",
+            docurl
+        )
+        startActivity(intent)
     }
 
     companion object {
