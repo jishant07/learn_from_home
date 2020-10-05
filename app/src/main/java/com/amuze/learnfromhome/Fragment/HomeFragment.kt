@@ -19,24 +19,32 @@ import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders.*
+import androidx.lifecycle.ViewModelProviders.of
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.amuze.learnfromhome.*
-import com.amuze.learnfromhome.Modal.*
+import com.amuze.learnfromhome.Login
+import com.amuze.learnfromhome.Modal.CWatching
+import com.amuze.learnfromhome.Modal.Ebooks
+import com.amuze.learnfromhome.Modal.LVideos
 import com.amuze.learnfromhome.Modal.NDataStore.ApplicationData
+import com.amuze.learnfromhome.Modal.Session
 import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.PDF.PDFViewer
+import com.amuze.learnfromhome.PlayerActivity
+import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.StudentActivity.*
 import com.amuze.learnfromhome.ViewModel.VModel
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.circular_item.view.*
-import kotlinx.android.synthetic.main.ebook_item.view.body
+import kotlinx.android.synthetic.main.ebook_item.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -300,7 +308,7 @@ class HomeFragment : Fragment() {
                 intent.putExtra("subname", clist[position].sname)
                 intent.putExtra("desc", clist[position].title)
                 intent.putExtra("pic", clist[position].vthumb)
-                intent.putExtra("teacher", "Sachin Kunthe")
+                intent.putExtra("teacher", "")
                 intent.putExtra("id", clist[position].id)
                 intent.putExtra("cid", clist[position].cid)
                 PlayerActivity.cid = clist[position].cid
@@ -454,14 +462,21 @@ class HomeFragment : Fragment() {
                 intent.putExtra("flag", "videos")
                 intent.putExtra("title", sList[position].vtitle)
                 intent.putExtra("subname", "")
-                intent.putExtra("teacher", "Sachin Kunthe")
+                intent.putExtra("teacher", "")
                 intent.putExtra("desc", sList[position].vtitle)
                 intent.putExtra("pic", sList[position].thumb)
                 intent.putExtra("id", sList[position].id)
                 PlayerActivity.cid = sList[position].cid
                 PlayerActivity.id = sList[position].id
-                PlayerActivity.documentUrl = sList[position].doc
+                try {
+                    PlayerActivity.documentUrl = sList[position].doc
+                } catch (e: Exception) {
+                    PlayerActivity.documentUrl = ""
+                    Log.d(TAG, "onBindViewHolder:$e")
+                }
                 PlayerActivity.videoflag = "continue"
+                PlayerActivity.videomark = sList[position].watchtime.toInt() * 1000
+                intent.putExtra("mark", sList[position].watchtime.toInt() * 1000)
                 intent.putExtra("cid", "")
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)

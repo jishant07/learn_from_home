@@ -665,6 +665,18 @@ class PlayerActivity : AppCompatActivity() {
                 playerView.player = simpleExoPlayer
                 playerView.requestFocus()
                 simpleExoPlayer.addListener(PlayerEventListener())
+                try {
+                    when (videoflag) {
+                        "continue" -> {
+                            val cMark = videomark.toFloat().toInt().toLong()
+                            simpleExoPlayer.seekTo(
+                                cMark
+                            )
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }, 2000)
         } catch (e: Exception) {
             Log.d("playerError", e.toString())
@@ -810,7 +822,7 @@ class PlayerActivity : AppCompatActivity() {
                     id
                 }
                 "continue" -> {
-                    cid
+                    id
                 }
                 else -> cid
             }
@@ -1133,6 +1145,7 @@ class PlayerActivity : AppCompatActivity() {
         private lateinit var videoID: String
         private lateinit var courseUrl: String
         private var live_start_flag: String = ""
+        var videomark = 0
         var page = ""
         var videoflag = "videos"
         var id = ""
