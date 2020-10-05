@@ -1,9 +1,11 @@
-package com.amuze.learnfromhome.Modal.Assignments
+@file:Suppress("PackageName")
+
+package com.amuze.learnfromhome.Modal.AssignmentResult
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class NAssignments(
+data class Question(
     @SerializedName("id")
     @Expose
     var id: String,
@@ -22,16 +24,10 @@ data class NAssignments(
     @SerializedName("closedate")
     @Expose
     var closedate: String,
-    @SerializedName("type")
-    @Expose
-    var type: String,
     @SerializedName("document")
     @Expose
     var doc: String,
-    @SerializedName("submit_status")
+    @SerializedName("uploadflag")
     @Expose
-    var sStatus: String,
-    @SerializedName("ansid")
-    @Expose
-    var ansid: String
+    var uflag: String
 )

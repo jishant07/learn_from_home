@@ -28,9 +28,18 @@ data class QDetails(
     @SerializedName("marks")
     @Expose
     var marks: String,
+    @SerializedName("document")
+    @Expose
+    var document: String,
     @SerializedName("qtype")
     @Expose
     var qtype: String,
+    @SerializedName("opendate")
+    @Expose
+    var opendate: String,
+    @SerializedName("closedate")
+    @Expose
+    var closedate: String,
     @SerializedName("ansid")
     @Expose
     var ansid: String

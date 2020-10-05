@@ -24,7 +24,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="q">
-        <activity android:name=".StudentActivity.UploadedPage"></activity>
+        <activity
+            android:name=".StudentActivity.UploadedPage"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PDF.PDFWeb"
             android:screenOrientation="portrait"

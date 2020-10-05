@@ -1,4 +1,4 @@
-@file:Suppress("unused", "PackageName")
+@file:Suppress("unused", "PackageName", "DEPRECATION", "PrivatePropertyName")
 
 package com.amuze.learnfromhome.StudentActivity
 
@@ -16,7 +16,6 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -54,12 +53,11 @@ class Assignment : AppCompatActivity() {
         actionBar?.setDisplayHomeAsUpEnabled(true)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
-        vModel.getNAssignment().observe(this@Assignment, Observer {
+        vModel.getNAssignment().observe(this@Assignment, {
             try {
                 Log.d(TAG, "onCreate:${it.data?.body()!!}")
                 when {
                     it.data.body()!!.assignment.data.isEmpty() -> {
-                        //nodatafound.visibility = View.VISIBLE
                         headd_title.text = "You have 0 Assignments Today!!"
                         headd_subtitle.text = "0 unfinished tasks"
                     }
@@ -100,10 +98,6 @@ class Assignment : AppCompatActivity() {
             finish()
         }
         addtasklist.setOnClickListener {
-//            val intent = Intent(applicationContext, CreateTask::class.java)
-//            intent.putExtra("flag", "taskactivity")
-//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//            startActivity(intent)
             Toast.makeText(applicationContext, "Coming Soon!!", Toast.LENGTH_LONG).show()
         }
         recyclerView.apply {
@@ -148,15 +142,39 @@ class Assignment : AppCompatActivity() {
                 }
             }
             holder.itemView.assignmentbody.setOnClickListener {
-                val intent = Intent(context, NTaskUpload::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.putExtra("flag", "normal")
-                intent.putExtra("id", slist[position].id)
-                intent.putExtra("type", slist[position].type)
-                intent.putExtra("title", slist[position].question)
-                intent.putExtra("desc", slist[position].closedate)
-                intent.putExtra("subj", slist[position].subject_name)
-                context.startActivity(intent)
+                try {
+                    when {
+                        slist[position].ansid.isNotEmpty() -> {
+                            val intent = Intent(context, UploadedPage::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            UploadedPage.ansID = slist[position].ansid
+                            context.startActivity(intent)
+                        }
+                        else -> {
+                            val intent = Intent(context, NTaskUpload::class.java)
+                            NTaskUpload.evid = "0"
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            intent.putExtra("flag", "normal")
+                            intent.putExtra("id", slist[position].id)
+                            intent.putExtra("type", slist[position].type)
+                            intent.putExtra("title", slist[position].question)
+                            intent.putExtra("desc", slist[position].closedate)
+                            intent.putExtra("subj", slist[position].subject_name)
+                            context.startActivity(intent)
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    val intent = Intent(context, NTaskUpload::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    intent.putExtra("flag", "normal")
+                    intent.putExtra("id", slist[position].id)
+                    intent.putExtra("type", slist[position].type)
+                    intent.putExtra("title", slist[position].question)
+                    intent.putExtra("desc", slist[position].closedate)
+                    intent.putExtra("subj", slist[position].subject_name)
+                    context.startActivity(intent)
+                }
             }
             holder.bindItems()
         }

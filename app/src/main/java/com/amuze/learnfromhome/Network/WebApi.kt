@@ -3,6 +3,7 @@
 package com.amuze.learnfromhome.Network
 
 import com.amuze.learnfromhome.Modal.*
+import com.amuze.learnfromhome.Modal.AssignmentResult.AssignResult
 import com.amuze.learnfromhome.Modal.Assignments.MAssignment
 import com.amuze.learnfromhome.Modal.Assignments.SingleAssign
 import com.amuze.learnfromhome.Modal.Classroom.ClassroomData
@@ -229,6 +230,7 @@ interface WebApi {
         @Query("classid") classid: String,
         @Query("emp_code") empcode: String,
         @Query("id") id: String,
+        @Query("evid") evid: String,
         @Query("type") type: String,
         @Part body: MultipartBody.Part,
         @Query("answer") ans: String
@@ -241,8 +243,8 @@ interface WebApi {
         @Query("classid") classid: String,
         @Query("emp_code") empcode: String,
         @Query("id") id: String,
+        @Query("evid") evid: String,
         @Query("type") type: String,
-        @Query("file") body: ByteArray,
         @Query("answer") ans: String
     ): Response<SMessage>
 
@@ -264,4 +266,13 @@ interface WebApi {
         @Query("old_password") oldpass: String,
         @Query("new_password") newpass: String
     ): Response<SMessage>
+
+    @GET("appapi.php?")
+    suspend fun assignmentResult(
+        @Query("action") action: String,
+        @Query("category") category: String,
+        @Query("classid") classid: String,
+        @Query("emp_code") empcode: String,
+        @Query("ansid") id: String
+    ): Response<AssignResult>
 }

@@ -403,15 +403,41 @@ class VModel : ViewModel() {
             }
         }
 
-    fun getSAssignData(string: String, string1: String, part: MultipartBody.Part, string2: String) =
+    fun getSAssignData(
+        string: String,
+        examid: String,
+        string1: String,
+        part: MultipartBody.Part,
+        string2: String
+    ) =
         liveData(Dispatchers.IO) {
             submitid = string
+            evid = examid
             assigntype = string1
             multipartFile = part
             answer = string2
             emit(Resource.loading(data = null))
             try {
                 emit(Resource.success(data = getSubmitAssign()))
+            } catch (exception: Exception) {
+                emit(Resource.error(data = null, message = exception.message ?: "Error Occured!"))
+            }
+        }
+
+    fun getSubmitAssignNew(
+        string: String,
+        examid: String,
+        string1: String,
+        string2: String
+    ) =
+        liveData(Dispatchers.IO) {
+            submitid = string
+            evid = examid
+            assigntype = string1
+            answer = string2
+            emit(Resource.loading(data = null))
+            try {
+                emit(Resource.success(data = getSubmitAssignNew()))
             } catch (exception: Exception) {
                 emit(Resource.error(data = null, message = exception.message ?: "Error Occured!"))
             }
@@ -435,6 +461,16 @@ class VModel : ViewModel() {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = getForgotPassword()))
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occured!"))
+        }
+    }
+
+    fun getAResult(string: String) = liveData(Dispatchers.IO) {
+        aResultId = string
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = getAssignmentResult()))
         } catch (exception: Exception) {
             emit(Resource.error(data = null, message = exception.message ?: "Error Occured!"))
         }
@@ -644,8 +680,20 @@ class VModel : ViewModel() {
         "1",
         Utils.userId,
         submitid,
+        evid,
         assigntype,
         multipartFile,
+        answer
+    )
+
+    private suspend fun getSubmitAssignNew() = service1.getAssignmentSubmitNew(
+        "list-gen",
+        "assignment-submit",
+        "1",
+        Utils.userId,
+        submitid,
+        evid,
+        assigntype,
         answer
     )
 
@@ -666,10 +714,19 @@ class VModel : ViewModel() {
         newPassword
     )
 
+    private suspend fun getAssignmentResult() = service1.assignmentResult(
+        "list-gen",
+        "exam-result",
+        Utils.classId,
+        Utils.userId,
+        aResultId
+    )
+
     companion object {
         private lateinit var examid: String
         private lateinit var examtype: String
         private lateinit var submitid: String
+        private lateinit var evid: String
         private lateinit var assigntype: String
         private lateinit var multipartFile: MultipartBody.Part
         private lateinit var answer: String
@@ -680,5 +737,6 @@ class VModel : ViewModel() {
         private lateinit var newPassword: String
         private lateinit var dTaskURL: String
         private lateinit var watchURL: String
+        private lateinit var aResultId: String
     }
 }

@@ -6,5 +6,8 @@ import com.google.gson.annotations.SerializedName
 data class SMessage(
     @SerializedName("message")
     @Expose
-    var message: String
+    var message: String,
+    @SerializedName("lastid")
+    @Expose
+    var lastid: String
 )

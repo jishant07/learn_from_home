@@ -58,9 +58,7 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
         actionBar?.setDisplayHomeAsUpEnabled(true)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         upload_back.setOnClickListener {
-            val intent = Intent(applicationContext, HomePage::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
+            finish()
         }
         val title = intent.getStringExtra("title")
         val desc = intent.getStringExtra("desc")
@@ -199,6 +197,9 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                                 }
                             }
                             correct_marks.text = "${it.data?.body()!!.marks}marks"
+                            examQuestion = it.data.body()!!.question
+                            examSubject = it.data.body()!!.section
+                            examMarks = it.data.body()!!.marks
                             docurl = it.data.body()!!.refer
                             flag.text = it.data.body()!!.question
                             val colData = it.data.body()!!.cols1
@@ -233,49 +234,22 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
     }
 
     private fun submitAnswer(string: String, string1: String) {
+        Log.d(TAG, "submitAnswer:$string:::$string1:::$evid")
         try {
-            buildNotification()
-            val parcelFileDescriptor =
-                contentResolver.openFileDescriptor(uriFile, "r", null)
-                    ?: return
-            val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
-            val file = File(cacheDir, contentResolver.getFileName(uriFile))
-            val outputStream = FileOutputStream(file)
-            inputStream.copyTo(outputStream)
-            val body = UploadFileBody(file, "file", this@NTaskUpload)
-            vModel.getSAssignData(
-                string,
-                string1,
-                MultipartBody.Part.createFormData(
-                    "file",
-                    file.name,
-                    body
-                ),
-                ytextarea.text.toString().trim()
-            ).observe(this@NTaskUpload, {
-                it?.let { resource ->
-                    when (resource.status) {
-                        Status.SUCCESS -> {
-                            when (it.data!!.body()!!.message) {
-                                "success" -> {
-                                    val intent =
-                                        Intent(applicationContext, HomePage::class.java)
-                                    startActivity(intent)
-                                }
-                                else -> {
-                                    Log.d(TAG, "submitAnswer:Error")
-                                }
-                            }
-                        }
-                        Status.ERROR -> {
-                            Log.d(TAG, "submitAns_Error:${it.message}")
-                        }
-                        Status.LOADING -> {
-                            Log.d(TAG, "submitAns_Loading:${it.status}")
-                        }
+            try {
+                when {
+                    fileName.isNotEmpty() -> {
+                        uploadDocAssignment(string, string1)
+                    }
+                    else -> {
+                        submitAssignNotDoc(string, string1)
                     }
                 }
-            })
+            } catch (e: Exception) {
+                Log.d(TAG, "submitAnswer:$e")
+                submitAssignNotDoc(string, string1)
+            }
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -325,6 +299,97 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
         }
     }
 
+    private fun uploadDocAssignment(string: String, string1: String) {
+        buildNotification()
+        val parcelFileDescriptor =
+            contentResolver.openFileDescriptor(uriFile, "r", null)
+                ?: return
+        val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
+        val file = File(cacheDir, contentResolver.getFileName(uriFile))
+        val outputStream = FileOutputStream(file)
+        inputStream.copyTo(outputStream)
+        val body = UploadFileBody(file, "file", this@NTaskUpload)
+        vModel.getSAssignData(
+            string,
+            evid,
+            string1,
+            MultipartBody.Part.createFormData(
+                "file",
+                file.name,
+                body
+            ),
+            ytextarea.text.toString().trim()
+        ).observe(this@NTaskUpload, {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        when (it.data!!.body()!!.message) {
+                            "success" -> {
+                                Log.d(TAG, "submitAnswer:${it.data.body()!!}")
+                                val intent =
+                                    Intent(
+                                        applicationContext,
+                                        UploadedPage::class.java
+                                    )
+                                UploadedPage.examquestion = examQuestion
+                                UploadedPage.marks = examMarks
+                                UploadedPage.subjectname = examSubject
+                                UploadedPage.ansID = it.data.body()!!.lastid
+                                startActivity(intent)
+                            }
+                            else -> {
+                                Log.d(TAG, "submitAnswer:Error")
+                            }
+                        }
+                    }
+                    Status.ERROR -> {
+                        Log.d(TAG, "submitAns_Error:${it.message}")
+                    }
+                    Status.LOADING -> {
+                        Log.d(TAG, "submitAns_Loading:${it.status}")
+                    }
+                }
+            }
+        })
+    }
+
+    private fun submitAssignNotDoc(string: String, string1: String) {
+        vModel.getSubmitAssignNew(
+            string,
+            evid,
+            string1,
+            ytextarea.text.toString().trim()
+        ).observe(this@NTaskUpload, {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        when (it.data!!.body()!!.message) {
+                            "success" -> {
+                                Log.d(TAG, "submitAnswer:${it.data.body()!!}")
+                                val intent =
+                                    Intent(
+                                        applicationContext,
+                                        HomePage::class.java
+                                    )
+                                startActivity(intent)
+                                finish()
+                            }
+                            else -> {
+                                Log.d(TAG, "submitAnswer:Error")
+                            }
+                        }
+                    }
+                    Status.ERROR -> {
+                        Log.d(TAG, "submitAns_Error:${it.message}")
+                    }
+                    Status.LOADING -> {
+                        Log.d(TAG, "submitAns_Loading:${it.status}")
+                    }
+                }
+            }
+        })
+    }
+
     override fun onBackPressed() {
         super.onBackPressed()
         val intent = Intent(applicationContext, HomePage::class.java)
@@ -369,8 +434,12 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
         private var mBuilder: NotificationCompat.Builder? = null
         private var notificationId = 0
         const val CHANNEL_ID = "download_progress_notification"
+        var evid = "0"
         var progress = 0
         var submitflag = ""
         var docurl = ""
+        var examQuestion = ""
+        var examSubject = ""
+        var examMarks = ""
     }
 }

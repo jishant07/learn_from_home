@@ -20,6 +20,7 @@ import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.Modal.QDetails
 import com.amuze.learnfromhome.Modal.Task
 import com.amuze.learnfromhome.Network.Status
+import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
 import kotlinx.android.synthetic.main.activity_exam_page.*
@@ -28,6 +29,7 @@ import kotlinx.android.synthetic.main.activity_exam_page.headd_title
 import kotlinx.android.synthetic.main.exam_header.view.*
 import kotlinx.android.synthetic.main.exam_item.view.*
 import kotlin.Exception
+import kotlin.collections.ArrayList
 
 class ExamPage : AppCompatActivity() {
 
@@ -173,7 +175,7 @@ class ExamPage : AppCompatActivity() {
         }
     }
 
-    class CustomAdapter1(private val sList: ArrayList<QDetails>, val context: Context) :
+    inner class CustomAdapter1(private val sList: ArrayList<QDetails>, val context: Context) :
         RecyclerView.Adapter<CustomAdapter1.ViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -193,6 +195,7 @@ class ExamPage : AppCompatActivity() {
                 intent.putExtra("type", sList[position].qtype)
                 intent.putExtra("subj", sList[position].section)
                 intent.putExtra("ansid", sList[position].ansid)
+                NTaskUpload.evid = sList[position].evid
                 try {
                     NTaskUpload.submitflag = sList[position].ansid
                 } catch (e: Exception) {
@@ -208,13 +211,26 @@ class ExamPage : AppCompatActivity() {
             return sList.size
         }
 
-        class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             @SuppressLint("SetTextI18n")
             fun bindItems(sdata: QDetails) {
                 val name = itemView.findViewById<TextView>(R.id.head_tag)
                 val desc = itemView.findViewById<TextView>(R.id.end_tag)
-                name.text = sdata.question
-                desc.text = "${sdata.marks} marks"
+                when {
+                    Utils.compareDifference(sdata.opendate) &&
+                            Utils.compareCloseDateDifference(sdata.closedate) -> {
+                        recyclerView.visibility = View.VISIBLE
+                        examschedule.visibility = View.GONE
+                        name.text = sdata.question
+                        desc.text = "${sdata.marks} marks"
+                    }
+                    else -> {
+                        recyclerView.visibility = View.GONE
+                        examschedule.visibility = View.VISIBLE
+                        examschedule.text =
+                            "Exam is scheduled at ${sdata.opendate.subSequence(10, 16)}"
+                    }
+                }
             }
         }
     }

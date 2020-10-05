@@ -1,3 +1,5 @@
+@file:Suppress("PackageName")
+
 package com.amuze.learnfromhome.Modal.FileUtils
 
 import android.os.Handler
@@ -34,7 +36,6 @@ class UploadFileBody(
                 sink.write(buffer, 0, read)
             }
         }
-        Log.d("upload", "writeTo:$buffer")
     }
 
     interface UploadCallback {

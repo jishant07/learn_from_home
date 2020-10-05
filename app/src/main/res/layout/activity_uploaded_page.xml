@@ -31,7 +31,7 @@
             android:layout_centerInParent="true"
             android:layout_marginStart="15dp"
             android:layout_toEndOf="@id/uploaded_back"
-            android:text="UPLOAD ACTIVITY"
+            android:text="RESULT"
             android:textColor="@color/accent_black"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -82,7 +82,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:padding="1dp"
-                        android:text="Your Answer is Correct"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -98,7 +97,6 @@
                     android:layout_gravity="end"
                     android:layout_marginTop="5.5dp"
                     android:layout_marginEnd="20dp"
-                    android:text="4/5"
                     android:textColor="@color/accent_pink"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -111,7 +109,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="5 Marks"
                 android:textColor="@color/accent_pink"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -122,7 +119,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:text="@string/dumpText1"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -223,9 +219,10 @@
                 android:backgroundTint="@color/accent_edit_border"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="@string/dumpText"
+                android:text="No Feedback given yet..."
                 android:textColor="@color/accent_black"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
