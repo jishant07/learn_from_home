@@ -64,37 +64,7 @@ class Login : AppCompatActivity() {
                                 finish()
                             }
                             else -> {
-                                vModel.studentLogin(
-                                    "student",
-                                    string.capitalize(Locale.ROOT),
-                                    ""
-                                ).observe(this, {
-                                    it?.let { resource ->
-                                        when (resource.status) {
-                                            Status.LOADING -> {
-                                                Log.d(TAG, "onCreate:${it.status}")
-                                            }
-                                            Status.SUCCESS -> {
-                                                Utils.classId = it.data?.body()!!.classid
-                                                when {
-                                                    it.data.body()!!.msg.equals("success") -> {
-                                                        loadProfile()
-                                                    }
-                                                    else -> {
-                                                        Toast.makeText(
-                                                            applicationContext,
-                                                            "You're credentials were wrong!!",
-                                                            Toast.LENGTH_LONG
-                                                        ).show()
-                                                    }
-                                                }
-                                            }
-                                            Status.ERROR -> {
-                                                Log.d(TAG, "onCreate:${it.message}")
-                                            }
-                                        }
-                                    }
-                                })
+                                loadLoginData()
                             }
                         }
                     }
@@ -109,12 +79,48 @@ class Login : AppCompatActivity() {
                 Log.d(TAG, e.toString())
             }
         }
+        forgotpassword.visibility = View.GONE
         forgotpassword.setOnClickListener {
             val intent = Intent(applicationContext, PinLogin::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
             finish()
         }
+    }
+
+    @ExperimentalStdlibApi
+    private fun loadLoginData() {
+        vModel.studentLogin(
+            "student",
+            string.capitalize(Locale.ROOT),
+            ""
+        ).observe(this, {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.LOADING -> {
+                        Log.d(TAG, "onCreate:${it.status}")
+                    }
+                    Status.SUCCESS -> {
+                        Utils.classId = it.data?.body()!!.classid
+                        when {
+                            it.data.body()!!.msg.equals("success") -> {
+                                loadProfile()
+                            }
+                            else -> {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "You're credentials were wrong!!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+                    }
+                    Status.ERROR -> {
+                        Log.d(TAG, "onCreate:${it.message}")
+                    }
+                }
+            }
+        })
     }
 
     @ExperimentalStdlibApi

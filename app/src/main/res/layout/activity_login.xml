@@ -113,6 +113,7 @@
                     android:textColor="#333333"
                     android:textSize="18sp"
                     android:textStyle="normal"
+                    android:visibility="gone"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
         </LinearLayout>
