@@ -33,10 +33,12 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/comment_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -44,6 +46,7 @@
                 android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/askerimg"
                     android:layout_width="50dp"
                     android:layout_height="40dp"
                     android:src="@drawable/live1" />
@@ -104,7 +107,8 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_marginTop="15dp"
-            android:background="@color/gray_text" />
+            android:background="@color/gray_text"
+            android:visibility="gone" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -115,14 +119,16 @@
         android:layout_below="@id/linear_forum"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp" />
+        android:layout_marginEnd="10dp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/discuss_forum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/discuss_edit"
@@ -157,9 +163,20 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:src="@drawable/upload" />
+            android:src="@drawable/send" />
 
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/discussProgress"
+        style="@style/CircularProgressBar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/circular_progress_bar"
+        android:visibility="visible" />
 
 </RelativeLayout>

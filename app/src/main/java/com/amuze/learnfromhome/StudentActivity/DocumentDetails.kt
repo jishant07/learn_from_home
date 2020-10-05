@@ -60,11 +60,6 @@ class DocumentDetails : AppCompatActivity() {
             }
         })
         formulae_back.setOnClickListener {
-            val intent = Intent(
-                applicationContext, HomePage::class.java
-            )
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
             finish()
         }
 

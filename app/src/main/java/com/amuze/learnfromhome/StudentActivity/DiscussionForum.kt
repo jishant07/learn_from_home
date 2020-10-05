@@ -1,4 +1,4 @@
-@file:Suppress("PrivatePropertyName", "PackageName")
+@file:Suppress("PrivatePropertyName", "PackageName", "DEPRECATION")
 
 package com.amuze.learnfromhome.StudentActivity
 
@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +26,7 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
+import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_discussion_forum.*
 import kotlinx.android.synthetic.main.forum_text.view.*
@@ -57,6 +57,7 @@ class DiscussionForum : AppCompatActivity() {
         question.text = title
         dname.text = name
         ddate.text = date
+        loadProfile(intent.getStringExtra("ecode")!!)
         suspendAddComment()
         send_forum.setOnClickListener {
             Log.d(TAG, "onCreate:$askid")
@@ -84,9 +85,6 @@ class DiscussionForum : AppCompatActivity() {
             customAdapter.notifyDataSetChanged()
         }
         forum_back.setOnClickListener {
-            val intent = Intent(applicationContext, HomePage::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
             finish()
         }
     }
@@ -149,13 +147,33 @@ class DiscussionForum : AppCompatActivity() {
         }
     }
 
+    private fun loadProfile(string: String) {
+        vModel.getSProfile(string).observe(this, {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        Picasso.get().load(it.data?.body()!!.image).into(askerimg)
+                    }
+                    else -> {
+                        Picasso.get().load(R.drawable.live1).into(askerimg)
+                    }
+                }
+            }
+        })
+    }
+
     private fun suspendAddComment() {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
-                vModel.getDiscussComment(askid).observe(this@DiscussionForum, Observer {
+                vModel.getDiscussComment(askid).observe(this@DiscussionForum, {
                     it?.let { resource ->
                         when (resource.status) {
                             Status.SUCCESS -> {
+                                discussProgress.visibility = View.GONE
+                                comment_header.visibility = View.VISIBLE
+                                seperator.visibility = View.VISIBLE
+                                forum_recycler.visibility = View.VISIBLE
+                                discuss_forum.visibility = View.VISIBLE
                                 Log.d(TAG, "loadComment:${resource.data!!.body()}")
                                 addList(resource.data.body()!!)
                                 moreComment()

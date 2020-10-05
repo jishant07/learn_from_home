@@ -88,9 +88,7 @@ class CreateTask : AppCompatActivity() {
         mHour = getInstance().get(Calendar.HOUR_OF_DAY)
         mMinute = getInstance().get(Calendar.MINUTE)
         createback.setOnClickListener {
-            val intent = Intent(applicationContext, StudentTask::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
+            finish()
         }
         et1.setOnClickListener {
             showCalenderDialog()

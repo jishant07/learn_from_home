@@ -107,6 +107,7 @@ class ClassroomDiscussion : AppCompatActivity() {
                 intent.putExtra("name", slist[position].student_name)
                 intent.putExtra("date", slist[position].qdate)
                 intent.putExtra("id", slist[position].askid)
+                intent.putExtra("ecode", slist[position].ecode)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             }
