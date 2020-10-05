@@ -218,7 +218,7 @@ class Login : AppCompatActivity() {
                     grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
                         Toast.makeText(
                             this,
-                            "Permission granted now you can read the storage",
+                            "Welcome!!",
                             Toast.LENGTH_LONG
                         ).show()
                     }
