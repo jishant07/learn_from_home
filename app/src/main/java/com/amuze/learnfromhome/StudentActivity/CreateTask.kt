@@ -229,7 +229,7 @@ class CreateTask : AppCompatActivity() {
                 when {
                     taskID.isEmpty() -> {
                         TASK_URL = "https://flowrow.com/lfh/appapi.php?action=list-gen&" +
-                                "category=addtask&emp_code=${Utils.userId}&classid=1&title=${
+                                "category=addtask&emp_code=${Utils.userId}&classid=${Utils.classId}&title=${
                                     namearea.text.toString().trim()
                                 }&" +
                                 "description=${
@@ -238,7 +238,7 @@ class CreateTask : AppCompatActivity() {
                     }
                     else -> {
                         TASK_URL = "https://flowrow.com/lfh/appapi.php?action=list-gen&" +
-                                "category=updatetask&emp_code=${Utils.userId}&classid=1&taskid=$taskID&title=${
+                                "category=updatetask&emp_code=${Utils.userId}&classid=${Utils.classId}&taskid=$taskID&title=${
                                     namearea.text.toString().trim()
                                 }&" +
                                 "description=${

@@ -346,7 +346,7 @@ class ActivityPage : AppCompatActivity() {
         try {
             val url =
                 "https://www.flowrow.com/lfh/appapi.php?action=list-gen&category=deletetask" +
-                        "&emp_code=${Utils.userId}&classid=1&taskid=$id"
+                        "&emp_code=${Utils.userId}&classid=${Utils.classId}&taskid=$id"
             vModel.dTaskLiveData(applicationContext, url).observe(this, {
                 it?.let { resource ->
                     when (resource.status) {

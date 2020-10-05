@@ -1056,12 +1056,12 @@ class PlayerActivity : AppCompatActivity() {
         val url: String = when {
             courseid.isNotEmpty() -> {
                 "https://flowrow.com/lfh/appapi.php?" +
-                        "action=list-gen&category=addwatchlist&emp_code=${Utils.userId}&classid=1" +
+                        "action=list-gen&category=addwatchlist&emp_code=${Utils.userId}&classid=${Utils.classId}" +
                         "&course=$courseid&id=$id"
             }
             else -> {
                 "https://flowrow.com/lfh/appapi.php?" +
-                        "action=list-gen&category=removewatchlist&emp_code=${Utils.userId}&classid=1&" +
+                        "action=list-gen&category=removewatchlist&emp_code=${Utils.userId}&classid=${Utils.classId}&" +
                         "id=$id"
             }
         }

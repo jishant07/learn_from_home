@@ -117,7 +117,7 @@ class VModel : ViewModel() {
                         val url =
                             "https://www.flowrow.com/lfh/appapi.php?" +
                                     "action=list-gen&category=adddiscuss&" +
-                                    "emp_code=${Utils.userId}&classid=1&" +
+                                    "emp_code=${Utils.userId}&classid=${Utils.classId}&" +
                                     "text=$discussFlag"
                         val stringRequest1 = StringRequest(
                             Request.Method.GET,
@@ -146,7 +146,7 @@ class VModel : ViewModel() {
                     val queue = Volley.newRequestQueue(vContext)
                     val url =
                         "https://www.flowrow.com/lfh/appapi.php?action=list-gen&category=sendchat" +
-                                "&emp_code=${Utils.userId}&classid=1&chat_message=$string"
+                                "&emp_code=${Utils.userId}&classid=${Utils.classId}&chat_message=$string"
                     val stringRequest1 = StringRequest(
                         Request.Method.GET,
                         url,
@@ -509,84 +509,84 @@ class VModel : ViewModel() {
         "list-gen",
         "tasks",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getSDocuments() = service1.getDocuments(
         "list-gen",
         "documents",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getPAssign() = service1.getPrevAssignments(
         "list-gen",
         "prevassign",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getSAssign() = service1.getNAssignments(
         "list-gen",
         "assignment",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getSNVideos() = service1.getNVideos(
         "list-gen",
         "videos",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getSTimeTable() = service1.getTimeTableData(
         "list-gen",
         "timetable",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getSExams() = service1.getExams(
         "list-gen",
         "exams",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getSPrevExam() = service1.getPrevExams(
         "list-gen",
         "prevexams",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getSClassroom() = service1.getClassroomData(
         "list-gen",
         "classroom",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getSSession() = service1.getSessionData(
         "list-gen",
         "session",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getSEbooks() = service1.getEbooks(
         "list-gen",
         "ebooks",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getVideoCourses() = service1.getVideoCourse(
         "list-gen",
         "course",
         Utils.userId,
-        "1",
+        Utils.classId,
         courseID
     )
 
@@ -594,42 +594,42 @@ class VModel : ViewModel() {
         "list-gen",
         "classdiscuss",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getLatestVideo() = service1.getLVideo(
         "list-gen",
         "latestvideos",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getLatestNotification() = service1.getNotifications(
         "list-gen",
         "notifications",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getWatchListData() = service1.getWatchList(
         "list-gen",
         "watchlist",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getProfileData() = service1.getProfile(
         "list-gen",
         "profile",
         stCode,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getDComment() = service1.getComment(
         "list-gen",
         "discusscomment",
         Utils.userId,
-        "1",
+        Utils.classId,
         cAsk_id
     )
 
@@ -637,7 +637,7 @@ class VModel : ViewModel() {
         "list-gen",
         "study_material",
         Utils.userId,
-        "1",
+        Utils.classId,
         sAsk_id
     )
 
@@ -645,21 +645,21 @@ class VModel : ViewModel() {
         "list-gen",
         "getchat",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getContinueWatchingData() = service1.getCWatch(
         "list-gen",
         "continuewatching",
         Utils.userId,
-        "1"
+        Utils.classId
     )
 
     private suspend fun getSubmitWatchingData() = service1.getSCWatch(
         "list-gen",
         "submitcontinuewatching",
         Utils.userId,
-        "1",
+        Utils.classId,
         video_id,
         markFlag,
         durationFlag
@@ -668,7 +668,7 @@ class VModel : ViewModel() {
     private suspend fun getSAssignment() = service1.getSAssignment(
         "list-gen",
         "assignment-single",
-        "1",
+        Utils.classId,
         Utils.userId,
         sAssignID,
         sAssignType
@@ -677,7 +677,7 @@ class VModel : ViewModel() {
     private suspend fun getSubmitAssign() = service1.getAssignmentSubmit(
         "list-gen",
         "assignment-submit",
-        "1",
+        Utils.classId,
         Utils.userId,
         submitid,
         evid,
@@ -689,7 +689,7 @@ class VModel : ViewModel() {
     private suspend fun getSubmitAssignNew() = service1.getAssignmentSubmitNew(
         "list-gen",
         "assignment-submit",
-        "1",
+        Utils.classId,
         Utils.userId,
         submitid,
         evid,
@@ -700,7 +700,7 @@ class VModel : ViewModel() {
     private suspend fun getSingleExamData() = service1.getSingleExams(
         "list-gen",
         "exam-single",
-        "1",
+        Utils.classId,
         Utils.userId,
         examid,
         examtype
