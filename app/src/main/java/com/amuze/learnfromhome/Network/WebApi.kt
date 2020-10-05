@@ -275,4 +275,12 @@ interface WebApi {
         @Query("emp_code") empcode: String,
         @Query("ansid") id: String
     ): Response<AssignResult>
+
+    @GET("appapi.php?")
+    suspend fun getStudentLogin(
+        @Query("action") action: String,
+        @Query("usertype") utype: String,
+        @Query("username") username: String,
+        @Query("password") password: String
+    ): Response<SLogin>
 }

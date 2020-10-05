@@ -1,4 +1,8 @@
-@file:Suppress("PrivatePropertyName", "ReplaceCallWithBinaryOperator", "SpellCheckingInspection")
+@file:Suppress(
+    "PrivatePropertyName",
+    "ReplaceCallWithBinaryOperator", "SpellCheckingInspection",
+    "DEPRECATION"
+)
 
 package com.amuze.learnfromhome
 
@@ -15,9 +19,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.amuze.learnfromhome.Fragment.HomeFragment
 import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.PDF.PDFWeb
@@ -62,26 +64,37 @@ class Login : AppCompatActivity() {
                                 finish()
                             }
                             else -> {
-                                vModel.getLogin(
-                                    applicationContext, "student",
+                                vModel.studentLogin(
+                                    "student",
                                     string.capitalize(Locale.ROOT),
                                     ""
-                                )
-                                    .observe(this, Observer {
-                                        Log.d(TAG, it.toString())
-                                        when {
-                                            it.equals("success") -> {
-                                                loadProfile()
+                                ).observe(this, {
+                                    it?.let { resource ->
+                                        when (resource.status) {
+                                            Status.LOADING -> {
+                                                Log.d(TAG, "onCreate:${it.status}")
                                             }
-                                            else -> {
-                                                Toast.makeText(
-                                                    applicationContext,
-                                                    "You're credentials were wrong!!",
-                                                    Toast.LENGTH_LONG
-                                                ).show()
+                                            Status.SUCCESS -> {
+                                                Utils.classId = it.data?.body()!!.classid
+                                                when {
+                                                    it.data.body()!!.msg.equals("success") -> {
+                                                        loadProfile()
+                                                    }
+                                                    else -> {
+                                                        Toast.makeText(
+                                                            applicationContext,
+                                                            "You're credentials were wrong!!",
+                                                            Toast.LENGTH_LONG
+                                                        ).show()
+                                                    }
+                                                }
+                                            }
+                                            Status.ERROR -> {
+                                                Log.d(TAG, "onCreate:${it.message}")
                                             }
                                         }
-                                    })
+                                    }
+                                })
                             }
                         }
                     }
@@ -106,8 +119,8 @@ class Login : AppCompatActivity() {
 
     @ExperimentalStdlibApi
     private fun loadProfile() {
-        vModel.getSProfile(string.capitalize(Locale.ENGLISH))
-            .observe(this, Observer {
+        vModel.getSProfile(string.capitalize(Locale.ROOT))
+            .observe(this, {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
@@ -127,7 +140,7 @@ class Login : AppCompatActivity() {
                             finish()
                         }
                         else -> {
-                            Log.d(HomeFragment.TAG, "onCreate:Error")
+                            Log.d(TAG, "Error:${it.message}")
                         }
                     }
                 }

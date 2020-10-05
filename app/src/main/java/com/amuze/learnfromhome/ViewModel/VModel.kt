@@ -36,12 +36,6 @@ class VModel : ViewModel() {
     private lateinit var sAssignType: String
     private val TAG = "VModel"
 
-    private val loginData: MutableLiveData<String> by lazy {
-        MutableLiveData<String>().also {
-            loadLogin()
-        }
-    }
-
     private val discussdata: MutableLiveData<String> by lazy {
         MutableLiveData<String>().also {
             loadDiscuss()
@@ -54,19 +48,6 @@ class VModel : ViewModel() {
         }
     }
 
-    fun getLogin(
-        context: Context,
-        usertype: String,
-        username: String,
-        upassword: String
-    ): LiveData<String> {
-        vContext = context
-        userType = usertype
-        userName = username
-        uPassword = upassword
-        return loginData
-    }
-
     fun addDiscuss(context: Context, string: String): LiveData<String> {
         vContext = context
         discussFlag = string
@@ -77,35 +58,6 @@ class VModel : ViewModel() {
         vContext = context
         chatMsg = string
         return chatMutableData
-    }
-
-    private fun loadLogin() {
-        try {
-            Log.d(TAG, "loadLogin")
-            CoroutineScope(Dispatchers.IO).launch {
-                withContext(Dispatchers.Main) {
-                    try {
-                        val queue = Volley.newRequestQueue(vContext)
-                        val url = "https://flowrow.com/lfh/appapi.php?action=login" +
-                                "&usertype=$userType&username=$userName&password=$uPassword"
-                        val stringRequest1 = StringRequest(
-                            Request.Method.GET,
-                            url,
-                            { response ->
-                                loginData.value = response
-                            },
-                            { error: VolleyError? ->
-                                loginData.value = error.toString()
-                            })
-                        queue.add(stringRequest1)
-                    } catch (e: Exception) {
-                        e.localizedMessage
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            Log.d("vModel", e.toString())
-        }
     }
 
     private fun loadDiscuss() {
@@ -161,6 +113,22 @@ class VModel : ViewModel() {
                     e.printStackTrace()
                 }
             }
+        }
+    }
+
+    fun studentLogin(
+        usertype: String,
+        username: String,
+        upassword: String
+    ) = liveData(Dispatchers.IO) {
+        userType = usertype
+        userName = username
+        uPassword = upassword
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = getLogin()))
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
         }
     }
 
@@ -504,6 +472,13 @@ class VModel : ViewModel() {
             })
         queue.add(stringRequest1)
     }
+
+    private suspend fun getLogin() = service1.getStudentLogin(
+        "login",
+        userType,
+        userName,
+        uPassword
+    )
 
     private suspend fun getSTask() = service1.getTask(
         "list-gen",
