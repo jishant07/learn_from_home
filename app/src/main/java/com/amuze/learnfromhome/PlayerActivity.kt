@@ -453,24 +453,23 @@ class PlayerActivity : AppCompatActivity() {
                         finish()
                     }
                     else -> {
-                        Toast.makeText(
-                            applicationContext,
-                            "No Documents Available!!",
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
+                        showToast()
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(
-                    applicationContext,
-                    "No Documents Available!!",
-                    Toast.LENGTH_LONG
-                )
-                    .show()
+                showToast()
             }
         }
+    }
+
+    private fun showToast() {
+        Toast.makeText(
+            applicationContext,
+            "No Documents Available!!",
+            Toast.LENGTH_LONG
+        )
+            .show()
     }
 
     @SuppressLint("SimpleDateFormat")
