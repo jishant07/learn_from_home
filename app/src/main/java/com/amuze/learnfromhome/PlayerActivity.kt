@@ -289,7 +289,8 @@ class PlayerActivity : AppCompatActivity() {
                     endTime.visibility = View.VISIBLE
                     live_text.visibility = View.GONE
                     seekBar.visibility = View.VISIBLE
-                    text4.visibility = View.VISIBLE
+                    text3.visibility = View.GONE
+                    text4.visibility = View.GONE
                     add_watch_list.visibility = View.VISIBLE
                     documents_linear.visibility = View.VISIBLE
                     student_watch.visibility = View.GONE
@@ -668,10 +669,14 @@ class PlayerActivity : AppCompatActivity() {
                 try {
                     when (videoflag) {
                         "continue" -> {
+                            Log.d(TAG, "initializePlayer:yesSeek")
                             val cMark = videomark.toFloat().toInt().toLong()
                             simpleExoPlayer.seekTo(
                                 cMark
                             )
+                        }
+                        else -> {
+                            Log.d(TAG, "initializePlayer:noSeek")
                         }
                     }
                 } catch (e: Exception) {
@@ -1038,7 +1043,7 @@ class PlayerActivity : AppCompatActivity() {
                         documents_linear.visibility = View.VISIBLE
                         subject_title.visibility = View.GONE
                         subject_recycler.visibility = View.GONE
-                        tDescription.visibility = View.VISIBLE
+                        tDescription.visibility = View.GONE
                         spinner.visibility = View.GONE
                         live__body_text.visibility = View.GONE
                         playerView.visibility = View.VISIBLE
@@ -1077,6 +1082,7 @@ class PlayerActivity : AppCompatActivity() {
                         "id=$id"
             }
         }
+        Log.d(TAG, "addWatchList:$url")
         vModel.watchList(applicationContext, url).observe(this, {
             it?.let { resource ->
                 when (resource.status) {

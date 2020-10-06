@@ -311,6 +311,7 @@ class HomeFragment : Fragment() {
                 intent.putExtra("teacher", "")
                 intent.putExtra("id", clist[position].id)
                 intent.putExtra("cid", clist[position].cid)
+                PlayerActivity.page = "videos"
                 PlayerActivity.cid = clist[position].cid
                 try {
                     when {
@@ -373,6 +374,7 @@ class HomeFragment : Fragment() {
                 intent.putExtra("sub_start", sList[position].substart)
                 intent.putExtra("cid", sList[position].vidid)
                 PlayerActivity.cid = sList[position].vidid
+                PlayerActivity.page = "live"
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             }
@@ -468,6 +470,7 @@ class HomeFragment : Fragment() {
                 intent.putExtra("id", sList[position].id)
                 PlayerActivity.cid = sList[position].cid
                 PlayerActivity.id = sList[position].id
+                PlayerActivity.page = "videos"
                 try {
                     PlayerActivity.documentUrl = sList[position].doc
                 } catch (e: Exception) {

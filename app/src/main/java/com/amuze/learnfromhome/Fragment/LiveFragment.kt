@@ -257,6 +257,7 @@ class LiveFragment : Fragment() {
                 intent.putExtra("id", childList[position].vidid)
                 intent.putExtra("sub_start", childList[position].substart)
                 PlayerActivity.cid = childList[position].vidid
+                PlayerActivity.page = "live"
                 intent.putExtra("cid", "")
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)

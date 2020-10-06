@@ -183,6 +183,7 @@ class VideosFragment : Fragment() {
                         intent.putExtra("cid", slist[position].course.id)
                         intent.putExtra("id", slist[position].subjectid)
                         PlayerActivity.cid = slist[position].subjectid
+                        PlayerActivity.page = "videos"
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         context.startActivity(intent)
                     }
