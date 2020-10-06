@@ -373,6 +373,7 @@ class HomeFragment : Fragment() {
                 intent.putExtra("id", sList[position].vidid)
                 intent.putExtra("sub_start", sList[position].substart)
                 intent.putExtra("cid", sList[position].vidid)
+                intent.putExtra("liveid", sList[position].vidid)
                 PlayerActivity.cid = sList[position].vidid
                 PlayerActivity.page = "live"
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

@@ -256,6 +256,7 @@ class LiveFragment : Fragment() {
                 intent.putExtra("pic", childList[position].thumb)
                 intent.putExtra("id", childList[position].vidid)
                 intent.putExtra("sub_start", childList[position].substart)
+                intent.putExtra("liveid", childList[position].vidid)
                 PlayerActivity.cid = childList[position].vidid
                 PlayerActivity.page = "live"
                 intent.putExtra("cid", "")

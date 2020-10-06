@@ -26,10 +26,8 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.amuze.learnfromhome.Modal.CMessage
-import com.amuze.learnfromhome.Modal.Constants
-import com.amuze.learnfromhome.Modal.OtherCourse
-import com.amuze.learnfromhome.Modal.VideoCourse
+import com.amuze.learnfromhome.Modal.*
+import com.amuze.learnfromhome.Modal.StudentWatch.Students
 import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.PDF.PDFViewer
@@ -68,7 +66,10 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var playerView: PlayerView
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerView1: RecyclerView
+    private lateinit var recyclerView2: RecyclerView
     private lateinit var sAdapter: CustomAdapter
+    private lateinit var sAdapter1: CustomAdapter1
+    private lateinit var sAdapter2: CustomAdapter2
     private lateinit var text1: TextView
     private lateinit var text2: TextView
     private lateinit var text3: TextView
@@ -93,7 +94,6 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var full_screen: ImageView
     private lateinit var live_text: TextView
     private lateinit var vModel: VModel
-    private lateinit var sAdapter1: CustomAdapter1
     private lateinit var imageString: String
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
@@ -101,7 +101,9 @@ class PlayerActivity : AppCompatActivity() {
     private var list: ArrayList<CMessage> = ArrayList()
     private var spinnerList: MutableList<String> = mutableListOf()
     private var videoCourse: ArrayList<OtherCourse> = ArrayList()
+    private var students: ArrayList<Students> = ArrayList()
     private var vflag: Boolean = false
+    private var sflag: Boolean = false
     private var live_flag: Boolean = false
 
     @SuppressLint(
@@ -152,6 +154,7 @@ class PlayerActivity : AppCompatActivity() {
         ask_Question = findViewById(R.id.ask_question)
         recyclerView = findViewById(R.id.chat_player_recycler)
         recyclerView1 = findViewById(R.id.subject_recycler)
+        recyclerView2 = findViewById(R.id.swatching_recycler)
         player_edit_linear = findViewById(R.id.player_edit_linear)
         add_watch_list = findViewById(R.id.watchlist_linear)
         documents_linear = findViewById(R.id.document_linear)
@@ -179,13 +182,6 @@ class PlayerActivity : AppCompatActivity() {
             showNow()
             false
         }
-
-//        exitactivity.setOnClickListener {
-//            val intent = Intent(applicationContext, HomePage::class.java)
-//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//            startActivity(intent)
-//            finish()
-//        }
 
         full_screen.setOnClickListener {
             setOrientation("fullscreen", flag)
@@ -240,9 +236,19 @@ class PlayerActivity : AppCompatActivity() {
             sAdapter1.notifyDataSetChanged()
         }
 
+        recyclerView2.apply {
+            val linearLayoutManager =
+                LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
+            recyclerView2.layoutManager = linearLayoutManager
+            sAdapter2 = CustomAdapter2(students, applicationContext)
+            recyclerView2.adapter = sAdapter2
+            sAdapter2.notifyDataSetChanged()
+        }
+
         try {
             when (flag) {
                 "live" -> {
+                    loadStudentWatching()
                     live_start_flag = intent.getStringExtra("sub_start")!!
                     startTime.visibility = View.GONE
                     timeseperator.visibility = View.GONE
@@ -336,7 +342,7 @@ class PlayerActivity : AppCompatActivity() {
             when {
                 vflag -> {
                     askQuest = true
-                    Log.d("true", "called$vflag")
+                    Log.d(TAG, "askQuest:$sflag::$askQuest::$vflag")
                     try {
                         ask_Question.background.setColorFilter(
                             Color.parseColor("#FF3D57"),
@@ -344,6 +350,7 @@ class PlayerActivity : AppCompatActivity() {
                         )
                         Picasso.get().load(R.drawable.chat_o).into(imageView3)
                         askquest.setTextColor(Color.parseColor("#F5F5F5"))
+                        recyclerView2.visibility = View.GONE
                         recyclerView.visibility = View.VISIBLE
                         player_edit_linear.visibility = View.VISIBLE
                         vflag = false
@@ -354,7 +361,7 @@ class PlayerActivity : AppCompatActivity() {
                 }
                 !vflag -> {
                     askQuest = false
-                    Log.d("else", "called")
+                    Log.d(TAG, "askQuest:$sflag::$askQuest::$vflag")
                     try {
                         ask_Question.background.setColorFilter(
                             Color.parseColor("#F5F5F5"),
@@ -364,9 +371,56 @@ class PlayerActivity : AppCompatActivity() {
                         askquest.setTextColor(Color.parseColor("#000000"))
                         recyclerView.visibility = View.GONE
                         player_edit_linear.visibility = View.GONE
+                        recyclerView2.visibility = View.GONE
                         vflag = true
                     } catch (e: Exception) {
                         Log.d("error", e.toString())
+                    }
+                }
+            }
+        }
+
+        student_watch.setOnClickListener {
+            when {
+                vflag || !sflag -> {
+                    sflag = true
+                    try {
+                        Log.d(TAG, "sWatch-true:$sflag::$askQuest::$vflag")
+                        recyclerView2.visibility = View.VISIBLE
+                        when {
+                            askQuest -> {
+                                askQuest = false
+                                ask_Question.background.setColorFilter(
+                                    Color.parseColor("#F5F5F5"),
+                                    PorterDuff.Mode.SRC_ATOP
+                                )
+                                Picasso.get().load(R.drawable.askquestions).into(imageView3)
+                                askquest.setTextColor(Color.parseColor("#000000"))
+                                player_edit_linear.visibility = View.GONE
+                                recyclerView.visibility = View.GONE
+                            }
+                        }
+                        vflag = false
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                !vflag || sflag -> {
+                    sflag = false
+                    try {
+                        Log.d(TAG, "sWatch-false:$sflag::$askQuest::$vflag")
+                        recyclerView2.visibility = View.GONE
+                        ask_Question.background.setColorFilter(
+                            Color.parseColor("#F5F5F5"),
+                            PorterDuff.Mode.SRC_ATOP
+                        )
+                        Picasso.get().load(R.drawable.askquestions).into(imageView3)
+                        askquest.setTextColor(Color.parseColor("#000000"))
+                        player_edit_linear.visibility = View.GONE
+                        recyclerView.visibility = View.GONE
+                        vflag = true
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
             }
@@ -463,6 +517,31 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    private fun loadStudentWatching() {
+        vModel.getStudentWatchingData(intent.getStringExtra("liveid")!!)
+            .observe(this, {
+                it?.let { resource ->
+                    when (resource.status) {
+                        Status.LOADING -> {
+                            Log.d(TAG, "loadStudentWatching:${it.status}")
+                        }
+                        Status.SUCCESS -> {
+                            Log.d(TAG, "loadStudentWatching:${it.data?.body()!!}")
+                            studentwc.text = it.data.body()!!.sCount
+                            studentw.text = "Student Watching"
+                            students.clear()
+                            students.addAll(it.data.body()!!.students)
+                            sAdapter2.notifyDataSetChanged()
+                        }
+                        Status.ERROR -> {
+                            Log.d(TAG, "loadStudentWatching:${it.message}")
+                        }
+                    }
+                }
+            })
+    }
+
     private fun showToast() {
         Toast.makeText(
             applicationContext,
@@ -471,6 +550,7 @@ class PlayerActivity : AppCompatActivity() {
         )
             .show()
     }
+
 
     @SuppressLint("SimpleDateFormat")
     private fun compareDifference(string: String): Boolean {
@@ -582,10 +662,6 @@ class PlayerActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.itemView.chat__item_txt.text = slist[position].chat_message
-//            holder.itemView.chat_profile.text =
-//                slist[position].user_name.substring(0, 2).capitalize(
-//                    Locale.ROOT
-//                )
             Glide.with(context).load(slist[position].user_pic).into(holder.cimage)
         }
 
@@ -630,6 +706,29 @@ class PlayerActivity : AppCompatActivity() {
                     .error(R.drawable.s1)
                     .into(img)
             }
+        }
+    }
+
+    class CustomAdapter2(private val slist: ArrayList<Students>, val context: Context) :
+        RecyclerView.Adapter<CustomAdapter2.ViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val v = LayoutInflater.from(parent.context)
+                .inflate(R.layout.student_watching_item, parent, false)
+            return ViewHolder(v)
+        }
+
+        override fun getItemCount(): Int {
+            return slist.size
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.ctxt.text = slist[position].sName
+            Glide.with(context).load(slist[position].img).into(holder.cimage)
+        }
+
+        class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            val ctxt = itemView.findViewById<TextView>(R.id.swatch__item_txt)!!
+            val cimage = itemView.findViewById<CircleImageView>(R.id.swatch_profile)!!
         }
     }
 
@@ -1021,10 +1120,17 @@ class PlayerActivity : AppCompatActivity() {
                             askQuest -> {
                                 chat_player_recycler.visibility = View.VISIBLE
                                 player_edit_linear.visibility = View.VISIBLE
+                                recyclerView2.visibility = View.GONE
+                            }
+                            sflag -> {
+                                chat_player_recycler.visibility = View.GONE
+                                player_edit_linear.visibility = View.GONE
+                                recyclerView2.visibility = View.VISIBLE
                             }
                             else -> {
                                 chat_player_recycler.visibility = View.GONE
                                 player_edit_linear.visibility = View.GONE
+                                recyclerView2.visibility = View.GONE
                             }
                         }
                         live__body_text.visibility = View.GONE

@@ -10,6 +10,7 @@ import com.amuze.learnfromhome.Modal.Classroom.ClassroomData
 import com.amuze.learnfromhome.Modal.Exams.EPrev
 import com.amuze.learnfromhome.Modal.Exams.EPrevious
 import com.amuze.learnfromhome.Modal.Exams.SingleExams
+import com.amuze.learnfromhome.Modal.StudentWatch.StudentWatching
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -283,4 +284,13 @@ interface WebApi {
         @Query("username") username: String,
         @Query("password") password: String
     ): Response<SLogin>
+
+    @GET("appapi.php?")
+    suspend fun getStudentWatching(
+        @Query("action") action: String,
+        @Query("category") category: String,
+        @Query("emp_code") empcode: String,
+        @Query("classid") classid: String,
+        @Query("liveid") id: String
+    ): Response<StudentWatching>
 }

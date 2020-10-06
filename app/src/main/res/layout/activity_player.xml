@@ -61,8 +61,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@string/dumpText"
-                android:textSize="17sp"
                 android:textColor="@color/accent_black"
+                android:textSize="17sp"
                 android:visibility="gone" />
 
             <com.google.android.exoplayer2.ui.PlayerView
@@ -419,6 +419,18 @@
         android:layout_below="@id/scroll_player"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="8dp"
+        android:nestedScrollingEnabled="true"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/swatching_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/player_edit_linear"
+        android:layout_below="@id/scroll_player"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
         android:nestedScrollingEnabled="true"
         android:visibility="gone" />
 

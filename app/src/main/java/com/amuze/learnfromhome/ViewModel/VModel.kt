@@ -444,6 +444,16 @@ class VModel : ViewModel() {
         }
     }
 
+    fun getStudentWatchingData(string: String) = liveData(Dispatchers.IO) {
+        liveID = string
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = getSWatching()))
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occured!"))
+        }
+    }
+
     private suspend fun getData() = suspendCoroutine<String> {
         val queue = Volley.newRequestQueue(vContext)
         val stringRequest1 = StringRequest(
@@ -697,6 +707,14 @@ class VModel : ViewModel() {
         aResultId
     )
 
+    private suspend fun getSWatching() = service1.getStudentWatching(
+        "list-gen",
+        "live",
+        Utils.userId,
+        Utils.classId,
+        liveID
+    )
+
     companion object {
         private lateinit var examid: String
         private lateinit var examtype: String
@@ -713,5 +731,6 @@ class VModel : ViewModel() {
         private lateinit var dTaskURL: String
         private lateinit var watchURL: String
         private lateinit var aResultId: String
+        private lateinit var liveID: String
     }
 }
