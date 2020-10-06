@@ -97,10 +97,10 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var imageString: String
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
+    private lateinit var mSocket: Socket
     private var list: ArrayList<CMessage> = ArrayList()
     private var spinnerList: MutableList<String> = mutableListOf()
     private var videoCourse: ArrayList<OtherCourse> = ArrayList()
-    private lateinit var mSocket: Socket
     private var vflag: Boolean = false
     private var live_flag: Boolean = false
 
