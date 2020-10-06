@@ -346,7 +346,6 @@ class PlayerActivity : AppCompatActivity() {
                         vflag = false
                     } catch (e: Exception) {
                         Log.d("error", e.toString())
-                        e.printStackTrace()
                     }
                 }
                 !vflag -> {
