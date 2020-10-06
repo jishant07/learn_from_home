@@ -173,7 +173,6 @@ class PlayerActivity : AppCompatActivity() {
             Log.d("onSocket", "onCreate:$e")
         }
 
-        val askquest = findViewById<TextView>(R.id.askquest)
         val btitle = getString(R.string.byTeacher)
         byTeacherN.text = HtmlCompat.fromHtml(btitle, HtmlCompat.FROM_HTML_MODE_LEGACY)
         showNow()
@@ -342,17 +341,8 @@ class PlayerActivity : AppCompatActivity() {
             when {
                 vflag -> {
                     askQuest = true
-                    Log.d(TAG, "askQuest:$sflag::$askQuest::$vflag")
                     try {
-                        ask_Question.background.setColorFilter(
-                            Color.parseColor("#FF3D57"),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                        Picasso.get().load(R.drawable.chat_o).into(imageView3)
-                        askquest.setTextColor(Color.parseColor("#F5F5F5"))
-                        recyclerView2.visibility = View.GONE
-                        recyclerView.visibility = View.VISIBLE
-                        player_edit_linear.visibility = View.VISIBLE
+                        askQuestionTrue()
                         vflag = false
                     } catch (e: Exception) {
                         Log.d("error", e.toString())
@@ -361,16 +351,8 @@ class PlayerActivity : AppCompatActivity() {
                 }
                 !vflag -> {
                     askQuest = false
-                    Log.d(TAG, "askQuest:$sflag::$askQuest::$vflag")
                     try {
-                        ask_Question.background.setColorFilter(
-                            Color.parseColor("#F5F5F5"),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                        Picasso.get().load(R.drawable.askquestions).into(imageView3)
-                        askquest.setTextColor(Color.parseColor("#000000"))
-                        recyclerView.visibility = View.GONE
-                        player_edit_linear.visibility = View.GONE
+                        askQuestionFalse()
                         recyclerView2.visibility = View.GONE
                         vflag = true
                     } catch (e: Exception) {
@@ -385,19 +367,11 @@ class PlayerActivity : AppCompatActivity() {
                 vflag || !sflag -> {
                     sflag = true
                     try {
-                        Log.d(TAG, "sWatch-true:$sflag::$askQuest::$vflag")
                         recyclerView2.visibility = View.VISIBLE
                         when {
                             askQuest -> {
                                 askQuest = false
-                                ask_Question.background.setColorFilter(
-                                    Color.parseColor("#F5F5F5"),
-                                    PorterDuff.Mode.SRC_ATOP
-                                )
-                                Picasso.get().load(R.drawable.askquestions).into(imageView3)
-                                askquest.setTextColor(Color.parseColor("#000000"))
-                                player_edit_linear.visibility = View.GONE
-                                recyclerView.visibility = View.GONE
+                                askQuestionFalse()
                             }
                         }
                         vflag = false
@@ -408,16 +382,8 @@ class PlayerActivity : AppCompatActivity() {
                 !vflag || sflag -> {
                     sflag = false
                     try {
-                        Log.d(TAG, "sWatch-false:$sflag::$askQuest::$vflag")
                         recyclerView2.visibility = View.GONE
-                        ask_Question.background.setColorFilter(
-                            Color.parseColor("#F5F5F5"),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                        Picasso.get().load(R.drawable.askquestions).into(imageView3)
-                        askquest.setTextColor(Color.parseColor("#000000"))
-                        player_edit_linear.visibility = View.GONE
-                        recyclerView.visibility = View.GONE
+                        askQuestionFalse()
                         vflag = true
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -540,6 +506,29 @@ class PlayerActivity : AppCompatActivity() {
                     }
                 }
             })
+    }
+
+    private fun askQuestionTrue() {
+        ask_Question.background.setColorFilter(
+            Color.parseColor("#FF3D57"),
+            PorterDuff.Mode.SRC_ATOP
+        )
+        Picasso.get().load(R.drawable.chat_o).into(imageView3)
+        askquest.setTextColor(Color.parseColor("#F5F5F5"))
+        recyclerView2.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+        player_edit_linear.visibility = View.VISIBLE
+    }
+
+    private fun askQuestionFalse() {
+        ask_Question.background.setColorFilter(
+            Color.parseColor("#F5F5F5"),
+            PorterDuff.Mode.SRC_ATOP
+        )
+        Picasso.get().load(R.drawable.askquestions).into(imageView3)
+        askquest.setTextColor(Color.parseColor("#000000"))
+        player_edit_linear.visibility = View.GONE
+        recyclerView.visibility = View.GONE
     }
 
     private fun showToast() {
