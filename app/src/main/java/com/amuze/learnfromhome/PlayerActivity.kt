@@ -219,7 +219,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         player_back.setOnClickListener {
-            startActivity(Intent(applicationContext, HomePage::class.java))
+            finish()
         }
 
         recyclerView.apply {
