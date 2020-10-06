@@ -15,7 +15,6 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.Modal.CDiscuss
 import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.Network.Utils

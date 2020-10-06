@@ -62,8 +62,8 @@ class VModel : ViewModel() {
 
     private fun loadDiscuss() {
         try {
-            CoroutineScope(Dispatchers.IO).launch {
-                withContext(Dispatchers.Main) {
+            CoroutineScope(Dispatchers.Main).launch {
+                withContext(Dispatchers.IO) {
                     try {
                         val queue = Volley.newRequestQueue(vContext)
                         val url =

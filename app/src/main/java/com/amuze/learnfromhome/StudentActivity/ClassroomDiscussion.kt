@@ -1,3 +1,5 @@
+@file:Suppress("LocalVariableName", "DEPRECATION", "PrivatePropertyName", "PackageName")
+
 package com.amuze.learnfromhome.StudentActivity
 
 import android.content.Context
@@ -15,7 +17,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -139,7 +140,7 @@ class ClassroomDiscussion : AppCompatActivity() {
                 "Entered: " + userInput.text.toString(),
                 Toast.LENGTH_LONG
             ).show()
-            vModel.addDiscuss(this, userInput.text.toString()).observe(this, Observer {
+            vModel.addDiscuss(this, userInput.text.toString()).observe(this, {
                 Log.d(TAG, "showalert:$it")
                 loadData()
                 alertDialog.dismiss()
@@ -149,7 +150,7 @@ class ClassroomDiscussion : AppCompatActivity() {
     }
 
     private fun loadData() {
-        vModel.getClassDiscussData().observe(this, Observer {
+        vModel.getClassDiscussData().observe(this, {
             it?.let { resource ->
                 try {
                     when (resource.status) {
