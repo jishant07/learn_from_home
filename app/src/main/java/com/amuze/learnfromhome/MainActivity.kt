@@ -1,3 +1,5 @@
+@file:Suppress("PrivatePropertyName")
+
 package com.amuze.learnfromhome
 
 import android.annotation.SuppressLint
@@ -7,7 +9,6 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.PDF.PDFWeb
@@ -16,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     private val SPLASH_TIME_OUT = 3000L
     private lateinit var sharedPreferences: SharedPreferences
-    lateinit var editor: SharedPreferences.Editor
+    private lateinit var editor: SharedPreferences.Editor
 
     @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {

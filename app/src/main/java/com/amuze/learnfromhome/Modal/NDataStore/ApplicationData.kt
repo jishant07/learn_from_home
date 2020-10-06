@@ -1,3 +1,5 @@
+@file:Suppress("PackageName")
+
 package com.amuze.learnfromhome.Modal.NDataStore
 
 import android.content.Context
