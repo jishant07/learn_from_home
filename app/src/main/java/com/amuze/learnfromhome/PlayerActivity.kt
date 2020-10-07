@@ -1,5 +1,5 @@
 @file:Suppress(
-    "DEPRECATION", "MemberVisibilityCanBePrivate", "PrivatePropertyName", "unused",
+    "DEPRECATION", "MemberVisibilityCanBePrivate", "PrivatePropertyName",
     "PropertyName", "SpellCheckingInspection", "SameParameterValue"
 )
 
@@ -49,7 +49,6 @@ import com.google.android.exoplayer2.util.Util
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_player.*
-import kotlinx.android.synthetic.main.chat_student_item.view.*
 import kotlinx.android.synthetic.main.list_item.view.*
 import kotlinx.coroutines.*
 import org.json.JSONException
@@ -70,12 +69,9 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var sAdapter: CustomAdapter
     private lateinit var sAdapter1: CustomAdapter1
     private lateinit var sAdapter2: CustomAdapter2
-    private lateinit var text1: TextView
     private lateinit var text2: TextView
     private lateinit var text3: TextView
     private lateinit var text4: TextView
-    private lateinit var text5: TextView
-    private lateinit var text6: TextView
     private lateinit var imageView: ImageView
     private lateinit var imageView1: ImageView
     private lateinit var imageView2: ImageView
@@ -648,7 +644,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.itemView.chat__item_txt.text = slist[position].chat_message
+            holder.ctxt.text = slist[position].chat_message
             Glide.with(context).load(slist[position].user_pic).into(holder.cimage)
         }
 
@@ -1201,6 +1197,7 @@ class PlayerActivity : AppCompatActivity() {
         })
     }
 
+    @Suppress("unused")
     private fun setCourseText(videoCourse: VideoCourse) {
         teacher.text = videoCourse.subject
         subject_title.text = videoCourse.subject
