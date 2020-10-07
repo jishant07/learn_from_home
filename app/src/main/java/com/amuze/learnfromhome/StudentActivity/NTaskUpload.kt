@@ -1,5 +1,5 @@
 @file:Suppress(
-    "PackageName", "PrivatePropertyName", "unused", "UNUSED_VARIABLE",
+    "PackageName", "PrivatePropertyName", "UNUSED_VARIABLE",
     "SpellCheckingInspection", "DEPRECATION"
 )
 
@@ -42,7 +42,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
 
     private lateinit var intentString: String
     private lateinit var vModel: VModel
-    private val STORAGE_PERMISSION_CODE = 123
     private lateinit var uriFile: Uri
     private lateinit var fileName: String
 
@@ -249,7 +248,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                 Log.d(TAG, "submitAnswer:$e")
                 submitAssignNotDoc(string, string1)
             }
-
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -432,7 +430,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
         var TAG = "NTaskUpload"
         private var mNotifyManager: NotificationManagerCompat? = null
         private var mBuilder: NotificationCompat.Builder? = null
-        private var notificationId = 0
         const val CHANNEL_ID = "download_progress_notification"
         var evid = "0"
         var progress = 0
