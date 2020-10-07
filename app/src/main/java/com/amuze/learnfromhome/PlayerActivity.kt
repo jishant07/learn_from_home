@@ -539,35 +539,34 @@ class PlayerActivity : AppCompatActivity() {
             .show()
     }
 
-
     @SuppressLint("SimpleDateFormat")
     private fun compareDifference(string: String): Boolean {
         try {
             val current = Calendar.getInstance()
             val format = SimpleDateFormat("hh:mm:ss aa")
             val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-            val date = dateFormatter.parse(string)!!
             val timeFormatter = SimpleDateFormat("hh:mm:ss aa")
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+            val date = dateFormatter.parse(string)!!
             val currDate = current.time
+            val currentDate = dateFormat.format(currDate)
+            val liveDate = dateFormat.format(date)
             val currDString = format.format(currDate)
             val liveString = timeFormatter.format(date)
             val date1 = format.parse(currDString)
             val date2 = format.parse(liveString)
-            val mills = date1!!.time - date2!!.time
-            val hours = (mills / (1000 * 60 * 60)).toInt()
-            val mins = (mills / (1000 * 60)).toInt() % 60
-            val secs = (mills / 1000).toInt() % 60.toLong()
-            val diff = "$hours:$mins:$secs"
-            Log.d(TAG, "compareDifference:$diff::$currDString::$liveString")
-            if (date1.before(date2)) { //date1 = current_time && date 2 = live_video_time
-                !live_flag
-            } else if (date1.after(date2)) {
-                live_flag = true
+            /** date1 = current_time && date 2 = live_video_time **/
+            when {
+                date1!!.before(date2) || currentDate != liveDate -> {
+                    !live_flag
+                }
+                date1.after(date2) || currentDate == liveDate -> {
+                    live_flag = true
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        Log.d(TAG, "compareDifference:$live_flag")
         return live_flag
     }
 
