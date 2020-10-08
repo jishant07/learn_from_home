@@ -6,70 +6,80 @@
     android:background="@color/background">
 
     <LinearLayout
+        android:id="@+id/header_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="11dp"
-        android:orientation="vertical">
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/sTask_back"
+            android:layout_width="wrap_content"
+            android:layout_height="20sp"
+            android:layout_gravity="center"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:scaleType="fitCenter"
+            android:src="@drawable/back"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="4dp"
+            android:text="@string/todays_task"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <LinearLayout
+            android:id="@+id/see_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="2dp"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:gravity="end"
             android:orientation="horizontal"
-            tools:ignore="UselessParent">
-
-            <ImageView
-                android:id="@+id/sTask_back"
-                android:layout_width="wrap_content"
-                android:layout_height="20sp"
-                android:layout_gravity="center"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:scaleType="fitCenter"
-                android:src="@drawable/back" />
+            tools:ignore="UseCompoundDrawables">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="4dp"
-                android:text="@string/todays_task"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/opensans_bold"
+                android:text="@string/see_all"
+                android:textColor="@color/accent_pink"
+                android:textSize="20sp" />
 
-            <LinearLayout
-                android:id="@+id/see_all"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="2dp"
-                android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                android:gravity="end"
-                android:orientation="horizontal"
-                tools:ignore="UseCompoundDrawables">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/opensans_bold"
-                    android:text="@string/see_all"
-                    android:textColor="@color/accent_pink"
-                    android:textSize="20sp" />
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="12dp"
-                    android:layout_marginTop="8.6dp"
-                    android:src="@drawable/send"
-                    tools:ignore="ContentDescription" />
-            </LinearLayout>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="12dp"
+                android:layout_marginTop="8.6dp"
+                android:src="@drawable/send"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_linear"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="17dp"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/youhaveTask"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="2dp"
             android:text="You have 0 task Today"
             android:textColor="@color/black"
             android:textSize="20sp"
@@ -112,6 +122,19 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="2dp" />
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/taskProgress"
+        style="@style/CircularProgressBar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/circular_progress_bar"
+        android:visibility="visible" />
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_task"

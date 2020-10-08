@@ -55,8 +55,6 @@ class ActivityPage : AppCompatActivity() {
         filteredList.clear()
         loadAllTask()
         activity_back.setOnClickListener {
-            val intent = Intent(applicationContext, HomePage::class.java)
-            startActivity(intent)
             finish()
         }
         create_task.setOnClickListener {

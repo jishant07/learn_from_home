@@ -454,6 +454,17 @@ class VModel : ViewModel() {
         }
     }
 
+    fun swipeTaskStatus(context: Context, string: String) = liveData(Dispatchers.IO) {
+        vContext = context
+        taskStatusURL = string
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = getTaskStatus()))
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occured!"))
+        }
+    }
+
     private suspend fun getData() = suspendCoroutine<String> {
         val queue = Volley.newRequestQueue(vContext)
         val stringRequest1 = StringRequest(
@@ -479,6 +490,21 @@ class VModel : ViewModel() {
             },
             { error: VolleyError? ->
                 Log.d(TAG, "getDTask:$error")
+            })
+        queue.add(stringRequest1)
+    }
+
+    private suspend fun getTaskStatus() = suspendCoroutine<String> { cont ->
+        val queue = Volley.newRequestQueue(vContext)
+        val stringRequest1 = StringRequest(
+            Request.Method.GET,
+            taskStatusURL,
+            { response ->
+                Log.d(TAG, "getTaskStatus:$response")
+                cont.resume(response)
+            },
+            { error: VolleyError? ->
+                Log.d(TAG, "getTaskStatus:$error")
             })
         queue.add(stringRequest1)
     }
@@ -729,6 +755,7 @@ class VModel : ViewModel() {
         private lateinit var oldPassword: String
         private lateinit var newPassword: String
         private lateinit var dTaskURL: String
+        private lateinit var taskStatusURL: String
         private lateinit var watchURL: String
         private lateinit var aResultId: String
         private lateinit var liveID: String

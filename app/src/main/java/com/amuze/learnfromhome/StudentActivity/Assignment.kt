@@ -93,9 +93,6 @@ class Assignment : AppCompatActivity() {
         })
         recyclerView = findViewById(R.id.assignment_recyclerview)
         assign_back.setOnClickListener {
-            val intent = Intent(applicationContext, HomePage::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
             finish()
         }
         prevAssignment.setOnClickListener {

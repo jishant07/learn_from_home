@@ -1,7 +1,6 @@
 @file:Suppress(
     "PackageName", "PrivatePropertyName",
-    "SpellCheckingInspection", "DEPRECATION",
-    "UNUSED_VARIABLE", "unused"
+    "SpellCheckingInspection", "DEPRECATION"
 )
 
 package com.amuze.learnfromhome.StudentActivity
@@ -26,9 +25,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.Modal.LTask
-import com.amuze.learnfromhome.Modal.Task
 import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.R
@@ -36,8 +33,6 @@ import com.amuze.learnfromhome.ViewModel.VModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.activity_student_task.*
-import kotlinx.android.synthetic.main.task_assignment.view.*
-import kotlinx.android.synthetic.main.task_item.view.*
 import kotlinx.android.synthetic.main.task_item1.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -61,6 +56,7 @@ class StudentTask : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         context = applicationContext
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
+        taskProgress.visibility = View.VISIBLE
         loadTask()
         create_task = findViewById(R.id.create_task)
         recyclerView1 = findViewById(R.id.task_recycler_new)
@@ -78,9 +74,7 @@ class StudentTask : AppCompatActivity() {
             startActivity(sIntent)
         }
         sTask_back.setOnClickListener {
-            val intent = Intent(applicationContext, HomePage::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
+            finish()
         }
         try {
             stitle = intent.getStringExtra("title")!!
@@ -90,12 +84,7 @@ class StudentTask : AppCompatActivity() {
             color = intent.getStringExtra("color")!!
             mydate = intent.getStringExtra("date")!!
         } catch (e: Exception) {
-//            Toast.makeText(
-//                applicationContext,
-//                "Oops no task available right now!!",
-//                Toast.LENGTH_LONG
-//            ).show()
-            Log.d(TAG, "onCreate:$e")
+            e.printStackTrace()
         }
         val layoutManager1 =
             LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
@@ -127,51 +116,12 @@ class StudentTask : AppCompatActivity() {
             (holder as ViewHolder).itemView.nhead_title.text =
                 sList[position].time
             holder.itemView.nhead_title1.text = sList[position].taskname
-            when (selected) {
-                position -> {
-                    when {
-                        check -> {
-                            holder.itemView.nhead_title.paintFlags =
-                                holder.itemView.nhead_title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                            holder.itemView.nhead_title1.paintFlags =
-                                holder.itemView.nhead_title1.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                            myColor = try {
-                                Color.parseColor(sList[position].color)
-                            } catch (e: Exception) {
-                                Color.parseColor("#000000")
-                            }
-                            holder.itemView.nnumber.setBackgroundColor(
-                                ContextCompat.getColor(
-                                    context,
-                                    R.color.light_gray
-                                )
-                            )
-                        }
-                        !check -> {
-                            holder.itemView.nhead_title.paintFlags =
-                                holder.itemView.nhead_title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                            holder.itemView.nhead_title1.paintFlags =
-                                holder.itemView.nhead_title1.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                            myColor = try {
-                                Color.parseColor(sList[position].color)
-                            } catch (e: Exception) {
-                                Color.parseColor("#000000")
-                            }
-                            Log.d(TAG, "onBindViewHolder:${sList[position].color}")
-                            holder.itemView.nnumber.setBackgroundColor(
-                                myColor
-                            )
-                        }
-                    }
-                }
-            }
             holder.itemView.ntask_body.setOnClickListener {
                 when {
                     !flag -> {
                         flag = true
                         holder.itemView.nhead_desc.visibility = View.GONE
                         holder.itemView.edit_linear.visibility = View.VISIBLE
-                        //holder.itemView.nhead_desc.text = sList[position].taskname
                     }
                     flag -> {
                         flag = false
@@ -203,10 +153,39 @@ class StudentTask : AppCompatActivity() {
                     e.printStackTrace()
                 }
             }
+            when {
+                position == selected && check || sList[position].status == "0" -> {
+                    holder.itemView.nhead_title.paintFlags =
+                        holder.itemView.nhead_title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                    holder.itemView.nhead_title1.paintFlags =
+                        holder.itemView.nhead_title1.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                    holder.itemView.nnumber.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.light_gray
+                        )
+                    )
+                }
+                position == selected && !check || sList[position].status == "1" -> {
+                    holder.itemView.nhead_title.paintFlags =
+                        holder.itemView.nhead_title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                    holder.itemView.nhead_title1.paintFlags =
+                        holder.itemView.nhead_title1.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                    myColor = try {
+                        Color.parseColor(sList[position].color)
+                    } catch (e: Exception) {
+                        Color.parseColor("#000000")
+                    }
+                    holder.itemView.nnumber.setBackgroundColor(
+                        myColor
+                    )
+                }
+            }
             holder.bindItems()
         }
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            @Suppress("UNUSED_VARIABLE")
             fun bindItems() {
                 val no = itemView.findViewById<TextView>(R.id.nnumber)
                 val title = itemView.findViewById<TextView>(R.id.nhead_title)
@@ -218,128 +197,15 @@ class StudentTask : AppCompatActivity() {
             selected = position
             check = boolean
             notifyItemChanged(position)
-        }
-    }
-
-    @Suppress("PrivatePropertyName")
-    class CustomAdapter1(private val sList: ArrayList<Task>) :
-        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        private var VIEW_ASSIGNMENT: Int = 0
-        private var VIEW_ITEM: Int = 1
-        private lateinit var vh: RecyclerView.ViewHolder
-        private var check: Boolean = false
-        private var selected: Int = 0
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            val inflater = LayoutInflater.from(parent.context)
-            return when (viewType) {
-                VIEW_ASSIGNMENT -> {
-                    val v = inflater.inflate(R.layout.task_assignment, parent, false)
-                    ViewHolder1(v)
+            val status = when (boolean) {
+                true -> {
+                    "0"
                 }
-                else -> {
-                    val v = inflater.inflate(R.layout.task_item, parent, false)
-                    ViewHolder(v)
+                false -> {
+                    "1"
                 }
             }
-        }
-
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            when (sList[position].subtitle1) {
-                "Assignment" -> {
-                    (holder as ViewHolder1).itemView.headA_title1.text = sList[position].subtitle1
-                    holder.itemView.headA_title.text = sList[position].title
-                    when (selected) {
-                        position -> {
-                            when {
-                                check -> {
-                                    holder.itemView.headA_title.paintFlags =
-                                        holder.itemView.headA_title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                                    holder.itemView.headA_title1.paintFlags =
-                                        holder.itemView.headA_title1.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                                }
-                                !check -> {
-                                    holder.itemView.headA_title.paintFlags =
-                                        holder.itemView.headA_title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                                    holder.itemView.headA_title1.paintFlags =
-                                        holder.itemView.headA_title1.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                                }
-                            }
-                        }
-                    }
-                    holder.bindItems()
-                }
-                else -> {
-                    (holder as ViewHolder).itemView.head_title.text = sList[position].title
-                    holder.itemView.head_title1.text = sList[position].subtitle
-                    when (selected) {
-                        position -> {
-                            when {
-                                check -> {
-                                    holder.itemView.head_title.paintFlags =
-                                        holder.itemView.head_title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                                    holder.itemView.head_title1.paintFlags =
-                                        holder.itemView.head_title1.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                                    val myColor = Color.parseColor(sList[position].no)
-                                    holder.itemView.number.setBackgroundColor(
-                                        ContextCompat.getColor(
-                                            context,
-                                            R.color.light_gray
-                                        )
-                                    )
-                                }
-                                !check -> {
-                                    holder.itemView.head_title.paintFlags =
-                                        holder.itemView.head_title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                                    holder.itemView.head_title1.paintFlags =
-                                        holder.itemView.head_title1.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                                    val myColor = Color.parseColor(sList[position].no)
-                                    holder.itemView.number.setBackgroundColor(
-                                        myColor
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    holder.bindItems()
-                }
-            }
-        }
-
-        override fun getItemViewType(position: Int): Int {
-            return when (sList[position].subtitle1) {
-                "Assignment" -> {
-                    VIEW_ASSIGNMENT
-                }
-                else -> {
-                    VIEW_ITEM
-                }
-            }
-        }
-
-        override fun getItemCount(): Int {
-            return sList.size
-        }
-
-        class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            fun bindItems() {
-                val no = itemView.findViewById<TextView>(R.id.number)
-                val title = itemView.findViewById<TextView>(R.id.head_title)
-                val title1 = itemView.findViewById<TextView>(R.id.head_title1)
-            }
-        }
-
-        class ViewHolder1(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            fun bindItems() {
-                val title = itemView.findViewById<TextView>(R.id.headA_title)
-                val title1 = itemView.findViewById<TextView>(R.id.headA_title1)
-            }
-        }
-
-        fun complete(position: Int, boolean: Boolean) {
-            selected = position
-            check = boolean
-            notifyItemChanged(position)
+            taskStatusChange(sList[position].id, status)
         }
     }
 
@@ -441,21 +307,25 @@ class StudentTask : AppCompatActivity() {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
-                        addLTask(resource.data!!.body()!!)
+                        apiResponse("loadTask", resource.data!!.body().toString())
+                        addLTask(resource.data.body()!!)
                     }
                     else -> {
-                        Log.d(TAG, "onCreate:Error")
+                        noTask()
                     }
                 }
             }
         })
     } catch (e: Exception) {
+        noTask()
         e.printStackTrace()
     }
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     private fun addLTask(list: List<LTask>) {
         try {
+            taskProgress.visibility = View.GONE
+            linear_body.visibility = View.VISIBLE
             tList.clear()
             fList.clear()
             tList.addAll(list)
@@ -466,12 +336,20 @@ class StudentTask : AppCompatActivity() {
             progressbar!!.progress = ((filtered.size.toDouble() / 10) * 100).toInt()
             youhaveTask.text = "You have ${filtered.size} task today!!"
             unfinishedtask.text = "${filtered.size} unfinished task"
-            Log.d(TAG, "addLTask:$filtered")
             fList.addAll(filtered)
             sadapter1.notifyDataSetChanged()
         } catch (e: Exception) {
-            Log.d(TAG, "addLTask:$e")
+            e.printStackTrace()
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun noTask() {
+        taskProgress.visibility = View.GONE
+        linear_body.visibility = View.VISIBLE
+        progressbar!!.progress = 10
+        youhaveTask.text = "You have 0 task today!!"
+        unfinishedtask.text = "0 unfinished task"
     }
 
     private fun deleteTask(id: String) {
@@ -483,10 +361,10 @@ class StudentTask : AppCompatActivity() {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.LOADING -> {
-                            Log.d(TAG, "deleteTask:${it.status}")
+                            apiResponse("deleteTask", it.status.toString())
                         }
                         Status.SUCCESS -> {
-                            Log.d(TAG, "deleteTask:${it.data}")
+                            apiResponse("deleteTask", it.data!!)
                             when (it.data) {
                                 "success" -> {
                                     loadTask()
@@ -494,7 +372,7 @@ class StudentTask : AppCompatActivity() {
                             }
                         }
                         Status.ERROR -> {
-                            Log.d(TAG, "deleteTask:${it.message}")
+                            apiResponse("deleteTask", it.message!!)
                         }
                     }
                 }
@@ -502,6 +380,41 @@ class StudentTask : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun taskStatusChange(id: String, status: String) {
+        try {
+            val swipeTaskUrl =
+                "https://flowrow.com/lfh/appapi.php?action=list-gen" +
+                        "&category=taskstatus&emp_code=${Utils.userId}&classid=${Utils.classId}" +
+                        "&taskid=$id&status=$status"
+            vModel.swipeTaskStatus(applicationContext, swipeTaskUrl).observe(this, {
+                it?.let { resource ->
+                    when (resource.status) {
+                        Status.LOADING -> {
+                            apiResponse("taskStatusChange", it.status.toString())
+                        }
+                        Status.SUCCESS -> {
+                            apiResponse("taskStatusChange", it.data!!)
+                            sadapter1.notifyDataSetChanged()
+                            finish()
+                            overridePendingTransition(0, 0)
+                            startActivity(intent)
+                            overridePendingTransition(0, 0)
+                        }
+                        Status.ERROR -> {
+                            apiResponse("taskStatusChange", it.message!!)
+                        }
+                    }
+                }
+            })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun apiResponse(key: String, string: String) {
+        Log.d(TAG, "apiResponse$key:::$string")
     }
 
     companion object {
