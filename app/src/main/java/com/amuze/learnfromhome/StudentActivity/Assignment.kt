@@ -206,7 +206,6 @@ class Assignment : AppCompatActivity() {
         val dayFormat = SimpleDateFormat("yyyy-MM-dd")
         val dateString = dayFormat.format(current.time)
         val filtered = nList.filter { it.opendate == dateString }
-        Log.d(TAG, "loadAssignment:$filtered:::$dateString")
         sadapter.notifyDataSetChanged()
     }
 
