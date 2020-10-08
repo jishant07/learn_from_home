@@ -50,8 +50,10 @@ class Assignment : AppCompatActivity() {
         setContentView(R.layout.activity_assignment)
         title = "ASSIGNMENT"
         val actionBar = supportActionBar
+        assignProgress.visibility = View.VISIBLE
         actionBar?.setDisplayHomeAsUpEnabled(true)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        progressbar.progress = 0
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
         vModel.getNAssignment().observe(this@Assignment, {
             try {
@@ -60,9 +62,13 @@ class Assignment : AppCompatActivity() {
                     it.data.body()!!.assignment.data.isEmpty() -> {
                         headd_title.text = "You have 0 Assignments Today!!"
                         headd_subtitle.text = "0 unfinished tasks"
+                        nestedAssignBody.visibility = View.VISIBLE
+                        assignProgress.visibility = View.GONE
                     }
                     else -> {
                         nodatafound.visibility = View.GONE
+                        nestedAssignBody.visibility = View.VISIBLE
+                        assignProgress.visibility = View.GONE
                         headd_title.text =
                             "You have ${it.data.body()!!.assignment.data.size} Assignments Today!!"
                         headd_subtitle.text =
@@ -80,6 +86,8 @@ class Assignment : AppCompatActivity() {
                 nodatafound.visibility = View.GONE
                 headd_title.text = "You have 0 Assignments Today!!"
                 headd_subtitle.text = "0 unfinished tasks"
+                nestedAssignBody.visibility = View.VISIBLE
+                assignProgress.visibility = View.GONE
                 Log.d(TAG, "onCreate:$e")
             }
         })
@@ -196,6 +204,7 @@ class Assignment : AppCompatActivity() {
         nList.clear()
         nList.addAll(list)
         aList.addAll(list)
+        progressbar.progress = ((list.size.toDouble() / 10) * 100).toInt()
         val current = Calendar.getInstance()
         val dayFormat = SimpleDateFormat("yyyy-MM-dd")
         val dateString = dayFormat.format(current.time)

@@ -144,7 +144,14 @@ class CreateTask : AppCompatActivity() {
                 mMonth = monthOfYear + 1
                 mYear = year
                 mDay = dayOfMonth
-                myDate = "$mYear-$mMonth-$mDay"
+                myDate = when (dayOfMonth.toString().length) {
+                    1 -> {
+                        "$mYear-$mMonth-0$mDay"
+                    }
+                    else -> {
+                        "$mYear-$mMonth-$mDay"
+                    }
+                }
                 showTimePicker()
             }, mYearParam, mMonthParam, mDayParam
         )

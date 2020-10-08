@@ -60,6 +60,7 @@ class ActivityPage : AppCompatActivity() {
             finish()
         }
         create_task.setOnClickListener {
+            CreateTask.taskID = ""
             val intent = Intent(applicationContext, CreateTask::class.java)
             intent.putExtra("flag", "taskactivity")
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

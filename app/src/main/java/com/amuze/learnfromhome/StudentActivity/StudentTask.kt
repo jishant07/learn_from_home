@@ -65,8 +65,9 @@ class StudentTask : AppCompatActivity() {
         create_task = findViewById(R.id.create_task)
         recyclerView1 = findViewById(R.id.task_recycler_new)
         see_all = findViewById(R.id.see_all)
-
+        progressbar!!.progress = 0
         create_task.setOnClickListener {
+            CreateTask.taskID = ""
             val intent = Intent(context, CreateTask::class.java)
             intent.putExtra("flag", "taskactivity")
             startActivity(intent)
@@ -156,6 +157,7 @@ class StudentTask : AppCompatActivity() {
                             } catch (e: Exception) {
                                 Color.parseColor("#000000")
                             }
+                            Log.d(TAG, "onBindViewHolder:${sList[position].color}")
                             holder.itemView.nnumber.setBackgroundColor(
                                 myColor
                             )
@@ -196,7 +198,6 @@ class StudentTask : AppCompatActivity() {
             }
             holder.itemView.edit_task1.setOnClickListener {
                 try {
-                    Log.d(TAG, "viewholder::${sList[position].id}")
                     deleteTask(sList[position].id)
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -462,8 +463,10 @@ class StudentTask : AppCompatActivity() {
             val curFormatter = SimpleDateFormat("yyyy-MM-dd")
             val formatted = curFormatter.format(current.time)
             val filtered = tList.filter { it.taskdate == formatted }
+            progressbar!!.progress = ((filtered.size.toDouble() / 10) * 100).toInt()
             youhaveTask.text = "You have ${filtered.size} task today!!"
             unfinishedtask.text = "${filtered.size} unfinished task"
+            Log.d(TAG, "addLTask:$filtered")
             fList.addAll(filtered)
             sadapter1.notifyDataSetChanged()
         } catch (e: Exception) {

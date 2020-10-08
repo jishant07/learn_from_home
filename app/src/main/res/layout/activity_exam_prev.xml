@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <RelativeLayout
             android:id="@+id/header_relative"
@@ -47,7 +48,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="10dp"
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
@@ -85,7 +88,9 @@
             android:id="@+id/prev_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -123,7 +128,7 @@
                             android:id="@+id/crct_no"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="7"
+                            android:text="0"
                             android:textColor="@color/accent_green"
                             android:textSize="13sp"
                             android:textStyle="bold"
@@ -147,7 +152,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="25dp"
                             android:layout_toEndOf="@id/crct_Txt"
-                            android:text="7"
+                            android:text="0"
                             android:textColor="@color/accent_pink"
                             android:textSize="13sp"
                             android:textStyle="bold"
@@ -171,7 +176,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="22dp"
                             android:layout_toEndOf="@id/wrng_Txt"
-                            android:text="7"
+                            android:text="0"
                             android:textColor="@color/accent_yellow"
                             android:textSize="13sp"
                             android:textStyle="bold"
@@ -196,7 +201,7 @@
                     android:id="@+id/eprev_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="14"
+                    android:text="0"
                     android:textColor="@color/accent_black"
                     android:textSize="40sp"
                     android:textStyle="bold"
@@ -209,7 +214,9 @@
             android:id="@+id/exam_prev_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="8dp" />
     </LinearLayout>
 
 </LinearLayout>

@@ -1218,6 +1218,7 @@ class PlayerActivity : AppCompatActivity() {
                 cMessage = CMessage(cMsg.toString(), userN.toString(), cImg, "live", "1".toInt())
                 list.add(cMessage)
                 sAdapter.notifyDataSetChanged()
+                pchat_edittxt.setText("")
                 recyclerView.scrollToPosition(list.size - 1)
             }
         } catch (e: Exception) {

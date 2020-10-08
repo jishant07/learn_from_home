@@ -45,6 +45,7 @@ class ExamPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exam_page)
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
+        progressbar.progress = 0
         loadExamData()
         recyclerView = findViewById(R.id.exam_recyclerview)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -296,6 +297,7 @@ class ExamPage : AppCompatActivity() {
     }
 
     private fun loadExams(list: List<QDetails>) {
+        progressbar.progress = ((list.size.toDouble() / 10) * 100).toInt()
         slist.clear()
         slist.addAll(list)
         sadapter.notifyDataSetChanged()
