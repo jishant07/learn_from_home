@@ -1260,7 +1260,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private val onNewMessage = Emitter.Listener { args ->
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.IO) {
                 try {
                     val data = args[0] as JSONObject
@@ -1278,7 +1278,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private val online = Emitter.Listener {
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.IO) {
                 try {
                     mSocket.on("is_online") { args ->
