@@ -66,9 +66,7 @@ class ExamPrev : AppCompatActivity() {
         })
         imageView = findViewById(R.id.search_img)
         exam_back.setOnClickListener {
-            val intent = Intent(applicationContext, HomePage::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
+            finish()
         }
         title = "PREVIOUS EXAM"
         val actionBar = supportActionBar

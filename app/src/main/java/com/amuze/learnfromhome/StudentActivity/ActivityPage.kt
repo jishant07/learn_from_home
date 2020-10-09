@@ -5,9 +5,12 @@ package com.amuze.learnfromhome.StudentActivity
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -16,6 +19,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amuze.learnfromhome.HomePage
@@ -25,6 +29,7 @@ import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.activity_page.*
 import kotlinx.android.synthetic.main.task_item.view.*
 import kotlinx.android.synthetic.main.task_slider.view.*
@@ -41,6 +46,7 @@ class ActivityPage : AppCompatActivity() {
     private lateinit var sadapter1: CustomAdapter1
     private var slList: ArrayList<LTask> = ArrayList()
     private var filteredList: ArrayList<Subject> = ArrayList()
+    private lateinit var itemTouchHelperCallback: ItemTouchHelper.SimpleCallback
     private var tList: ArrayList<LTask> = ArrayList()
     private lateinit var vModel: VModel
     private var TAG = "ActivityPage"
@@ -89,6 +95,7 @@ class ActivityPage : AppCompatActivity() {
             )
         recyclerView1.adapter = sadapter1
         sadapter1.notifyDataSetChanged()
+        swipeFun(applicationContext)
     }
 
     inner class CustomAdapter(private val sList: ArrayList<Subject>) :
@@ -118,7 +125,7 @@ class ActivityPage : AppCompatActivity() {
             val mydate: Date = SimpleDateFormat("yyyy-M-d").parse(dateString)!!
             val c = Calendar.getInstance()
             c.time = mydate
-            Log.d(TAG, "onBindViewHolder:${sList[position].name}")
+            apiResponse("onBindViewHolder", sList[position].name)
             when (c[Calendar.DAY_OF_WEEK]) {
                 1
                 -> {
@@ -145,44 +152,47 @@ class ActivityPage : AppCompatActivity() {
             }
             holder.itemView.date.text = c[Calendar.DATE].toString()
             holder.itemView.month.text = mydate.toString().subSequence(4, 8)
-            if (currentPosition == position) {
-                holder.itemView.day.setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.accent_pink
+            when (currentPosition) {
+                position -> {
+                    holder.itemView.day.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.accent_pink
+                        )
                     )
-                )
-                holder.itemView.date.setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.accent_pink
+                    holder.itemView.date.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.accent_pink
+                        )
                     )
-                )
-                holder.itemView.month.setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.accent_pink
+                    holder.itemView.month.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.accent_pink
+                        )
                     )
-                )
-            } else {
-                holder.itemView.day.setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.text_dark_white
+                }
+                else -> {
+                    holder.itemView.day.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.text_dark_white
+                        )
                     )
-                )
-                holder.itemView.date.setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.text_dark_white
+                    holder.itemView.date.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.text_dark_white
+                        )
                     )
-                )
-                holder.itemView.month.setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.text_dark_white
+                    holder.itemView.month.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.text_dark_white
+                        )
                     )
-                )
+                }
             }
             (holder as MyViewHolder).bindItems()
         }
@@ -202,6 +212,8 @@ class ActivityPage : AppCompatActivity() {
 
         private var checkFlag = false
         private var myColor by Delegates.notNull<Int>()
+        private var check: Boolean = false
+        private var selected: Int = 0
 
         override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -221,14 +233,6 @@ class ActivityPage : AppCompatActivity() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             holder.itemView.head_title.text = slist[position].time
             holder.itemView.head_title1.text = slist[position].taskname
-            myColor = try {
-                Color.parseColor(slist[position].color)
-            } catch (e: Exception) {
-                Color.parseColor("#000000")
-            }
-            holder.itemView.number.setBackgroundColor(
-                myColor
-            )
             holder.itemView.task_body.setOnClickListener {
                 when {
                     !checkFlag -> {
@@ -262,6 +266,34 @@ class ActivityPage : AppCompatActivity() {
                     e.printStackTrace()
                 }
             }
+            when {
+                position == selected && check || slist[position].status == "0" -> {
+                    holder.itemView.head_title.paintFlags =
+                        holder.itemView.head_title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                    holder.itemView.head_title1.paintFlags =
+                        holder.itemView.head_title1.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                    holder.itemView.number.setBackgroundColor(
+                        ContextCompat.getColor(
+                            StudentTask.context,
+                            R.color.light_gray
+                        )
+                    )
+                }
+                position == selected && !check || slist[position].status == "1" -> {
+                    holder.itemView.head_title.paintFlags =
+                        holder.itemView.head_title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                    holder.itemView.head_title1.paintFlags =
+                        holder.itemView.head_title1.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                    myColor = try {
+                        Color.parseColor(slist[position].color)
+                    } catch (e: Exception) {
+                        Color.parseColor("#000000")
+                    }
+                    holder.itemView.number.setBackgroundColor(
+                        myColor
+                    )
+                }
+            }
             (holder as MyViewHolder).bindItems()
         }
 
@@ -273,6 +305,21 @@ class ActivityPage : AppCompatActivity() {
                 val title1 = itemView.findViewById<TextView>(R.id.head_title1)
             }
         }
+
+        fun complete(position: Int, boolean: Boolean) {
+            selected = position
+            check = boolean
+            notifyItemChanged(position)
+            val status = when (boolean) {
+                true -> {
+                    "0"
+                }
+                false -> {
+                    "1"
+                }
+            }
+            taskStatusChange(slist[position].id, status)
+        }
     }
 
     private fun loadAllTask() {
@@ -280,10 +327,10 @@ class ActivityPage : AppCompatActivity() {
             it?.let { resource ->
                 when (resource.status) {
                     Status.LOADING -> {
-                        Log.d(TAG, "loadAllTask:${it.status}")
+                        apiResponse("loadAllTask", it.status.toString())
                     }
                     Status.SUCCESS -> {
-                        Log.d(TAG, "loadAllTask:${resource.data?.body()}")
+                        apiResponse("loadAllTask", it.data?.body()!!.toString())
                         tList.clear()
                         filteredList.clear()
                         slList.clear()
@@ -292,7 +339,7 @@ class ActivityPage : AppCompatActivity() {
                         addSlider(tList)
                     }
                     Status.ERROR -> {
-                        Log.d(TAG, "onCreate:${it.message}")
+                        apiResponse("loadAllTask", it.message!!)
                     }
                 }
             }
@@ -301,11 +348,10 @@ class ActivityPage : AppCompatActivity() {
 
     private fun filterTask(string: String) {
         try {
-            Log.d(TAG, "filterTask:$string")
+            apiResponse("filterTask", string)
             filteredSlide.clear()
             val filtered = tList.filter { it.taskdate == string }
             val distinct = filtered.distinct().toList()
-            Log.d(TAG, "filterTask:$distinct")
             filteredSlide.addAll(distinct)
             addTask(filteredSlide)
         } catch (e: Exception) {
@@ -314,7 +360,7 @@ class ActivityPage : AppCompatActivity() {
     }
 
     private fun addTask(list: List<LTask>) {
-        Log.d(TAG, "addTask:$list")
+        apiResponse("addTask", list.toString())
         try {
             slList.clear()
             slList.addAll(list)
@@ -325,7 +371,7 @@ class ActivityPage : AppCompatActivity() {
     }
 
     private fun addSlider(list: List<LTask>) {
-        Log.d(TAG, "addSlider:$list")
+        apiResponse("addSlider", list.toString())
         try {
             filteredList.clear()
             dateList.clear()
@@ -350,7 +396,7 @@ class ActivityPage : AppCompatActivity() {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.LOADING -> {
-                            Log.d(TAG, "deleteTask:${it.status}")
+                            apiResponse("deleteTask", it.status.toString())
                         }
                         Status.SUCCESS -> {
                             when (it.data) {
@@ -363,7 +409,7 @@ class ActivityPage : AppCompatActivity() {
                             }
                         }
                         Status.ERROR -> {
-                            Log.d(TAG, "deleteTask:${it.message}")
+                            apiResponse("deleteTask", it.message!!)
                         }
                     }
                 }
@@ -371,6 +417,134 @@ class ActivityPage : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun swipeFun(context: Context) {
+        itemTouchHelperCallback =
+            object :
+                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(
+                    viewHolder: RecyclerView.ViewHolder,
+                    direction: Int
+                ) {
+                    /** Row is swiped from recycler view :: remove it from adapter**/
+                    val position = viewHolder.adapterPosition
+                    when (direction) {
+                        ItemTouchHelper.RIGHT -> {
+                            sadapter1.complete(position, true)
+                        }
+                        ItemTouchHelper.LEFT -> {
+                            sadapter1.complete(position, false)
+                        }
+                    }
+                }
+
+                override fun onChildDraw(
+                    c: Canvas,
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    dX: Float,
+                    dY: Float,
+                    actionState: Int,
+                    isCurrentlyActive: Boolean
+                ) {
+                    RecyclerViewSwipeDecorator.Builder(
+                        c,
+                        recyclerView,
+                        viewHolder,
+                        dX,
+                        dY,
+                        actionState,
+                        isCurrentlyActive
+                    )
+                        .addSwipeLeftBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.text_dark_white
+                            )
+                        )
+                        .addSwipeRightBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.accent_green
+                            )
+                        )
+                        .addSwipeLeftLabel("Restored")
+                        .addSwipeRightLabel("Completed")
+                        .setSwipeLeftLabelColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.whitebg
+                            )
+                        )
+                        .setSwipeRightLabelColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.whitebg
+                            )
+                        )
+                        .setSwipeLeftLabelTextSize(TypedValue.COMPLEX_UNIT_DIP, 20.0F)
+                        .setSwipeRightLabelTextSize(TypedValue.COMPLEX_UNIT_DIP, 20.0F)
+                        .addSwipeRightActionIcon(R.drawable.assignment_submit)
+                        .addSwipeLeftActionIcon(R.drawable.restore)
+                        .create()
+                        .decorate()
+                    super.onChildDraw(
+                        c,
+                        recyclerView,
+                        viewHolder,
+                        dX,
+                        dY,
+                        actionState,
+                        isCurrentlyActive
+                    )
+                }
+            }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView1)
+    }
+
+    private fun taskStatusChange(id: String, status: String) {
+        try {
+            val swipeTaskUrl =
+                "https://flowrow.com/lfh/appapi.php?action=list-gen" +
+                        "&category=taskstatus&emp_code=${Utils.userId}&classid=${Utils.classId}" +
+                        "&taskid=$id&status=$status"
+            vModel.swipeTaskStatus(applicationContext, swipeTaskUrl).observe(this, {
+                it?.let { resource ->
+                    when (resource.status) {
+                        Status.LOADING -> {
+                            apiResponse("taskStatusChange", it.status.toString())
+                        }
+                        Status.SUCCESS -> {
+                            apiResponse("taskStatusChange", it.data!!)
+                            sadapter1.notifyDataSetChanged()
+                            finish()
+                            overridePendingTransition(0, 0)
+                            startActivity(intent)
+                            overridePendingTransition(0, 0)
+                        }
+                        Status.ERROR -> {
+                            apiResponse("taskStatusChange", it.message!!)
+                        }
+                    }
+                }
+            })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun apiResponse(key: String, string: String) {
+        Log.d(TAG, "apiResponse$key:::$string")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
