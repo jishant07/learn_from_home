@@ -115,6 +115,16 @@ interface WebApi {
     ): Response<VideoCourse>
 
     @GET("appapi.php?")
+    suspend fun getVideoCourseFilter(
+        @Query("action") action: String,
+        @Query("category") category: String,
+        @Query("emp_code") empcode: String,
+        @Query("classid") classid: String,
+        @Query("cid") cid: String,
+        @Query("id") id: String
+    ): Response<VideoCourse>
+
+    @GET("appapi.php?")
     suspend fun getClassDiscuss(
         @Query("action") action: String,
         @Query("category") category: String,

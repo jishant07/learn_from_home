@@ -263,6 +263,17 @@ class VModel : ViewModel() {
         }
     }
 
+    fun getVCourseFilter(string: String, string1: String) = liveData(Dispatchers.IO) {
+        courseIDN = string
+        spinnerID = string1
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = getVideoCoursesFilter()))
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
+        }
+    }
+
     fun getClassDiscussData() = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
@@ -601,6 +612,15 @@ class VModel : ViewModel() {
         courseID
     )
 
+    private suspend fun getVideoCoursesFilter() = service1.getVideoCourseFilter(
+        "list-gen",
+        "course",
+        Utils.userId,
+        Utils.classId,
+        courseIDN,
+        spinnerID
+    )
+
     private suspend fun getClassDiscuss() = service1.getClassDiscuss(
         "list-gen",
         "classdiscuss",
@@ -759,5 +779,7 @@ class VModel : ViewModel() {
         private lateinit var watchURL: String
         private lateinit var aResultId: String
         private lateinit var liveID: String
+        private lateinit var courseIDN: String
+        private lateinit var spinnerID: String
     }
 }

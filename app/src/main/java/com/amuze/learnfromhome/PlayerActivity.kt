@@ -58,6 +58,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
+@SuppressLint("SetTextI18n")
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var simpleExoPlayer: SimpleExoPlayer
@@ -96,6 +97,7 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var mSocket: Socket
     private var list: ArrayList<CMessage> = ArrayList()
     private var spinnerList: MutableList<String> = mutableListOf()
+    private var courseIdList: MutableList<Courses> = mutableListOf()
     private var videoCourse: ArrayList<OtherCourse> = ArrayList()
     private var students: ArrayList<Students> = ArrayList()
     private var vflag: Boolean = false
@@ -307,7 +309,7 @@ class PlayerActivity : AppCompatActivity() {
                     vflag = false
                 }
                 "courses" -> {
-                    loadCourseData(courseId)
+                    loadCourseData(courseId, 0, "course")
                     startTime.visibility = View.VISIBLE
                     timeseperator.visibility = View.VISIBLE
                     endTime.visibility = View.VISIBLE
@@ -478,7 +480,6 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun loadStudentWatching() {
         vModel.getStudentWatchingData(intent.getStringExtra("liveid")!!)
             .observe(this, {
@@ -566,45 +567,120 @@ class PlayerActivity : AppCompatActivity() {
         return live_flag
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun loadCourseData(string: String) {
-        vModel.getVCourse(string).observe(this, {
-            it?.let { resource ->
-                try {
-                    when (resource.status) {
-                        Status.SUCCESS -> {
-                            Log.d(TAG, "onCreate:${resource.data!!.body()}")
-                            val listIterator = resource.data.body()!!.course.listIterator()
-                            //setCourseText(resource.data.body()!!)
-                            courseUrl = resource.data.body()!!.videoInfo.vlink
-                            documentUrl = resource.data.body()!!.videoInfo.document
-                            getCourseUrl()
-                            spinnerList.clear()
-                            while (listIterator.hasNext()) {
-                                spinnerList.add(listIterator.next().video_name)
-                            }
-                            loadSpinner()
-                            addCourse(resource.data.body()!!.othercourse)
-                            teacher.text = intent.getStringExtra("subname")
-                            subject_title.text = resource.data.body()!!.subject
-                            text2.text = resource.data.body()!!.videoInfo.title
-                            text4.text = resource.data.body()!!.videoInfo.description
-                            byTeacherN.text =
-                                "By ${intent.getStringExtra("teacher")} on ${intent.getStringExtra("subname")}"
-                        }
-                        else -> {
-                            Log.d(TAG, "onCreate:Error")
-                        }
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(applicationContext, "Oops", Toast.LENGTH_LONG).show()
-                }
+    private fun loadCourseData(string: String, position: Int, flag: String) {
+        when (flag) {
+            "course" -> {
+                loadCourse(string = string, position = position, flag = flag)
             }
-        })
+            "spinner" -> {
+                loadCourseFilter(string = string, position = position, flag = flag)
+            }
+        }
+    }
+
+    private fun loadCourse(string: String, position: Int, flag: String) {
+        try {
+            loadCourseApiData("loadCourse", "$string::$position::$flag")
+            vModel.getVCourse(string).observe(this, {
+                it?.let { resource ->
+                    try {
+                        when (resource.status) {
+                            Status.SUCCESS -> {
+                                //releasePlayer()
+                                initializePlayer()
+                                loadCourseApiData(
+                                    "course",
+                                    resource.data?.body()!!.toString()
+                                )
+                                val listIterator = resource.data.body()!!.course.listIterator()
+                                //setCourseText(resource.data.body()!!)
+                                courseUrl = resource.data.body()!!.videoInfo.vlink
+                                documentUrl = resource.data.body()!!.videoInfo.document
+                                getCourseUrl()
+                                spinnerList.clear()
+                                courseIdList.clear()
+                                while (listIterator.hasNext()) {
+                                    spinnerList.add(listIterator.next().video_name)
+                                }
+                                courseIdList.addAll(resource.data.body()!!.course)
+                                loadSpinner(0, courseIdList)
+                                addCourse(resource.data.body()!!.othercourse)
+                                teacher.text = intent.getStringExtra("subname")
+                                subject_title.text = resource.data.body()!!.subject
+                                text2.text = resource.data.body()!!.othercourse[position].name
+                                text4.text = resource.data.body()!!.videoInfo.description
+                                byTeacherN.text =
+                                    "By ${intent.getStringExtra("teacher")} on ${
+                                        intent.getStringExtra(
+                                            "subname"
+                                        )
+                                    }"
+                            }
+                            else -> {
+                                Log.d(TAG, "onCreate:Error")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        loadCourseApiData("errorCourse", e.toString())
+                        Toast.makeText(applicationContext, "Oops", Toast.LENGTH_LONG).show()
+                    }
+                }
+            })
+        } catch (e: Exception) {
+            loadCourseApiData("errorCourse", e.toString())
+        }
+    }
+
+    private fun loadCourseFilter(string: String, position: Int, flag: String) {
+        try {
+            loadCourseApiData("loadCourseFilter", "$string::$position::$flag")
+            vModel.getVCourseFilter(string, courseSpinnerId).observe(this, {
+                it?.let { resource ->
+                    try {
+                        when (resource.status) {
+                            Status.SUCCESS -> {
+                                //releasePlayer()
+                                initializePlayer()
+                                loadCourseApiData(
+                                    "courseFilter",
+                                    resource.data?.body()!!.toString()
+                                )
+                                courseUrl = resource.data.body()!!.videoInfo.vlink
+                                documentUrl = resource.data.body()!!.videoInfo.document
+                                getCourseUrl()
+                                addCourse(resource.data.body()!!.othercourse)
+                                teacher.text = intent.getStringExtra("subname")
+                                subject_title.text = resource.data.body()!!.subject
+                                text2.text = resource.data.body()!!.course[position].video_name
+                                text4.text = resource.data.body()!!.videoInfo.description
+                                byTeacherN.text =
+                                    "By ${intent.getStringExtra("teacher")} on ${
+                                        intent.getStringExtra(
+                                            "subname"
+                                        )
+                                    }"
+                            }
+                            else -> {
+                                Log.d(TAG, "onCreate:Error")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        loadCourseApiData("errorFilter", e.toString())
+                        Toast.makeText(applicationContext, "Oops", Toast.LENGTH_LONG).show()
+                    }
+                }
+            })
+        } catch (e: Exception) {
+            loadCourseApiData("errorFilter", e.toString())
+        }
     }
 
     private fun getCourseUrl(): String {
-        return courseUrl
+        return COURSE_URL
+    }
+
+    private fun loadCourseApiData(key: String, value: String) {
+        Log.d(TAG, "loadCourseApiData:$key::$value")
     }
 
     private fun showNow() {
@@ -665,7 +741,8 @@ class PlayerActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.itemView.body.setOnClickListener {
-                loadCourseData(sList[position].id)
+                courseId = sList[position].id
+                loadCourseData(sList[position].id, position, "course")
             }
             holder.bindItems(sList[position])
         }
@@ -675,7 +752,6 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            @SuppressLint("SetTextI18n")
             fun bindItems(sdata: OtherCourse) {
                 val name = itemView.findViewById<TextView>(R.id.text1)
                 val desc = itemView.findViewById<TextView>(R.id.text2)
@@ -770,26 +846,42 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadSpinner() {
-        val arrayAdapter = ArrayAdapter(
-            this@PlayerActivity,
-            R.layout.spinner_item,
-            spinnerList
-        )
-        spinner.adapter = arrayAdapter
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                (spinner.selectedView as TextView).setTextColor(Color.BLACK)
-                Toast.makeText(
-                    this@PlayerActivity,
-                    "Selected Item" + " " + spinnerList[p2],
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+    private fun loadSpinner(count: Int, list: List<Courses>) {
+        try {
+            var pagecount = count
+            val arrayAdapter = ArrayAdapter(
+                this@PlayerActivity,
+                R.layout.spinner_item,
+                spinnerList
+            )
+            spinner.adapter = arrayAdapter
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    pagecount++
+                    (spinner.selectedView as TextView).setTextColor(Color.BLACK)
+                    when {
+                        pagecount > 1 -> {
+                            courseSpinnerId = list[p2].video_id
+                            loadCourseApiData("pagecount > 0", "$p2::$courseSpinnerId")
+                            loadCourseData(courseId, p2, "spinner")
+                        }
+                        else -> {
+                            loadCourseApiData("spinnerList", "$p2")
+                        }
+                    }
+                    Toast.makeText(
+                        this@PlayerActivity,
+                        "Selected Item" + " " + spinnerList[p2],
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
 
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                Log.d("nothing_selected", "true")
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                    Log.d("nothing_selected", "true")
+                }
             }
+        } catch (e: Exception) {
+            loadCourseApiData("spinnerListError", e.toString())
         }
     }
 
@@ -1238,6 +1330,7 @@ class PlayerActivity : AppCompatActivity() {
         private lateinit var random: String
         private lateinit var chatMessage: String
         private lateinit var courseId: String
+        private lateinit var courseSpinnerId: String
         private lateinit var videoID: String
         private lateinit var courseUrl: String
         private var live_start_flag: String = ""
