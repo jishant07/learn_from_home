@@ -169,7 +169,7 @@ class PlayerActivity : AppCompatActivity() {
             mSocket.on("is_online", online)
             mSocket.connect()
         } catch (e: Exception) {
-            Log.d("onSocket", "onCreate:$e")
+            loadPlayerLog("onSocket", "onCreate:$e")
         }
 
         val btitle = getString(R.string.byTeacher)
@@ -209,7 +209,7 @@ class PlayerActivity : AppCompatActivity() {
             subject_title.text = intent.getStringExtra("subname")
             text2.text = intent.getStringExtra("title")
             text4.text = intent.getStringExtra("desc")
-            Log.d(TAG, "onCreate:$e")
+            loadPlayerLog(TAG, "onCreate:$e")
         }
 
         player_back.setOnClickListener {
@@ -333,7 +333,7 @@ class PlayerActivity : AppCompatActivity() {
                 }
             }
         } catch (e: Exception) {
-            Log.d("error", e.toString())
+            loadPlayerLog("onCreate:error", e.toString())
         }
 
         ask_Question.setOnClickListener {
@@ -344,7 +344,7 @@ class PlayerActivity : AppCompatActivity() {
                         askQuestionTrue()
                         vflag = false
                     } catch (e: Exception) {
-                        Log.d("error", e.toString())
+                        loadPlayerLog("onCreate:error", e.toString())
                     }
                 }
                 !vflag -> {
@@ -354,7 +354,7 @@ class PlayerActivity : AppCompatActivity() {
                         recyclerView2.visibility = View.GONE
                         vflag = true
                     } catch (e: Exception) {
-                        Log.d("error", e.toString())
+                        loadPlayerLog("onCreate:error", e.toString())
                     }
                 }
             }
@@ -413,14 +413,14 @@ class PlayerActivity : AppCompatActivity() {
 
         imageView2.setOnClickListener {
             if (simpleExoPlayer.isPlaying) {
-                Log.e("iplay", "called")
+                loadPlayerLog("iplay", "called")
                 simpleExoPlayer.playWhenReady = false
                 Glide
                     .with(applicationContext)
                     .load(R.drawable.exo_icon_play)
                     .into(imageView2)
             } else {
-                Log.e("ipause", "called")
+                loadPlayerLog("ipause", "called")
                 simpleExoPlayer.playWhenReady = true
                 Glide
                     .with(applicationContext)
@@ -487,10 +487,10 @@ class PlayerActivity : AppCompatActivity() {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.LOADING -> {
-                            Log.d(TAG, "loadStudentWatching:${it.status}")
+                            loadPlayerLog(TAG, "loadStudentWatching:${it.status}")
                         }
                         Status.SUCCESS -> {
-                            Log.d(TAG, "loadStudentWatching:${it.data?.body()!!}")
+                            loadPlayerLog(TAG, "loadStudentWatching:${it.data?.body()!!}")
                             studentwc.text = it.data.body()!!.sCount
                             studentw.text = "Student Watching"
                             students.clear()
@@ -498,7 +498,7 @@ class PlayerActivity : AppCompatActivity() {
                             sAdapter2.notifyDataSetChanged()
                         }
                         Status.ERROR -> {
-                            Log.d(TAG, "loadStudentWatching:${it.message}")
+                            loadPlayerLog(TAG, "loadStudentWatching:${it.message}")
                         }
                     }
                 }
@@ -621,7 +621,7 @@ class PlayerActivity : AppCompatActivity() {
                                     }"
                             }
                             else -> {
-                                Log.d(TAG, "onCreate:Error")
+                                loadPlayerLog(TAG, "loadCourse:Error")
                             }
                         }
                     } catch (e: Exception) {
@@ -664,7 +664,7 @@ class PlayerActivity : AppCompatActivity() {
                                     }"
                             }
                             else -> {
-                                Log.d(TAG, "onCreate:Error")
+                                loadPlayerLog(TAG, "loadCourseFilter: Error")
                             }
                         }
                     } catch (e: Exception) {
@@ -868,7 +868,7 @@ class PlayerActivity : AppCompatActivity() {
                 2000
             )
         } catch (e: Exception) {
-            Log.d("playerError", e.toString())
+            loadPlayerLog("playerError", e.toString())
             Toast.makeText(this@PlayerActivity, "oops", Toast.LENGTH_LONG).show()
         }
     }
@@ -904,7 +904,7 @@ class PlayerActivity : AppCompatActivity() {
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
-                    Log.d("nothing_selected", "true")
+                    loadPlayerLog("nothing_selected", "true")
                 }
             }
         } catch (e: Exception) {
@@ -915,18 +915,18 @@ class PlayerActivity : AppCompatActivity() {
     inner class PlayerEventListener : Player.EventListener {
 
         override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
-            Log.d(TAG, "onPlaybackParametersChanged: ")
+            loadPlayerLog(TAG, "onPlaybackParametersChanged: ")
         }
 
         override fun onTracksChanged(
             trackGroups: TrackGroupArray?,
             trackSelections: TrackSelectionArray?
         ) {
-            Log.d(TAG, "onTracksChanged: ")
+            loadPlayerLog(TAG, "onTracksChanged: ")
         }
 
         override fun onPlayerError(error: ExoPlaybackException?) {
-            Log.d(TAG, "onPlayerError: ")
+            loadPlayerLog(TAG, "onPlayerError: ")
         }
 
         /** 4 playbackState exists */
@@ -934,48 +934,48 @@ class PlayerActivity : AppCompatActivity() {
             when (playbackState) {
                 PlaybackState.STATE_BUFFERING -> {
                     showNow()
-                    Log.d(TAG, "onPlayerStateChanged - STATE_BUFFERING")
+                    loadPlayerLog("onPlayerStateChanged", "STATE_BUFFERING")
                 }
                 Player.STATE_READY -> {
                     VideoSeeking = false
-                    Log.d(TAG, "onPlayerStateChanged - STATE_READY")
+                    loadPlayerLog("onPlayerStateChanged", "STATE_READY")
                 }
                 Player.STATE_IDLE -> {
-                    Log.d(TAG, "onPlayerStateChanged - STATE_IDLE")
+                    loadPlayerLog("onPlayerStateChanged", "STATE_IDLE")
                 }
                 Player.STATE_ENDED -> {
-                    Log.d(TAG, "onPlayerStateChanged - STATE_ENDED")
+                    loadPlayerLog("onPlayerStateChanged", "STATE_ENDED")
                 }
             }
             when {
                 playbackState == Player.STATE_READY -> {
-                    Log.d("might be idle ready", "TAG")
+                    loadPlayerLog("might be idle ready", "TAG")
                     Picasso.get().load(R.drawable.ic_pause).into(imageView2)
                     setSeekProgress()
                 }
                 playWhenReady -> {
-                    Log.d("might be idle (plays", "TAG")
+                    loadPlayerLog("might be idle (plays)", "TAG")
                 }
                 else -> {
-                    Log.d("player paused in any", "TAG")
+                    loadPlayerLog("player paused in any", "TAG")
                 }
             }
         }
 
         override fun onLoadingChanged(isLoading: Boolean) {
-            Log.d(TAG, "onLoadingChanged: ")
+            loadPlayerLog(TAG, "onLoadingChanged: ")
         }
 
         override fun onPositionDiscontinuity(reason: Int) {
-            Log.d(TAG, "onPositionDiscontinuity: ")
+            loadPlayerLog(TAG, "onPositionDiscontinuity: ")
         }
 
         override fun onRepeatModeChanged(repeatMode: Int) {
-            Log.d(TAG, "onRepeatModeChanged: ")
+            loadPlayerLog(TAG, "onRepeatModeChanged: ")
         }
 
         override fun onTimelineChanged(timeline: Timeline?, manifest: Any?, reason: Int) {
-            Log.d(TAG, "onTimelineChanged: ")
+            loadPlayerLog(TAG, "onTimelineChanged: ")
         }
     }
 
@@ -1039,16 +1039,16 @@ class PlayerActivity : AppCompatActivity() {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
-                            Log.d(TAG, "onPause:$it")
+                            loadPlayerLog(TAG, "onPause:$it")
                         }
                         else -> {
-                            Log.d(TAG, "onPause:Error$continueid::${it.message}")
+                            loadPlayerLog(TAG, "onPause:Error$continueid::${it.message}")
                         }
                     }
                 }
             })
         } catch (e: Exception) {
-            Log.d(TAG, "onPause:Error$e")
+            loadPlayerLog(TAG, "onPause:Error$e")
         }
     }
 
@@ -1134,7 +1134,7 @@ class PlayerActivity : AppCompatActivity() {
         when (string) {
             "fullscreen" -> {
                 flag = string1
-                Log.d(TAG, "setOrientation: fullscreen$flag")
+                loadPlayerLog(TAG, "setOrientation: fullscreen$flag")
                 val layoutParams = RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -1170,7 +1170,7 @@ class PlayerActivity : AppCompatActivity() {
             }
             "exitfullscreen" -> {
                 flag = string1
-                Log.d(TAG, "setOrientation: exitfullscreen$flag")
+                loadPlayerLog(TAG, "setOrientation: exitfullscreen$flag")
                 val vp = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP,
                     250f,
@@ -1214,7 +1214,7 @@ class PlayerActivity : AppCompatActivity() {
                 exitactivity.visibility = View.GONE
                 when (flag) {
                     "live" -> {
-                        Log.d(TAG, "setOrientation:live")
+                        loadPlayerLog(TAG, "setOrientation:live")
                         header_relative.visibility = View.VISIBLE
                         student_watch.visibility = View.VISIBLE
                         ask_Question.visibility = View.VISIBLE
@@ -1242,7 +1242,7 @@ class PlayerActivity : AppCompatActivity() {
                         documents_linear.visibility = View.GONE
                     }
                     "videos" -> {
-                        Log.d(TAG, "setOrientation:videos")
+                        loadPlayerLog(TAG, "setOrientation:videos")
                         header_relative.visibility = View.VISIBLE
                         student_watch.visibility = View.GONE
                         ask_Question.visibility = View.GONE
@@ -1257,7 +1257,7 @@ class PlayerActivity : AppCompatActivity() {
                         controls_options.visibility = View.VISIBLE
                     }
                     "courses" -> {
-                        Log.d(TAG, "setOrientation:videos")
+                        loadPlayerLog(TAG, "setOrientation:courses")
                         header_relative.visibility = View.VISIBLE
                         student_watch.visibility = View.GONE
                         ask_Question.visibility = View.GONE
@@ -1289,12 +1289,12 @@ class PlayerActivity : AppCompatActivity() {
                         "id=$id"
             }
         }
-        Log.d(TAG, "addWatchList:$url")
+        loadPlayerLog(TAG, "addWatchList:$url")
         vModel.watchList(applicationContext, url).observe(this, {
             it?.let { resource ->
                 when (resource.status) {
                     Status.LOADING -> {
-                        Log.d(TAG, "addWatchList:${it.status}")
+                        loadPlayerLog(TAG, "addWatchList:${it.status}")
                     }
                     Status.SUCCESS -> {
                         when (it.data) {
@@ -1309,7 +1309,7 @@ class PlayerActivity : AppCompatActivity() {
                         }
                     }
                     Status.ERROR -> {
-                        Log.d(TAG, "addWatchList:${it.message}")
+                        loadPlayerLog(TAG, "addWatchList:${it.message}")
                     }
                 }
             }
@@ -1325,10 +1325,9 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun addData(jsonObject: JSONObject) {
-        Log.d(TAG, "addData:$jsonObject")
+        loadPlayerLog(TAG, "addData:$jsonObject")
         try {
             runOnUiThread {
-                Log.d("addData", "->:$jsonObject")
                 val cMessage: CMessage
                 val messageObject: JSONObject = jsonObject.optJSONObject("message")!!
                 val cMsg = messageObject.optString("chat_message")
@@ -1386,13 +1385,13 @@ class PlayerActivity : AppCompatActivity() {
                 try {
                     val data = args[0] as JSONObject
                     try {
-                        Log.d("data", data.toString())
+                        loadPlayerLog("data", data.toString())
                         addData(data)
                     } catch (e: JSONException) {
-                        Log.d("Nerror", e.toString())
+                        loadPlayerLog("Nerror", e.toString())
                     }
                 } catch (e: Exception) {
-                    Log.d("eNerror", e.toString())
+                    loadPlayerLog("eNerror", e.toString())
                 }
             }
         }
@@ -1404,10 +1403,10 @@ class PlayerActivity : AppCompatActivity() {
                 try {
                     mSocket.on("is_online") { args ->
                         val data = args[0] as JSONObject
-                        Log.d("online", data.toString())
+                        loadPlayerLog("online", data.toString())
                     }
                 } catch (e: Exception) {
-                    Log.d("error", e.toString())
+                    loadPlayerLog("error", e.toString())
                 }
             }
         }
