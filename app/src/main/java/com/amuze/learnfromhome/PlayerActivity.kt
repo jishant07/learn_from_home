@@ -92,6 +92,7 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var live_text: TextView
     private lateinit var vModel: VModel
     private lateinit var imageString: String
+    private lateinit var url: String
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private lateinit var mSocket: Socket
@@ -580,15 +581,13 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun loadCourse(string: String, position: Int, flag: String) {
         try {
-            loadCourseApiData("loadCourse", "$string::$position::$flag")
+            loadPlayerLog("loadCourse", "$string::$position::$flag")
             vModel.getVCourse(string).observe(this, {
                 it?.let { resource ->
                     try {
                         when (resource.status) {
                             Status.SUCCESS -> {
-                                //releasePlayer()
-                                initializePlayer()
-                                loadCourseApiData(
+                                loadPlayerLog(
                                     "course",
                                     resource.data?.body()!!.toString()
                                 )
@@ -605,6 +604,11 @@ class PlayerActivity : AppCompatActivity() {
                                 courseIdList.addAll(resource.data.body()!!.course)
                                 loadSpinner(0, courseIdList)
                                 addCourse(resource.data.body()!!.othercourse)
+                                when {
+                                    count >= 1 -> {
+                                        initializeSeriesPlayer()
+                                    }
+                                }
                                 teacher.text = intent.getStringExtra("subname")
                                 subject_title.text = resource.data.body()!!.subject
                                 text2.text = resource.data.body()!!.othercourse[position].name
@@ -621,27 +625,25 @@ class PlayerActivity : AppCompatActivity() {
                             }
                         }
                     } catch (e: Exception) {
-                        loadCourseApiData("errorCourse", e.toString())
+                        loadPlayerLog("errorCourse", e.toString())
                         Toast.makeText(applicationContext, "Oops", Toast.LENGTH_LONG).show()
                     }
                 }
             })
         } catch (e: Exception) {
-            loadCourseApiData("errorCourse", e.toString())
+            loadPlayerLog("errorCourse", e.toString())
         }
     }
 
     private fun loadCourseFilter(string: String, position: Int, flag: String) {
         try {
-            loadCourseApiData("loadCourseFilter", "$string::$position::$flag")
+            loadPlayerLog("loadCourseFilter", "$string::$position::$flag")
             vModel.getVCourseFilter(string, courseSpinnerId).observe(this, {
                 it?.let { resource ->
                     try {
                         when (resource.status) {
                             Status.SUCCESS -> {
-                                //releasePlayer()
-                                initializePlayer()
-                                loadCourseApiData(
+                                loadPlayerLog(
                                     "courseFilter",
                                     resource.data?.body()!!.toString()
                                 )
@@ -649,6 +651,7 @@ class PlayerActivity : AppCompatActivity() {
                                 documentUrl = resource.data.body()!!.videoInfo.document
                                 getCourseUrl()
                                 addCourse(resource.data.body()!!.othercourse)
+                                initializeSeriesPlayer()
                                 teacher.text = intent.getStringExtra("subname")
                                 subject_title.text = resource.data.body()!!.subject
                                 text2.text = resource.data.body()!!.course[position].video_name
@@ -665,13 +668,13 @@ class PlayerActivity : AppCompatActivity() {
                             }
                         }
                     } catch (e: Exception) {
-                        loadCourseApiData("errorFilter", e.toString())
+                        loadPlayerLog("errorFilter", e.toString())
                         Toast.makeText(applicationContext, "Oops", Toast.LENGTH_LONG).show()
                     }
                 }
             })
         } catch (e: Exception) {
-            loadCourseApiData("errorFilter", e.toString())
+            loadPlayerLog("errorFilter", e.toString())
         }
     }
 
@@ -679,8 +682,8 @@ class PlayerActivity : AppCompatActivity() {
         return COURSE_URL
     }
 
-    private fun loadCourseApiData(key: String, value: String) {
-        Log.d(TAG, "loadCourseApiData:$key::$value")
+    private fun loadPlayerLog(key: String, value: String) {
+        Log.d(TAG, "loadPlayerLog:$key::$value")
     }
 
     private fun showNow() {
@@ -741,6 +744,7 @@ class PlayerActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.itemView.body.setOnClickListener {
+                count++
                 courseId = sList[position].id
                 loadCourseData(sList[position].id, position, "course")
             }
@@ -791,55 +795,78 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+    private fun initializeSeriesPlayer() {
+        try {
+            when {
+                simpleExoPlayer.isPlaying -> {
+                    releasePlayer()
+                    initializePlayer()
+                }
+                else -> {
+                    initializePlayer()
+                }
+            }
+        } catch (e: Exception) {
+            loadPlayerLog("initializeSeriesPlayer", e.toString())
+            initializePlayer()
+        }
+    }
+
     private fun initializePlayer() {
         try {
-            Handler().postDelayed({
-                mediaDataSourceFactory =
-                    DefaultDataSourceFactory(this, Util.getUserAgent(this, "mediaPlayerSample"))
-                val bandwidthMeter: BandwidthMeter = DefaultBandwidthMeter()
-                val videoTrackSelectionFactory: TrackSelection.Factory =
-                    AdaptiveTrackSelection.Factory(bandwidthMeter)
-                val trackSelector: TrackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
+            Handler().postDelayed(
+                {
+                    mediaDataSourceFactory =
+                        DefaultDataSourceFactory(
+                            this,
+                            Util.getUserAgent(this, "mediaPlayerSample")
+                        )
+                    val bandwidthMeter: BandwidthMeter = DefaultBandwidthMeter()
+                    val videoTrackSelectionFactory: TrackSelection.Factory =
+                        AdaptiveTrackSelection.Factory(bandwidthMeter)
+                    val trackSelector: TrackSelector =
+                        DefaultTrackSelector(videoTrackSelectionFactory)
 
-                simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
-                val url = when (flag) {
-                    "courses" -> {
-                        //getCourseUrl()
-                        COURSE_URL
-                    }
-                    else -> {
-                        STREAM_URL
-                    }
-                }
-                Log.d(TAG, "initializePlayer:$url")
-                val mediaSource = HlsMediaSource.Factory(
-                    mediaDataSourceFactory
-                ).createMediaSource(Uri.parse(url))
-
-                simpleExoPlayer.prepare(mediaSource, false, false)
-                simpleExoPlayer.playWhenReady = true
-
-                playerView.setShutterBackgroundColor(Color.TRANSPARENT)
-                playerView.player = simpleExoPlayer
-                playerView.requestFocus()
-                simpleExoPlayer.addListener(PlayerEventListener())
-                try {
-                    when (videoflag) {
-                        "continue" -> {
-                            Log.d(TAG, "initializePlayer:yesSeek")
-                            val cMark = videomark.toFloat().toInt().toLong()
-                            simpleExoPlayer.seekTo(
-                                cMark
-                            )
+                    simpleExoPlayer =
+                        ExoPlayerFactory.newSimpleInstance(this, trackSelector)
+                    url = when (flag) {
+                        "courses" -> {
+                            //getCourseUrl()
+                            COURSE_URL
                         }
                         else -> {
-                            Log.d(TAG, "initializePlayer:noSeek")
+                            STREAM_URL
                         }
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }, 2000)
+                    loadPlayerLog("initializePlayer", "->$url")
+                    simpleExoPlayer.playWhenReady = true
+                    playerView.setShutterBackgroundColor(Color.TRANSPARENT)
+                    playerView.player = simpleExoPlayer
+                    playerView.requestFocus()
+                    simpleExoPlayer.addListener(PlayerEventListener())
+                    try {
+                        when (videoflag) {
+                            "continue" -> {
+                                loadPlayerLog("initializePlayer", ":yesSeek")
+                                val cMark = videomark.toFloat().toInt().toLong()
+                                simpleExoPlayer.seekTo(
+                                    cMark
+                                )
+                            }
+                            else -> {
+                                loadPlayerLog("initializePlayer", ":noSeek")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                    val mediaSource = HlsMediaSource.Factory(
+                        mediaDataSourceFactory
+                    ).createMediaSource(Uri.parse(url))
+                    simpleExoPlayer.prepare(mediaSource, false, false)
+                },
+                2000
+            )
         } catch (e: Exception) {
             Log.d("playerError", e.toString())
             Toast.makeText(this@PlayerActivity, "oops", Toast.LENGTH_LONG).show()
@@ -862,11 +889,11 @@ class PlayerActivity : AppCompatActivity() {
                     when {
                         pagecount > 1 -> {
                             courseSpinnerId = list[p2].video_id
-                            loadCourseApiData("pagecount > 0", "$p2::$courseSpinnerId")
+                            loadPlayerLog("pagecount > 0", "$p2::$courseSpinnerId")
                             loadCourseData(courseId, p2, "spinner")
                         }
                         else -> {
-                            loadCourseApiData("spinnerList", "$p2")
+                            loadPlayerLog("spinnerList", "$p2")
                         }
                     }
                     Toast.makeText(
@@ -881,7 +908,7 @@ class PlayerActivity : AppCompatActivity() {
                 }
             }
         } catch (e: Exception) {
-            loadCourseApiData("spinnerListError", e.toString())
+            loadPlayerLog("spinnerListError", e.toString())
         }
     }
 
@@ -1335,6 +1362,7 @@ class PlayerActivity : AppCompatActivity() {
         private lateinit var courseUrl: String
         private var live_start_flag: String = ""
         var videomark = 0
+        var count = 0
         var page = ""
         var videoflag = "videos"
         var id = ""
