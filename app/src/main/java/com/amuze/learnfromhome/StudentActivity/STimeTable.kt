@@ -74,9 +74,6 @@ class STimeTable : AppCompatActivity() {
         recyclerView = findViewById(R.id.ttdate_recycler)
         recyclerView1 = findViewById(R.id.timetable_recycler)
         tt_back.setOnClickListener {
-            val intent = Intent(applicationContext, HomePage::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
             finish()
         }
         context = applicationContext
