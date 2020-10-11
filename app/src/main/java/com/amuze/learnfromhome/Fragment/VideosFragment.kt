@@ -24,7 +24,8 @@ import com.amuze.learnfromhome.Modal.ATask
 import com.amuze.learnfromhome.Modal.NVideos
 import com.amuze.learnfromhome.Modal.Task
 import com.amuze.learnfromhome.Network.Status
-import com.amuze.learnfromhome.PlayerActivity
+import com.amuze.learnfromhome.Player.DemoPlayer
+import com.amuze.learnfromhome.Player.PlayerActivity
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.StudentActivity.DocumentPage
 import com.amuze.learnfromhome.ViewModel.VModel
@@ -174,7 +175,7 @@ class VideosFragment : Fragment() {
                         ).show()
                     }
                     else -> {
-                        val intent = Intent(context, PlayerActivity::class.java)
+                        val intent = Intent(context, DemoPlayer::class.java)
                         intent.putExtra("flag", "courses")
                         intent.putExtra("title", slist[position].course.name)
                         intent.putExtra("subname", slist[position].subject_name)
@@ -182,8 +183,8 @@ class VideosFragment : Fragment() {
                         intent.putExtra("teacher", "Sachin Kunthe")
                         intent.putExtra("cid", slist[position].course.id)
                         intent.putExtra("id", slist[position].subjectid)
-                        PlayerActivity.cid = slist[position].subjectid
-                        PlayerActivity.page = "videos"
+                        DemoPlayer.cid = slist[position].subjectid
+                        DemoPlayer.page = "videos"
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         context.startActivity(intent)
                     }

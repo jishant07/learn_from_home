@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
+        android:name=".LFHApplication"
         android:icon="@drawable/logo2"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
@@ -23,6 +24,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="q">
+        <activity
+            android:name=".StudentActivity.MyDownloads"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Player.DemoPlayer"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".StudentActivity.UploadedPage"
             android:screenOrientation="portrait"
@@ -128,7 +137,7 @@
             android:parentActivityName=".HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PlayerActivity"
+            android:name=".Player.PlayerActivity"
             android:configChanges="orientation|screenSize"
             android:parentActivityName=".HomePage"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -156,6 +165,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".Utilities.DemoDownloadService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.exoplayer.downloadService.action.RESTART" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

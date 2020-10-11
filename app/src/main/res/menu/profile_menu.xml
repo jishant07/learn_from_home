@@ -17,6 +17,11 @@
         tools:ignore="HardcodedText" />
 
     <item
+        android:id="@+id/navigation_download"
+        android:title="MY DOWNLOAD"
+        tools:ignore="HardcodedText" />
+
+    <item
         android:id="@+id/navigation_chat"
         android:title="LOGOUT"
         tools:ignore="HardcodedText" />

@@ -20,7 +20,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.amuze.learnfromhome.Modal.LiveVideo
 import com.amuze.learnfromhome.Modal.Session
 import com.amuze.learnfromhome.Network.Status
-import com.amuze.learnfromhome.PlayerActivity
+import com.amuze.learnfromhome.Player.PlayerActivity
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
 import com.bumptech.glide.Glide

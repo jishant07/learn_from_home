@@ -303,7 +303,7 @@ class ExamPage : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun setNullText() {
         headd_title.text = "You have 0 Questions Today!!"
-        headd_subtitle.text = "0 unfinished question"
+        headd_subtitle.text = "0 unfinished Question"
         crct_no.text = "0"
         wrng_no.text = "0"
         nsubmit_no.text = "0"

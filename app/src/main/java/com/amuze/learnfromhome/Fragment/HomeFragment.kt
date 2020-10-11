@@ -31,7 +31,8 @@ import com.amuze.learnfromhome.Modal.Session
 import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.PDF.PDFViewer
-import com.amuze.learnfromhome.PlayerActivity
+import com.amuze.learnfromhome.Player.DemoPlayer
+import com.amuze.learnfromhome.Player.PlayerActivity
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.StudentActivity.*
 import com.amuze.learnfromhome.ViewModel.VModel
@@ -140,6 +141,11 @@ class HomeFragment : Fragment() {
                     }
                     "WATCHLIST" -> {
                         val intent = Intent(HomeFragment.context, SWatchList::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        HomeFragment.context.startActivity(intent)
+                    }
+                    "MY DOWNLOAD" -> {
+                        val intent = Intent(HomeFragment.context, MyDownloads::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         HomeFragment.context.startActivity(intent)
                     }
@@ -302,7 +308,7 @@ class HomeFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.itemView.body.setOnClickListener {
-                val intent = Intent(context, PlayerActivity::class.java)
+                val intent = Intent(context, DemoPlayer::class.java)
                 intent.putExtra("flag", "videos")
                 intent.putExtra("title", clist[position].title)
                 intent.putExtra("subname", clist[position].sname)
@@ -311,22 +317,23 @@ class HomeFragment : Fragment() {
                 intent.putExtra("teacher", "")
                 intent.putExtra("id", clist[position].id)
                 intent.putExtra("cid", clist[position].cid)
-                PlayerActivity.page = "videos"
-                PlayerActivity.cid = clist[position].cid
+                DemoPlayer.page = "videos"
+                DemoPlayer.eng_banner = clist[position].vthumb
+                DemoPlayer.cid = clist[position].cid
                 try {
                     when {
                         clist[position].doc.isNullOrEmpty() -> {
-                            PlayerActivity.documentUrl = ""
+                            DemoPlayer.documentUrl = ""
                         }
                         else -> {
-                            PlayerActivity.documentUrl = clist[position].doc!!
+                            DemoPlayer.documentUrl = clist[position].doc!!
                         }
                     }
                 } catch (e: Exception) {
-                    PlayerActivity.documentUrl = ""
+                    DemoPlayer.documentUrl = ""
                     e.printStackTrace()
                 }
-                PlayerActivity.id = clist[position].id
+                DemoPlayer.id = clist[position].id
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             }
@@ -461,7 +468,7 @@ class HomeFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.itemView.body.setOnClickListener {
-                val intent = Intent(context, PlayerActivity::class.java)
+                val intent = Intent(context, DemoPlayer::class.java)
                 intent.putExtra("flag", "videos")
                 intent.putExtra("title", sList[position].vtitle)
                 intent.putExtra("subname", "")
@@ -469,17 +476,17 @@ class HomeFragment : Fragment() {
                 intent.putExtra("desc", sList[position].vtitle)
                 intent.putExtra("pic", sList[position].thumb)
                 intent.putExtra("id", sList[position].id)
-                PlayerActivity.cid = sList[position].cid
-                PlayerActivity.id = sList[position].id
-                PlayerActivity.page = "videos"
+                DemoPlayer.cid = sList[position].cid
+                DemoPlayer.id = sList[position].id
+                DemoPlayer.page = "videos"
                 try {
-                    PlayerActivity.documentUrl = sList[position].doc
+                    DemoPlayer.documentUrl = sList[position].doc
                 } catch (e: Exception) {
-                    PlayerActivity.documentUrl = ""
+                    DemoPlayer.documentUrl = ""
                     Log.d(TAG, "onBindViewHolder:$e")
                 }
-                PlayerActivity.videoflag = "continue"
-                PlayerActivity.videomark = sList[position].watchtime.toInt() * 1000
+                DemoPlayer.videoflag = "continue"
+                DemoPlayer.videomark = sList[position].watchtime.toInt() * 1000
                 intent.putExtra("mark", sList[position].watchtime.toInt() * 1000)
                 intent.putExtra("cid", "")
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

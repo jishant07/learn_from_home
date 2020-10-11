@@ -1,9 +1,9 @@
 @file:Suppress(
     "DEPRECATION", "MemberVisibilityCanBePrivate", "PrivatePropertyName",
-    "PropertyName", "SpellCheckingInspection", "SameParameterValue"
+    "PropertyName", "SpellCheckingInspection", "SameParameterValue", "PackageName"
 )
 
-package com.amuze.learnfromhome
+package com.amuze.learnfromhome.Player
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,6 +17,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.util.Pair
 import android.util.TypedValue
 import android.view.*
 import android.widget.*
@@ -26,29 +27,45 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.amuze.learnfromhome.LFHApplication
 import com.amuze.learnfromhome.Modal.*
 import com.amuze.learnfromhome.Modal.StudentWatch.Students
 import com.amuze.learnfromhome.Network.Status
 import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.PDF.PDFViewer
+import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.StudentActivity.ChatApplication
+import com.amuze.learnfromhome.Utilities.DBHelper
+import com.amuze.learnfromhome.Utilities.DownloadTracker
+import com.amuze.learnfromhome.Utilities.Downloads
 import com.amuze.learnfromhome.ViewModel.VModel
 import com.bumptech.glide.Glide
 import com.github.nkzawa.emitter.Emitter
 import com.github.nkzawa.socketio.client.Socket
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.mediacodec.MediaCodecRenderer.DecoderInitializationException
+import com.google.android.exoplayer2.mediacodec.MediaCodecUtil.DecoderQueryException
+import com.google.android.exoplayer2.offline.DownloadHelper
+import com.google.android.exoplayer2.offline.DownloadManager
+import com.google.android.exoplayer2.offline.DownloadRequest
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
+import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
 import com.google.android.exoplayer2.trackselection.*
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.BandwidthMeter
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.ErrorMessageProvider
 import com.google.android.exoplayer2.util.Util
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.activity_player.*
+import kotlinx.android.synthetic.main.activity_demo_player.*
 import kotlinx.android.synthetic.main.list_item.view.*
 import kotlinx.coroutines.*
 import org.json.JSONException
@@ -59,7 +76,7 @@ import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 @SuppressLint("SetTextI18n")
-class PlayerActivity : AppCompatActivity() {
+class DemoPlayer : AppCompatActivity() {
 
     private lateinit var simpleExoPlayer: SimpleExoPlayer
     private lateinit var mediaDataSourceFactory: DataSource.Factory
@@ -95,7 +112,12 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var url: String
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
+    private lateinit var downloadTracker: DownloadTracker
+    private lateinit var downloadManager: DownloadManager
+    private lateinit var dbHelper: DBHelper
     private lateinit var mSocket: Socket
+    private var dataSourceFactory: DataSource.Factory? = null
+    private lateinit var mediaSource: MediaSource
     private var list: ArrayList<CMessage> = ArrayList()
     private var spinnerList: MutableList<String> = mutableListOf()
     private var courseIdList: MutableList<Courses> = mutableListOf()
@@ -111,7 +133,7 @@ class PlayerActivity : AppCompatActivity() {
     )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_player)
+        setContentView(R.layout.activity_demo_player)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         sharedPreferences = applicationContext.getSharedPreferences(
             "lfh",
@@ -128,6 +150,11 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
         editor = sharedPreferences.edit()
+        dataSourceFactory = buildDataSourceFactory()
+        val application: LFHApplication = application as LFHApplication
+        downloadTracker = application.getDownloadTracker()
+        downloadManager = application.getDownloadManager()!!
+        dbHelper = DBHelper(applicationContext)
         imageString = sharedPreferences.getString("userpic", "")!!
         playerView = findViewById(R.id.player_view)
         vModel = ViewModelProviders.of(this).get(VModel::class.java)
@@ -262,6 +289,7 @@ class PlayerActivity : AppCompatActivity() {
                     subject_title.visibility = View.GONE
                     teacher.visibility = View.GONE
                     spinner.visibility = View.GONE
+                    download_linear.visibility = View.GONE
                     when {
                         compareDifference(live_start_flag) -> {
                             live__body_text.visibility = View.GONE
@@ -307,6 +335,7 @@ class PlayerActivity : AppCompatActivity() {
                     live__body_text.visibility = View.GONE
                     playerView.visibility = View.VISIBLE
                     controls_options.visibility = View.VISIBLE
+                    download_linear.visibility = View.VISIBLE
                     vflag = false
                 }
                 "courses" -> {
@@ -328,6 +357,7 @@ class PlayerActivity : AppCompatActivity() {
                     spinner.visibility = View.VISIBLE
                     live__body_text.visibility = View.GONE
                     playerView.visibility = View.VISIBLE
+                    download_linear.visibility = View.VISIBLE
                     controls_options.visibility = View.VISIBLE
                     vflag = false
                 }
@@ -479,6 +509,33 @@ class PlayerActivity : AppCompatActivity() {
                 showToast()
             }
         }
+
+        vtitle = intent.getStringExtra("title")!!
+        download_linear.setOnClickListener {
+            when (download.text) {
+                "Download" -> {
+                    Glide.with(applicationContext)
+                        .load(R.drawable.cancel)
+                        .error(R.drawable.ndownload)
+                        .into(ndownload)
+                    download.text = "Remove Download"
+                    addDownload(
+                        Uri.parse(COURSE_URL),
+                        vtitle,
+                        simpleExoPlayer.duration.toString(),
+                        "video"
+                    )
+                }
+                "Remove Download" -> {
+                    Glide.with(applicationContext)
+                        .load(R.drawable.ndownload)
+                        .error(R.drawable.ndownload)
+                        .into(ndownload)
+                    download.text = "Download"
+                    removeDownload(Uri.parse(COURSE_URL))
+                }
+            }
+        }
     }
 
     private fun loadStudentWatching() {
@@ -594,6 +651,7 @@ class PlayerActivity : AppCompatActivity() {
                                 val listIterator = resource.data.body()!!.course.listIterator()
                                 //setCourseText(resource.data.body()!!)
                                 courseUrl = resource.data.body()!!.videoInfo.vlink
+                                vtitle = resource.data.body()!!.videoInfo.title
                                 documentUrl = resource.data.body()!!.videoInfo.document
                                 getCourseUrl()
                                 spinnerList.clear()
@@ -648,6 +706,7 @@ class PlayerActivity : AppCompatActivity() {
                                     resource.data?.body()!!.toString()
                                 )
                                 courseUrl = resource.data.body()!!.videoInfo.vlink
+                                vtitle = resource.data.body()!!.videoInfo.title
                                 documentUrl = resource.data.body()!!.videoInfo.document
                                 getCourseUrl()
                                 addCourse(resource.data.body()!!.othercourse)
@@ -838,12 +897,29 @@ class PlayerActivity : AppCompatActivity() {
                             STREAM_URL
                         }
                     }
-                    loadPlayerLog("initializePlayer", "->$url")
+                    isDownloaded(url)
+                    val uris: Array<Uri>
+                    val uria = Uri.parse(url)
+                    uris = arrayOf(uria)
+                    val mediaSources = arrayOfNulls<MediaSource>(uris.size)
+                    for (i in uris.indices) {
+                        loadPlayerLog("initializePlayer", "->${uris[i]}")
+                        mediaSources[i] = buildMediaSource(uris[i])
+                    }
+                    mediaSource =
+                        when (mediaSources.size) {
+                            1 -> mediaSources[0]!!
+                            else -> ConcatenatingMediaSource(
+                                *mediaSources
+                            )
+                        }
+                    mediaSource = buildMediaSource(uria)
                     simpleExoPlayer.playWhenReady = true
                     playerView.setShutterBackgroundColor(Color.TRANSPARENT)
                     playerView.player = simpleExoPlayer
                     playerView.requestFocus()
                     simpleExoPlayer.addListener(PlayerEventListener())
+                    playerView.setErrorMessageProvider(PlayerErrorMessageProvider())
                     try {
                         when (videoflag) {
                             "continue" -> {
@@ -860,16 +936,67 @@ class PlayerActivity : AppCompatActivity() {
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
-                    val mediaSource = HlsMediaSource.Factory(
-                        mediaDataSourceFactory
-                    ).createMediaSource(Uri.parse(url))
                     simpleExoPlayer.prepare(mediaSource, false, false)
                 },
                 2000
             )
         } catch (e: Exception) {
             loadPlayerLog("playerError", e.toString())
-            Toast.makeText(this@PlayerActivity, "oops", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "oops", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun isDownloaded(url: String) {
+        try {
+            when {
+                downloadTracker.isDownloaded(Uri.parse(url)) -> {
+                    Glide.with(applicationContext)
+                        .load(R.drawable.cancel)
+                        .error(R.drawable.ndownload)
+                        .into(ndownload)
+                    download.text = "Remove Download"
+                }
+                else -> {
+                    Glide.with(applicationContext)
+                        .load(R.drawable.ndownload)
+                        .error(R.drawable.ndownload)
+                        .into(ndownload)
+                    download.text = "Download"
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * Returns a new DataSource factory.
+     */
+    private fun buildDataSourceFactory(): DataSource.Factory? {
+        return (application as LFHApplication).buildDataSourceFactory()
+    }
+
+    private fun buildMediaSource(uri: Uri): MediaSource {
+        return buildMediaSource(uri, null)
+    }
+
+    private fun buildMediaSource(uri: Uri, overrideExtension: String?): MediaSource {
+        try {
+            val downloadRequest: DownloadRequest = downloadTracker.getDownloadRequest(uri)!!
+            @Suppress("SENSELESS_COMPARISON")
+            if (downloadRequest != null) {
+                loadPlayerLog("downloadMedaiSource", "called")
+                return DownloadHelper.createMediaSource(downloadRequest, dataSourceFactory)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return when (@C.ContentType val type = Util.inferContentType(uri, overrideExtension)) {
+            C.TYPE_DASH -> DashMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+            C.TYPE_SS -> SsMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+            C.TYPE_HLS -> HlsMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+            C.TYPE_OTHER -> ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+            else -> throw IllegalStateException("Unsupported type: $type")
         }
     }
 
@@ -877,7 +1004,7 @@ class PlayerActivity : AppCompatActivity() {
         try {
             var pagecount = count
             val arrayAdapter = ArrayAdapter(
-                this@PlayerActivity,
+                this,
                 R.layout.spinner_item,
                 spinnerList
             )
@@ -897,7 +1024,7 @@ class PlayerActivity : AppCompatActivity() {
                         }
                     }
                     Toast.makeText(
-                        this@PlayerActivity,
+                        applicationContext,
                         "Selected Item" + " " + spinnerList[p2],
                         Toast.LENGTH_SHORT
                     ).show()
@@ -1035,7 +1162,7 @@ class PlayerActivity : AppCompatActivity() {
                 continueid,
                 (simpleExoPlayer.currentPosition / 1000).toString(),
                 (simpleExoPlayer.duration / 1000).toString()
-            ).observe(this@PlayerActivity, {
+            ).observe(this, {
                 it?.let { resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
@@ -1113,6 +1240,94 @@ class PlayerActivity : AppCompatActivity() {
         })
     }
 
+    private fun addDownload(sample: Uri, name: String, duration: String, type: String) {
+        Toast.makeText(this, "Media Added for Downloading!!", Toast.LENGTH_SHORT).show()
+        when (getDownloadUnsupportedStringId(sample)) {
+            0 -> {
+                val renderersFactory: RenderersFactory = (application as LFHApplication)
+                    .buildRenderersFactory(false)
+                downloadTracker.addDownload(
+                    supportFragmentManager,
+                    name,
+                    sample,
+                    "",
+                    renderersFactory
+                )
+                when {
+                    !dbHelper.checkDownloads(url) -> {
+                        dbHelper.insertDownloads(name, type, url, duration, eng_banner)
+                    }
+                }
+                try {
+                    val notes: List<Downloads> = dbHelper.allDownloads
+                    loadPlayerLog("notes", "${notes.size}")
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    private fun removeDownload(sample: Uri) {
+        Toast.makeText(this, "Media Removed from Downloading!!", Toast.LENGTH_SHORT).show()
+        when (getDownloadUnsupportedStringId(sample)) {
+            0 -> {
+                downloadTracker.removeDownload(sample)
+                when {
+                    !dbHelper.checkDownloads(url) -> {
+                        dbHelper.deleteDownloadsByPath(url)
+                    }
+                }
+                try {
+                    val notes: List<Downloads> = dbHelper.allDownloads
+                    loadPlayerLog("notes", "${notes.size}")
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    private class PlayerErrorMessageProvider :
+        ErrorMessageProvider<ExoPlaybackException> {
+        @SuppressLint("SwitchIntDef")
+        override fun getErrorMessage(e: ExoPlaybackException): Pair<Int, String> {
+            var errorString = "Playback failed"
+            when (e.type) {
+                ExoPlaybackException.TYPE_RENDERER -> {
+                    when (val cause = e.rendererException) {
+                        is DecoderInitializationException -> {
+                            // Special case for decoder initialization failures.
+                            errorString = if (cause.decoderName == null) {
+                                when {
+                                    cause.cause is DecoderQueryException -> {
+                                        "Unable to query device decoders"
+                                    }
+                                    cause.secureDecoderRequired -> {
+                                        "This device does not provide a secure decoder"
+                                    }
+                                    else -> {
+                                        "This device does not provide a secure decoder"
+                                    }
+                                }
+                            } else {
+                                "Unable to instantiate decoder "
+                            }
+                        }
+                    }
+                }
+            }
+            return Pair.create(0, errorString)
+        }
+    }
+
+    private fun getDownloadUnsupportedStringId(sample: Uri): Int {
+        val scheme = sample.scheme
+        return if (!("http" == scheme || "https" == scheme)) {
+            R.string.download_scheme_unsupported
+        } else 0
+    }
+
     private fun stringForTime(timeMs: Int): String? {
         val mFormatter: Formatter
         val mFormatBuilder: StringBuilder = StringBuilder()
@@ -1165,6 +1380,7 @@ class PlayerActivity : AppCompatActivity() {
                 live__body_text.visibility = View.GONE
                 playerView.visibility = View.VISIBLE
                 controls_options.visibility = View.VISIBLE
+                download_linear.visibility = View.GONE
                 exitfullscreen.z = 1f
                 exitactivity.z = 1f
             }
@@ -1240,6 +1456,7 @@ class PlayerActivity : AppCompatActivity() {
                         controls_options.visibility = View.VISIBLE
                         watchlist_linear.visibility = View.GONE
                         documents_linear.visibility = View.GONE
+                        download_linear.visibility = View.GONE
                     }
                     "videos" -> {
                         loadPlayerLog(TAG, "setOrientation:videos")
@@ -1255,6 +1472,7 @@ class PlayerActivity : AppCompatActivity() {
                         live__body_text.visibility = View.GONE
                         playerView.visibility = View.VISIBLE
                         controls_options.visibility = View.VISIBLE
+                        download_linear.visibility = View.VISIBLE
                     }
                     "courses" -> {
                         loadPlayerLog(TAG, "setOrientation:courses")
@@ -1270,6 +1488,7 @@ class PlayerActivity : AppCompatActivity() {
                         live__body_text.visibility = View.GONE
                         playerView.visibility = View.VISIBLE
                         controls_options.visibility = View.VISIBLE
+                        download_linear.visibility = View.VISIBLE
                     }
                 }
             }
@@ -1360,6 +1579,7 @@ class PlayerActivity : AppCompatActivity() {
         private lateinit var videoID: String
         private lateinit var courseUrl: String
         private var live_start_flag: String = ""
+        var eng_banner: String = ""
         var videomark = 0
         var count = 0
         var page = ""
@@ -1367,6 +1587,7 @@ class PlayerActivity : AppCompatActivity() {
         var id = ""
         var cid = ""
         var documentUrl = ""
+        var vtitle = ""
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

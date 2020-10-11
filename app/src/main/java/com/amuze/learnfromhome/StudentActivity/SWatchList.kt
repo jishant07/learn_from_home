@@ -19,7 +19,8 @@ import com.amuze.learnfromhome.Fragment.HomeFragment
 import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.Modal.WatchList
 import com.amuze.learnfromhome.Network.Status
-import com.amuze.learnfromhome.PlayerActivity
+import com.amuze.learnfromhome.Player.DemoPlayer
+import com.amuze.learnfromhome.Player.PlayerActivity
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
 import com.squareup.picasso.Picasso
@@ -81,7 +82,7 @@ class SWatchList : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.itemView.body.setOnClickListener {
-                val intent = Intent(context, PlayerActivity::class.java)
+                val intent = Intent(context, DemoPlayer::class.java)
                 intent.putExtra("flag", "videos")
                 intent.putExtra("title", sList[position].videotitle)
                 intent.putExtra("subname", sList[position].coursename)
@@ -89,8 +90,8 @@ class SWatchList : AppCompatActivity() {
                 intent.putExtra("teacher", sList[position].coursename)
                 intent.putExtra("id", sList[position].vid)
                 intent.putExtra("cid", "")
-                PlayerActivity.page = "watchlist"
-                PlayerActivity.documentUrl = ""
+                DemoPlayer.page = "watchlist"
+                DemoPlayer.documentUrl = ""
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(intent)
             }
