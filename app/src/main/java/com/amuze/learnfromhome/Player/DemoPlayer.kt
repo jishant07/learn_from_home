@@ -652,6 +652,7 @@ class DemoPlayer : AppCompatActivity() {
                                 //setCourseText(resource.data.body()!!)
                                 courseUrl = resource.data.body()!!.videoInfo.vlink
                                 vtitle = resource.data.body()!!.videoInfo.title
+                                eng_banner = resource.data.body()!!.videoInfo.vthumb
                                 documentUrl = resource.data.body()!!.videoInfo.document
                                 getCourseUrl()
                                 spinnerList.clear()
@@ -707,6 +708,7 @@ class DemoPlayer : AppCompatActivity() {
                                 )
                                 courseUrl = resource.data.body()!!.videoInfo.vlink
                                 vtitle = resource.data.body()!!.videoInfo.title
+                                eng_banner = resource.data.body()!!.videoInfo.vthumb
                                 documentUrl = resource.data.body()!!.videoInfo.document
                                 getCourseUrl()
                                 addCourse(resource.data.body()!!.othercourse)

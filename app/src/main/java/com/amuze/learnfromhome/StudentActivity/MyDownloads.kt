@@ -204,6 +204,10 @@ class MyDownloads : AppCompatActivity() {
                 e.printStackTrace()
             }
             sAdapter.notifyDataSetChanged()
+            finish()
+            overridePendingTransition(0, 0)
+            startActivity(intent)
+            overridePendingTransition(0, 0)
         } catch (e: Exception) {
             e.printStackTrace()
         }
