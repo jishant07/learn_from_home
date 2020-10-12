@@ -406,7 +406,7 @@ class HomeFragment : Fragment() {
                     .asBitmap()
                     .centerCrop()
                     .load(sdata.thumb)
-                    .error(R.drawable.s1)
+                    .error(R.drawable.live2)
                     .into(circular_image)
                 when (int) {
                     0 -> {

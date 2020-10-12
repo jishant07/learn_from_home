@@ -120,7 +120,7 @@ class STimeTable : AppCompatActivity() {
                 Log.d(TAG, "onBindViewHolder:${rList[position].sub_title}")
                 currentPosition = position
                 notifyDataSetChanged()
-                filterTTable(rList[position].sub_title)
+                filterTTable(rList[position].name)
             }
             val dateString =
                 rList[position].name
@@ -201,7 +201,18 @@ class STimeTable : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             holder.itemView.tt_title.text = aList[position].subjectname
-            holder.itemView.tt_title1.text = aList[position].periodslot
+            //holder.itemView.tt_title1.text = aList[position].periodslot
+            try {
+                if (aList[position].periodslot.isNullOrEmpty()) {
+                    holder.itemView.tt_title1.visibility = View.GONE
+                } else {
+                    holder.itemView.tt_title1.visibility = View.VISIBLE
+                    holder.itemView.tt_title1.text = aList[position].periodslot
+                }
+            } catch (e: Exception) {
+                holder.itemView.tt_title1.visibility = View.GONE
+            }
+            holder.itemView.tt_title2.text = aList[position].type
             (holder as MyViewHolder).bindItems()
         }
 
@@ -227,7 +238,7 @@ class STimeTable : AppCompatActivity() {
     fun filterTTable(flag: String) {
         try {
             Log.d(TAG, "flag:$flag")
-            val filtered = sList.filter { it.dayname == flag }
+            val filtered = sList.filter { it.startdate == flag }
             val distinct = filtered.distinct().toList()
             loadTimetable(distinct)
         } catch (e: Exception) {

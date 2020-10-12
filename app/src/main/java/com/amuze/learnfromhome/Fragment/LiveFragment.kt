@@ -282,7 +282,7 @@ class LiveFragment : Fragment() {
                     .asBitmap()
                     .fitCenter()
                     .load(sdata.thumb)
-                    .error(R.drawable.s1)
+                    .error(R.drawable.live2)
                     .into(cimage)
                 val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                 val date = dateFormatter.parse(sdata.substart)!!

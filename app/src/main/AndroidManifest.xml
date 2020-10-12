@@ -27,11 +27,11 @@
         <activity
             android:name=".StudentActivity.MyDownloads"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Player.DemoPlayer"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".StudentActivity.UploadedPage"
             android:screenOrientation="portrait"

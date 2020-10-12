@@ -814,6 +814,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun initializePlayer() {
+        loadPlayerLog("initializePlayer", "Called")
         try {
             Handler().postDelayed(
                 {
@@ -981,17 +982,41 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun releasePlayer() {
-        simpleExoPlayer.release()
+        try {
+            simpleExoPlayer.release()
+        } catch (e: Exception) {
+            loadPlayerLog("releasePlayer", e.toString())
+        }
     }
 
     public override fun onStart() {
         super.onStart()
-        if (Util.SDK_INT > 23) initializePlayer()
+        //if (Util.SDK_INT > 23) initializePlayer()
+        when {
+            Util.SDK_INT > 23 && flag == "videos" || flag == "courses" -> {
+                loadPlayerLog("videos", "courses")
+                initializePlayer()
+            }
+            Util.SDK_INT > 23 && flag == "live" && compareDifference(live_start_flag) -> {
+                loadPlayerLog("live", "flagged")
+                initializePlayer()
+            }
+        }
     }
 
     public override fun onResume() {
         super.onResume()
-        if (Util.SDK_INT <= 23) initializePlayer()
+        //if (Util.SDK_INT <= 23) initializePlayer()
+        when {
+            Util.SDK_INT <= 23 && flag == "videos" || flag == "courses" -> {
+                loadPlayerLog("videos", "courses")
+                initializePlayer()
+            }
+            Util.SDK_INT <= 23 && flag == "live" && compareDifference(live_start_flag) -> {
+                loadPlayerLog("live", "flagged")
+                initializePlayer()
+            }
+        }
         try {
             playerView.onResume()
             if (VideoSeeking) {

@@ -1,6 +1,6 @@
 @file:Suppress(
     "DEPRECATION", "MemberVisibilityCanBePrivate", "PrivatePropertyName",
-    "PropertyName", "SpellCheckingInspection", "SameParameterValue", "PackageName"
+    "PropertyName", "SpellCheckingInspection", "SameParameterValue", "PackageName", "unused"
 )
 
 package com.amuze.learnfromhome.Player
@@ -48,7 +48,6 @@ import com.google.android.exoplayer2.mediacodec.MediaCodecUtil.DecoderQueryExcep
 import com.google.android.exoplayer2.offline.DownloadHelper
 import com.google.android.exoplayer2.offline.DownloadManager
 import com.google.android.exoplayer2.offline.DownloadRequest
-import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
@@ -875,6 +874,7 @@ class DemoPlayer : AppCompatActivity() {
 
     private fun initializePlayer() {
         try {
+            loadPlayerLog("initializePlayer", "called")
             Handler().postDelayed(
                 {
                     mediaDataSourceFactory =
@@ -900,22 +900,7 @@ class DemoPlayer : AppCompatActivity() {
                         }
                     }
                     isDownloaded(url)
-                    val uris: Array<Uri>
-                    val uria = Uri.parse(url)
-                    uris = arrayOf(uria)
-                    val mediaSources = arrayOfNulls<MediaSource>(uris.size)
-                    for (i in uris.indices) {
-                        loadPlayerLog("initializePlayer", "->${uris[i]}")
-                        mediaSources[i] = buildMediaSource(uris[i])
-                    }
-                    mediaSource =
-                        when (mediaSources.size) {
-                            1 -> mediaSources[0]!!
-                            else -> ConcatenatingMediaSource(
-                                *mediaSources
-                            )
-                        }
-                    mediaSource = buildMediaSource(uria)
+                    mediaSource = buildMediaSource(Uri.parse(url))
                     simpleExoPlayer.playWhenReady = true
                     playerView.setShutterBackgroundColor(Color.TRANSPARENT)
                     playerView.player = simpleExoPlayer
@@ -986,9 +971,11 @@ class DemoPlayer : AppCompatActivity() {
         try {
             val downloadRequest: DownloadRequest = downloadTracker.getDownloadRequest(uri)!!
             @Suppress("SENSELESS_COMPARISON")
-            if (downloadRequest != null) {
-                loadPlayerLog("downloadMedaiSource", "called")
-                return DownloadHelper.createMediaSource(downloadRequest, dataSourceFactory)
+            when {
+                downloadRequest != null -> {
+                    loadPlayerLog("downloadMedaiSource", "called")
+                    return DownloadHelper.createMediaSource(downloadRequest, dataSourceFactory)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -1109,17 +1096,29 @@ class DemoPlayer : AppCompatActivity() {
     }
 
     private fun releasePlayer() {
-        simpleExoPlayer.release()
+        try {
+            simpleExoPlayer.release()
+        } catch (e: Exception) {
+            loadPlayerLog("releasePlayer", e.toString())
+        }
     }
 
     public override fun onStart() {
         super.onStart()
-        if (Util.SDK_INT > 23) initializePlayer()
+        when {
+            Util.SDK_INT > 23 -> {
+                initializePlayer()
+            }
+        }
     }
 
     public override fun onResume() {
         super.onResume()
-        if (Util.SDK_INT <= 23) initializePlayer()
+        when {
+            Util.SDK_INT <= 23 -> {
+                initializePlayer()
+            }
+        }
         try {
             playerView.onResume()
             if (VideoSeeking) {
@@ -1458,6 +1457,7 @@ class DemoPlayer : AppCompatActivity() {
                         controls_options.visibility = View.VISIBLE
                         watchlist_linear.visibility = View.GONE
                         documents_linear.visibility = View.GONE
+                        byTeacherN.visibility = View.GONE
                         download_linear.visibility = View.GONE
                     }
                     "videos" -> {
@@ -1471,6 +1471,7 @@ class DemoPlayer : AppCompatActivity() {
                         subject_recycler.visibility = View.GONE
                         tDescription.visibility = View.GONE
                         spinner.visibility = View.GONE
+                        byTeacherN.visibility = View.GONE
                         live__body_text.visibility = View.GONE
                         playerView.visibility = View.VISIBLE
                         controls_options.visibility = View.VISIBLE
