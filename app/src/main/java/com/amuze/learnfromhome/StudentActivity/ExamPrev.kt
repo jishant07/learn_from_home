@@ -243,10 +243,6 @@ class ExamPrev : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         Log.d("onBack_EPr", "called")
-        val intent = Intent(applicationContext, ExamPage::class.java)
-        intent.putExtra("flag", "prev")
-        intent.putExtra("title", vtitle)
-        startActivity(intent)
         finish()
     }
 

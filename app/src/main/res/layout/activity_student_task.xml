@@ -108,8 +108,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
             android:indeterminate="false"
-            android:max="100"
-            android:progress="30"
+            android:progress="0"
             android:progressDrawable="@drawable/curved_progress_bar"
             android:scaleY="3"
             android:theme="@style/AppTheme" />

@@ -1093,6 +1093,7 @@ class PlayerActivity : AppCompatActivity() {
         releasePlayer()
         VideoSeeking = false
         seekPosition = 0
+        finish()
     }
 
     private fun initSeekBar() {

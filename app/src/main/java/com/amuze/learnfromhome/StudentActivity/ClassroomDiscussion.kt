@@ -208,6 +208,12 @@ class ClassroomDiscussion : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
+    }
+
     companion object {
         private var gList: ArrayList<ClassDiscuss> = ArrayList()
     }

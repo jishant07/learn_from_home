@@ -294,7 +294,17 @@ class ExamPage : AppCompatActivity() {
     }
 
     private fun loadExams(list: List<QDetails>) {
-        progressbar.progress = ((list.size.toDouble() / 10) * 100).toInt()
+        try {
+            val progressValue = list.filter { it.ansid == "null" }
+            val progressValue1 = list.groupBy { it.ansid }
+            progressbar.max = ((list.size.toDouble() / 10) * 100).toInt()
+            progressbar!!.progress = ((progressValue.size.toDouble() / 10) * 100).toInt()
+            Log.d(TAG, "loadExamsError:$progressValue1")
+            Log.d(TAG, "loadExams:$progressValue")
+        } catch (e: Exception) {
+            progressbar!!.progress = 0
+            e.printStackTrace()
+        }
         slist.clear()
         slist.addAll(list)
         sadapter.notifyDataSetChanged()
@@ -319,8 +329,6 @@ class ExamPage : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         Log.d("onBack_EP", "called")
-        val intent = Intent(applicationContext, HomePage::class.java)
-        startActivity(intent)
         finish()
     }
 

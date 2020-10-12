@@ -104,4 +104,10 @@ class AccountUpdate : AppCompatActivity() {
             e.printStackTrace()
         }
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
+    }
 }

@@ -333,10 +333,15 @@ class StudentTask : AppCompatActivity() {
             val curFormatter = SimpleDateFormat("yyyy-MM-dd")
             val formatted = curFormatter.format(current.time)
             val filtered = tList.filter { it.taskdate == formatted }
-            progressbar!!.progress = ((filtered.size.toDouble() / 10) * 100).toInt()
-            youhaveTask.text = "You have ${filtered.size} task today!!"
-            unfinishedtask.text = "${filtered.size} unfinished task"
-            fList.addAll(filtered)
+            apiResponse("filtered", filtered.toString())
+            val unfinished = tList.filter { it.status == "1" }
+            val finished = tList.filter { it.status == "0" }
+            progressbar!!.max = ((tList.size.toDouble() / 10) * 100).toInt()
+            progressbar!!.progress = ((finished.size.toDouble() / 10) * 100).toInt()
+            youhaveTask.text = "You have ${tList.size} task today!!"
+            unfinishedtask.text = "${unfinished.size} unfinished task"
+            apiResponse("progress", ((finished.size.toDouble() / 10) * 100).toInt().toString())
+            fList.addAll(tList)
             sadapter1.notifyDataSetChanged()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -415,6 +420,12 @@ class StudentTask : AppCompatActivity() {
 
     private fun apiResponse(key: String, string: String) {
         Log.d(TAG, "apiResponse$key:::$string")
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
     }
 
     companion object {

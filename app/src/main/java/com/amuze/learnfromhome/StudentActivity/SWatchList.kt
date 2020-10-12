@@ -121,4 +121,10 @@ class SWatchList : AppCompatActivity() {
         wList.addAll(list)
         sadapter1.notifyDataSetChanged()
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
+    }
 }

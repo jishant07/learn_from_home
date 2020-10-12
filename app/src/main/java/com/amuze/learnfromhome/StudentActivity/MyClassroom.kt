@@ -160,4 +160,10 @@ class MyClassroom : AppCompatActivity() {
             }
         }
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("MyClassroom", "called")
+        finish()
+    }
 }

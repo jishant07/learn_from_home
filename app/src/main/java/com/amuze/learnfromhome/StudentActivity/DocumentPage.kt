@@ -112,6 +112,12 @@ class DocumentPage : AppCompatActivity() {
         sadapter1.notifyDataSetChanged()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
+    }
+
     companion object {
         var TAG = DocumentPage::class.java.simpleName
         lateinit var context: Context

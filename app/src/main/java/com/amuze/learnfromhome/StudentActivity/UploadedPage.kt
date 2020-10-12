@@ -109,6 +109,12 @@ class UploadedPage : AppCompatActivity() {
         ).show()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
+    }
+
     companion object {
         var TAG = "UploadedPage"
         var ansID = ""

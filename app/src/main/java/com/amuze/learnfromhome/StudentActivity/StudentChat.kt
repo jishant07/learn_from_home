@@ -320,6 +320,12 @@ class StudentChat : AppCompatActivity() {
         })
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
+    }
+
     companion object {
         private lateinit var random: String
         private lateinit var username: String

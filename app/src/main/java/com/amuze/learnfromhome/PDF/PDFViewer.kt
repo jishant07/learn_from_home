@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -70,6 +71,12 @@ class PDFViewer : AppCompatActivity() {
         override fun onPostExecute(inputStream: InputStream?) {
             pdfview.fromStream(inputStream).load()
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
     }
 
     companion object {

@@ -9,15 +9,19 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.PDF.PDFWeb
+import com.amuze.learnfromhome.StudentActivity.MyDownloads
+import com.amuze.learnfromhome.Utilities.NetworkListener
 
 class MainActivity : AppCompatActivity() {
 
     private val SPLASH_TIME_OUT = 3000L
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
+    private var TAG = "MainActivity"
 
     @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {

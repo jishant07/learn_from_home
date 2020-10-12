@@ -1195,6 +1195,7 @@ class DemoPlayer : AppCompatActivity() {
         releasePlayer()
         VideoSeeking = false
         seekPosition = 0
+        finish()
     }
 
     private fun initSeekBar() {

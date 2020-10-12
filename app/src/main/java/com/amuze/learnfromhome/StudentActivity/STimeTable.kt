@@ -269,6 +269,12 @@ class STimeTable : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
+    }
+
     companion object {
         lateinit var context: Context
         var sublist: ArrayList<Subject> = ArrayList()

@@ -277,7 +277,7 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
             do {
                 SystemClock.sleep(2000)
                 mBuilder?.setContentText("$progress%")
-                    ?.setProgress(99, progress, false)
+                    ?.setProgress(99, progress, true)
                 mNotifyManager?.notify(1, mBuilder!!.build())
             } while (progress < 99)
             mBuilder!!.setContentText("Upload complete")
@@ -390,8 +390,6 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        val intent = Intent(applicationContext, HomePage::class.java)
-        startActivity(intent)
         finish()
     }
 

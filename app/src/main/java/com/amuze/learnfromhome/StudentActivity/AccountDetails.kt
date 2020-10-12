@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.R
@@ -38,5 +39,11 @@ class AccountDetails : AppCompatActivity() {
         account_back.setOnClickListener {
             finish()
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
     }
 }

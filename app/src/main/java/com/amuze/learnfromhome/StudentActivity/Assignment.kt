@@ -197,17 +197,29 @@ class Assignment : AppCompatActivity() {
 
     @SuppressLint("SimpleDateFormat")
     private fun loadAssignment(list: List<NAssignments>) {
-        aList.clear()
-        nList.clear()
-        nList.addAll(list)
-        aList.addAll(list)
-        progressbar.progress = ((list.size.toDouble() / 10) * 100).toInt()
-        val current = Calendar.getInstance()
-        val dayFormat = SimpleDateFormat("yyyy-MM-dd")
-        val dateString = dayFormat.format(current.time)
-        val filtered = nList.filter { it.opendate == dateString }
-        Log.d(TAG, "loadAssignment:$filtered:::$dateString")
-        sadapter.notifyDataSetChanged()
+        try {
+            aList.clear()
+            nList.clear()
+            nList.addAll(list)
+            aList.addAll(list)
+            progressbar.max = ((aList.size.toDouble() / 10) * 100).toInt()
+            val submitted = aList.filter { it.sStatus == "Submitted" }
+            progressbar.progress = ((submitted.size.toDouble() / 10) * 100).toInt()
+            val current = Calendar.getInstance()
+            val dayFormat = SimpleDateFormat("yyyy-MM-dd")
+            val dateString = dayFormat.format(current.time)
+            val filtered = nList.filter { it.opendate == dateString }
+            Log.d(TAG, "loadAssignment:$filtered:::$dateString")
+            sadapter.notifyDataSetChanged()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

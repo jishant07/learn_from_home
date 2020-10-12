@@ -74,4 +74,10 @@ class MyProfile : AppCompatActivity() {
         mothername_data.text = "${profile.mother_name}  ${profile.mother_contact}"
         emailData.text = profile.email
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
+    }
 }

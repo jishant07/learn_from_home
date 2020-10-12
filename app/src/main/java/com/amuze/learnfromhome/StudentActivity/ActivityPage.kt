@@ -547,6 +547,12 @@ class ActivityPage : AppCompatActivity() {
         Log.d(TAG, "apiResponse$key:::$string")
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {

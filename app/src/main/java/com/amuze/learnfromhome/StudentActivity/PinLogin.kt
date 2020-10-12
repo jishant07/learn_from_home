@@ -5,6 +5,7 @@ package com.amuze.learnfromhome.StudentActivity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.R
@@ -22,5 +23,11 @@ class PinLogin : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
     }
 }

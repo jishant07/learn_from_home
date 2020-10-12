@@ -292,8 +292,6 @@ class CreateTask : AppCompatActivity() {
                         true
                     }
                     else -> {
-                        val intent = Intent(applicationContext, HomePage::class.java)
-                        startActivity(intent)
                         finish()
                         true
                     }
@@ -301,6 +299,12 @@ class CreateTask : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d(TAG, "called")
+        finish()
     }
 
     companion object {

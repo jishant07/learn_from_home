@@ -2,8 +2,11 @@
 
 package com.amuze.learnfromhome
 
+import android.content.BroadcastReceiver
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.*
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -15,6 +18,9 @@ import androidx.fragment.app.FragmentManager
 import com.amuze.learnfromhome.Fragment.*
 import com.amuze.learnfromhome.StudentActivity.ClassroomDiscussion
 import com.amuze.learnfromhome.StudentActivity.DocumentPage
+import com.amuze.learnfromhome.StudentActivity.MyDownloads
+import com.amuze.learnfromhome.Utilities.NetworkChangeReceiver
+import com.amuze.learnfromhome.Utilities.NetworkListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomePage : AppCompatActivity() {
@@ -29,6 +35,7 @@ class HomePage : AppCompatActivity() {
     private lateinit var linearLayout1: LinearLayout
     private lateinit var linearLayout2: LinearLayout
     private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var NetworkChangeReceiver: BroadcastReceiver
 
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item: MenuItem ->
@@ -103,13 +110,14 @@ class HomePage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        NetworkChangeReceiver = NetworkChangeReceiver()
         linearLayout = findViewById(R.id.bottom_sheet)
         linearLayout1 = findViewById(R.id.item1)
         linearLayout2 = findViewById(R.id.item2)
         linearLayout.visibility = View.GONE
         bottomNavigationView = findViewById(R.id.nav_view)
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
+        registerIntent()
         val fragmentTransaction =
             supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, fragment1)
@@ -248,6 +256,42 @@ class HomePage : AppCompatActivity() {
 //            }
 //        }
 //    }
+
+    private fun registerIntent() {
+        try {
+            registerReceiver(
+                NetworkChangeReceiver,
+                IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        try {
+            unregisterReceiver(NetworkChangeReceiver)
+            NetworkListener.unregister(this, broadcastReceiver)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private val broadcastReceiver by lazy {
+        NetworkListener.create({
+            Log.d("broadcastReceiver", ":NetworkUp()")
+        }, {
+            val i = Intent(this, MyDownloads::class.java)
+            startActivity(i)
+            finish()
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        NetworkListener.register(this, broadcastReceiver)
+    }
 
     private fun profileClicked() {
         val intent = Intent(applicationContext, ProfileActivity::class.java)

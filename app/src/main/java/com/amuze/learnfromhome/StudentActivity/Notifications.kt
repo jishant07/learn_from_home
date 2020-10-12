@@ -101,6 +101,12 @@ class Notifications : AppCompatActivity() {
         })
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("LearnFromHome", "called")
+        finish()
+    }
+
     private fun addList(list: List<NNotifications>) {
         nList.clear()
         nList.addAll(list)
