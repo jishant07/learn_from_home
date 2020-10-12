@@ -100,6 +100,7 @@ class ActivityPage : AppCompatActivity() {
 
     inner class CustomAdapter(private val sList: ArrayList<Subject>) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        private var currentPosition by Delegates.notNull<Int>()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val v = LayoutInflater.from(parent.context)
@@ -152,47 +153,69 @@ class ActivityPage : AppCompatActivity() {
             }
             holder.itemView.date.text = c[Calendar.DATE].toString()
             holder.itemView.month.text = mydate.toString().subSequence(4, 8)
-            when (currentPosition) {
-                position -> {
-                    holder.itemView.day.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.accent_pink
+            try {
+                when (currentPosition) {
+                    position -> {
+                        holder.itemView.day.setTextColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.accent_pink
+                            )
                         )
-                    )
-                    holder.itemView.date.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.accent_pink
+                        holder.itemView.date.setTextColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.accent_pink
+                            )
                         )
-                    )
-                    holder.itemView.month.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.accent_pink
+                        holder.itemView.month.setTextColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.accent_pink
+                            )
                         )
-                    )
+                    }
+                    else -> {
+                        holder.itemView.day.setTextColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.text_dark_white
+                            )
+                        )
+                        holder.itemView.date.setTextColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.text_dark_white
+                            )
+                        )
+                        holder.itemView.month.setTextColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.text_dark_white
+                            )
+                        )
+                    }
                 }
-                else -> {
-                    holder.itemView.day.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.text_dark_white
-                        )
+            } catch (e: Exception) {
+                holder.itemView.day.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.text_dark_white
                     )
-                    holder.itemView.date.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.text_dark_white
-                        )
+                )
+                holder.itemView.date.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.text_dark_white
                     )
-                    holder.itemView.month.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.text_dark_white
-                        )
+                )
+                holder.itemView.month.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.text_dark_white
                     )
-                }
+                )
+                Log.d(TAG, "onBindViewHolder:$e")
             }
             (holder as MyViewHolder).bindItems()
         }
@@ -569,6 +592,5 @@ class ActivityPage : AppCompatActivity() {
         lateinit var context: Context
         var filteredSlide: ArrayList<LTask> = ArrayList()
         var dateList: ArrayList<Subject> = ArrayList()
-        var currentPosition = 0
     }
 }
