@@ -200,7 +200,6 @@ class ExamPage : AppCompatActivity() {
                     NTaskUpload.submitflag = "null"
                 }
                 context.startActivity(intent)
-
             }
             holder.bindItems(sList[position])
         }

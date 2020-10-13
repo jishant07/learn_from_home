@@ -323,7 +323,8 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                     Status.SUCCESS -> {
                         when (it.data!!.body()!!.message) {
                             "success" -> {
-                                Log.d(TAG, "submitAnswer:${it.data.body()!!}")
+                                Log.d(TAG, "uploadDocAssignment:${it.data.raw()}")
+                                Log.d(TAG, "uploadDocAssignment:${it.data.body()!!}")
                                 val intent =
                                     Intent(
                                         applicationContext,
@@ -333,7 +334,9 @@ class NTaskUpload : AppCompatActivity(), UploadFileBody.UploadCallback {
                                 UploadedPage.marks = examMarks
                                 UploadedPage.subjectname = examSubject
                                 UploadedPage.ansID = it.data.body()!!.lastid
+                                //UploadedPage.ansID = intent.getStringExtra("id")!!
                                 startActivity(intent)
+                                finish()
                             }
                             else -> {
                                 Log.d(TAG, "submitAnswer:Error")

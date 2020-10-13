@@ -46,6 +46,7 @@ class UploadedPage : AppCompatActivity() {
                     Status.SUCCESS -> {
                         taskProgress.visibility = View.GONE
                         upload_page_body.visibility = View.VISIBLE
+                        Log.d(TAG, "loadResult:${it.data?.raw()}")
                         loadData(it.data?.body()!!)
                     }
                     Status.ERROR -> {
@@ -58,6 +59,7 @@ class UploadedPage : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun loadData(assignResult: AssignResult) {
+        Log.d(TAG, "loadData:$assignResult")
         correct_txt.text = "You've already submitted."
         Picasso.get().load(R.drawable.assignment_submit)
             .into(corrct_img)

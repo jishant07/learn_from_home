@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION", "PrivatePropertyName", "PackageName")
+
 package com.amuze.learnfromhome.StudentActivity
 
 import android.annotation.SuppressLint
@@ -15,11 +17,9 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.amuze.learnfromhome.HomePage
 import com.amuze.learnfromhome.Modal.Exams.EPrev
 import com.amuze.learnfromhome.Modal.Exams.EPrevious
 import com.amuze.learnfromhome.Modal.QDetails
@@ -151,10 +151,20 @@ class ExamPrev : AppCompatActivity() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.itemView.exam_body.setOnClickListener {
                 val intent = Intent(context, NTaskUpload::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra("flag", "prev")
+                intent.putExtra("title", sList[position].question)
+                intent.putExtra("desc", sList[position].answer)
                 intent.putExtra("id", sList[position].id)
                 intent.putExtra("type", sList[position].qtype)
-                intent.putExtra("flag", "prev")
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra("subj", sList[position].section)
+                intent.putExtra("ansid", sList[position].ansid)
+                NTaskUpload.evid = sList[position].evid
+                try {
+                    NTaskUpload.submitflag = sList[position].ansid
+                } catch (e: Exception) {
+                    NTaskUpload.submitflag = "null"
+                }
                 context.startActivity(intent)
             }
             holder.bindItems(sList[position])
@@ -180,7 +190,7 @@ class ExamPrev : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun loadData() {
-        vModel.getPrevExams().observe(this@ExamPrev, Observer {
+        vModel.getPrevExams().observe(this@ExamPrev, {
             try {
                 val prevData = it.data!!.body()
                 gList.clear()

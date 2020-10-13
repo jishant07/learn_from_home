@@ -333,13 +333,13 @@ class StudentTask : AppCompatActivity() {
             val curFormatter = SimpleDateFormat("yyyy-MM-dd")
             val formatted = curFormatter.format(current.time)
             val filtered = tList.filter { it.taskdate == formatted }
-            apiResponse("filtered", filtered.toString())
             val unfinished = tList.filter { it.status == "1" }
             val finished = tList.filter { it.status == "0" }
             progressbar!!.max = ((tList.size.toDouble() / 10) * 100).toInt()
             progressbar!!.progress = ((finished.size.toDouble() / 10) * 100).toInt()
             youhaveTask.text = "You have ${tList.size} task today!!"
             unfinishedtask.text = "${unfinished.size} unfinished task"
+            apiResponse("filtered", filtered.toString())
             apiResponse("progress", ((finished.size.toDouble() / 10) * 100).toInt().toString())
             fList.addAll(tList)
             sadapter1.notifyDataSetChanged()
