@@ -145,8 +145,11 @@ class Login : AppCompatActivity() {
                             startActivity(sIntent)
                             finish()
                         }
-                        else -> {
+                        Status.ERROR -> {
                             Log.d(TAG, "Error:${it.message}")
+                        }
+                        Status.LOADING -> {
+                            Log.d(TAG, "Loading:${it.status}")
                         }
                     }
                 }

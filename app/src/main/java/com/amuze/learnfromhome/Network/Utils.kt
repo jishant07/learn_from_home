@@ -15,8 +15,10 @@ import java.util.*
 
 open class Utils {
     companion object {
+        var previousURL = "https://flowrow.com/lfh/"
+        var prevURL = "https://learnfromhome.app/learn_from_home/"
         var retrofit1: Retrofit = Retrofit.Builder()
-            .baseUrl("https://flowrow.com/lfh/")
+            .baseUrl(prevURL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         lateinit var userId: String

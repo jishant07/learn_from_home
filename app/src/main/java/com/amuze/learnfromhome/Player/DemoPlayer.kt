@@ -1502,12 +1502,12 @@ class DemoPlayer : AppCompatActivity() {
     private fun addWatchList(id: String, courseid: String) {
         val url: String = when {
             courseid.isNotEmpty() -> {
-                "https://flowrow.com/lfh/appapi.php?" +
+                "https://learnfromhome.app/learn_from_home/appapi.php?" +
                         "action=list-gen&category=addwatchlist&emp_code=${Utils.userId}&classid=${Utils.classId}" +
                         "&course=$courseid&id=$id"
             }
             else -> {
-                "https://flowrow.com/lfh/appapi.php?" +
+                "https://learnfromhome.app/learn_from_home/appapi.php?" +
                         "action=list-gen&category=removewatchlist&emp_code=${Utils.userId}&classid=${Utils.classId}&" +
                         "id=$id"
             }

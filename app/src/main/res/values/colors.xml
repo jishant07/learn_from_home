@@ -17,6 +17,7 @@
     <color name="background">#FFFFFF</color>
     <color name="light_background">#F5F5F5</color>
     <color name="red">#ff0000</color>
+    <color name="accent_blue">#0866B1</color>
 
     <color name="backgroundcolor">#121212</color>
     <color name="colorTab">#303030</color>

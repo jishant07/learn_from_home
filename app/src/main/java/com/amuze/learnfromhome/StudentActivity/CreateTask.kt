@@ -233,7 +233,7 @@ class CreateTask : AppCompatActivity() {
                 val queue = Volley.newRequestQueue(applicationContext)
                 when {
                     taskID.isEmpty() -> {
-                        TASK_URL = "https://flowrow.com/lfh/appapi.php?action=list-gen&" +
+                        TASK_URL = "https://learnfromhome.app/learn_from_home/appapi.php?action=list-gen&" +
                                 "category=addtask&emp_code=${Utils.userId}&classid=${Utils.classId}&title=${
                                     namearea.text.toString().trim()
                                 }&" +
@@ -242,7 +242,7 @@ class CreateTask : AppCompatActivity() {
                                 }&all_day=$isChecked&date=$myDate&time=$dtime&color=$mHex"
                     }
                     else -> {
-                        TASK_URL = "https://flowrow.com/lfh/appapi.php?action=list-gen&" +
+                        TASK_URL = "https://learnfromhome.app/learn_from_home/appapi.php?action=list-gen&" +
                                 "category=updatetask&emp_code=${Utils.userId}&classid=${Utils.classId}&taskid=$taskID&title=${
                                     namearea.text.toString().trim()
                                 }&" +

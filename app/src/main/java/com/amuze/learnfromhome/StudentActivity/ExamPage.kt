@@ -5,7 +5,6 @@ package com.amuze.learnfromhome.StudentActivity
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,11 +24,10 @@ import com.amuze.learnfromhome.Network.Utils
 import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.ViewModel.VModel
 import kotlinx.android.synthetic.main.activity_exam_page.*
-import kotlinx.android.synthetic.main.activity_exam_page.headd_subtitle
-import kotlinx.android.synthetic.main.activity_exam_page.headd_title
 import kotlinx.android.synthetic.main.exam_header.view.*
 import kotlinx.android.synthetic.main.exam_item.view.*
-import kotlin.Exception
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.collections.ArrayList
 
 class ExamPage : AppCompatActivity() {
@@ -184,22 +183,52 @@ class ExamPage : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.itemView.exam_body.setOnClickListener {
-                val intent = Intent(context, NTaskUpload::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.putExtra("flag", "prev")
-                intent.putExtra("title", sList[position].question)
-                intent.putExtra("desc", sList[position].answer)
-                intent.putExtra("id", sList[position].id)
-                intent.putExtra("type", sList[position].qtype)
-                intent.putExtra("subj", sList[position].section)
-                intent.putExtra("ansid", sList[position].ansid)
-                NTaskUpload.evid = sList[position].evid
                 try {
-                    NTaskUpload.submitflag = sList[position].ansid
+                    when {
+                        slist[position].ansid.isNotEmpty() -> {
+                            val intent = Intent(context, UploadedPage::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            UploadedPage.ansID = sList[position].ansid
+                            context.startActivity(intent)
+                        }
+                        else -> {
+                            val intent = Intent(context, NTaskUpload::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            intent.putExtra("flag", "prev")
+                            intent.putExtra("title", sList[position].question)
+                            intent.putExtra("desc", sList[position].answer)
+                            intent.putExtra("id", sList[position].id)
+                            intent.putExtra("type", sList[position].qtype)
+                            intent.putExtra("subj", sList[position].section)
+                            intent.putExtra("ansid", sList[position].ansid)
+                            NTaskUpload.evid = sList[position].evid
+                            try {
+                                NTaskUpload.submitflag = sList[position].ansid
+                            } catch (e: Exception) {
+                                NTaskUpload.submitflag = "null"
+                            }
+                            context.startActivity(intent)
+                        }
+                    }
                 } catch (e: Exception) {
-                    NTaskUpload.submitflag = "null"
+                    val intent = Intent(context, NTaskUpload::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    intent.putExtra("flag", "prev")
+                    intent.putExtra("title", sList[position].question)
+                    intent.putExtra("desc", sList[position].answer)
+                    intent.putExtra("id", sList[position].id)
+                    intent.putExtra("type", sList[position].qtype)
+                    intent.putExtra("subj", sList[position].section)
+                    intent.putExtra("ansid", sList[position].ansid)
+                    NTaskUpload.evid = sList[position].evid
+                    try {
+                        NTaskUpload.submitflag = sList[position].ansid
+                    } catch (e: Exception) {
+                        NTaskUpload.submitflag = "null"
+                    }
+                    context.startActivity(intent)
+                    Log.d(TAG, "onBindViewHolder:$e")
                 }
-                context.startActivity(intent)
             }
             holder.bindItems(sList[position])
         }
@@ -269,12 +298,6 @@ class ExamPage : AppCompatActivity() {
                         Status.SUCCESS -> {
                             headd_title.text =
                                 "You have ${it.data!!.body()?.size} Questions Today!!"
-                            headd_subtitle.text =
-                                "${it.data.body()?.size} unfinished question"
-                            crct_no.text = "0"
-                            wrng_no.text = "2"
-                            nsubmit_no.text = "2"
-                            total_count.text = "${it.data.body()?.size}"
                             headd_title.visibility = View.VISIBLE
                             relative_body.visibility = View.VISIBLE
                             eTitle.text = getString(R.string.last_exam_score)
@@ -290,23 +313,59 @@ class ExamPage : AppCompatActivity() {
                 }
             }
         })
+
+        vModel.getPrevExams().observe(this@ExamPage, {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.LOADING -> {
+                        Log.d(TAG, "loadExamData:${it.status}")
+                    }
+                    Status.SUCCESS -> {
+                        crct_no.text = it.data?.body()!!.correct
+                        wrng_no.text = it.data.body()!!.wrong
+                        nsubmit_no.text = it.data.body()!!.notsolved
+                        total_count.text = it.data.body()!!.marks
+                    }
+                    Status.ERROR -> {
+                        Log.d(TAG, "loadExamData:${it.message}")
+                    }
+                }
+            }
+        })
     }
 
+    @SuppressLint("SetTextI18n")
     private fun loadExams(list: List<QDetails>) {
         try {
-            val progressValue = list.filter { it.ansid == "null" }
+            val progressValue = list.filter { it.ansid.isNotEmpty() }
             val progressValue1 = list.groupBy { it.ansid }
+            val unfinished = list.filter { it.ansid.isEmpty() }
             progressbar.max = ((list.size.toDouble() / 10) * 100).toInt()
             progressbar!!.progress = ((progressValue.size.toDouble() / 10) * 100).toInt()
-            Log.d(TAG, "loadExamsError:$progressValue1")
+            headd_subtitle.text =
+                "${unfinished.size} unfinished question"
+            Log.d(TAG, "loadExamsError:$progressValue1:::${unfinished.size}")
             Log.d(TAG, "loadExams:$progressValue")
         } catch (e: Exception) {
             progressbar!!.progress = 0
             e.printStackTrace()
         }
+        convertAMtoPM("${list[0].closedate.subSequence(11, 16)}")
         slist.clear()
         slist.addAll(list)
         sadapter.notifyDataSetChanged()
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun convertAMtoPM(string: String) {
+        try {
+            val sdf = SimpleDateFormat("H:mm")
+            val dateObj: Date = sdf.parse(string)!!
+            val convertedTime = SimpleDateFormat("K:mm a").format(dateObj)
+            Log.d(TAG, "convertAMtoPM:$convertedTime")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     @SuppressLint("SetTextI18n")

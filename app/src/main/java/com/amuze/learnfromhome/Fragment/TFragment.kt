@@ -126,7 +126,11 @@ class TFragment : Fragment() {
                 chatheader.text = sdata.t_name
                 chatheader1.text = "Subject : ${sdata.sname}"
                 button.visibility = View.GONE
-                Glide.with(context).load(sdata.t_pic).into(chatimg)
+                Glide
+                    .with(context)
+                    .load(sdata.t_pic)
+                    .error(R.drawable.live5)
+                    .into(chatimg)
             }
         }
     }

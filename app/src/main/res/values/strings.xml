@@ -48,4 +48,5 @@
     <string name="error_unsupported_video">Media includes video tracks, but none are playable by this device</string>
     <string name="error_unsupported_audio">Media includes audio tracks, but none are playable by this device</string>
     <string name="storage_permission_denied">Permission to access storage was denied</string>
+    <string name="breaking_the_rules_of_mathematics">Breaking the rules of Mathematics</string>
 </resources>

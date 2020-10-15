@@ -2,6 +2,7 @@
 
 package com.amuze.learnfromhome.TeacherFragment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.amuze.learnfromhome.Fragment.CCFragment
+import com.amuze.learnfromhome.Fragment.TFragment
 import com.amuze.learnfromhome.R
 import com.google.android.material.tabs.TabLayout
 
@@ -38,13 +41,15 @@ class TChatFragment : Fragment() {
     }
 
     private fun initView() {
+        TChatFragment.context = activity!!
         tabLayout = rootView.findViewById(R.id.tabs)
         viewPager = rootView.findViewById(R.id.viewpager)
 
         tabLayout.setTabTextColors(
-            resources.getColor(R.color.black),
-            resources.getColor(R.color.white)
+            resources.getColor(R.color.text_dark_white),
+            resources.getColor(R.color.black)
         )
+        tabLayout.setSelectedTabIndicator(R.color.black)
         viewPager.adapter = DemoPagerAdapter(childFragmentManager)
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
         tabLayout.setupWithViewPager(viewPager)
@@ -76,7 +81,7 @@ class TChatFragment : Fragment() {
     class DemoPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
         private val tabTitles =
-            arrayOf("Tab1", "Tab2")
+            arrayOf("Students", "Teachers")
 
         override fun getPageTitle(position: Int): CharSequence? {
             return tabTitles[position]
@@ -87,10 +92,12 @@ class TChatFragment : Fragment() {
         override fun getItem(i: Int): Fragment {
             return when (i) {
                 0 -> {
-                    return CFragment()
+                    TFragment.newInstance("myclass")
+                    return TFragment()
                 }
                 1 -> {
-                    return CFragment()
+                    CCFragment.newInstance("student")
+                    return CCFragment()
                 }
                 else -> CFragment()
             }
@@ -100,5 +107,6 @@ class TChatFragment : Fragment() {
 
     companion object {
         var TAG: String = "NewFragment"
+        lateinit var context: Context
     }
 }

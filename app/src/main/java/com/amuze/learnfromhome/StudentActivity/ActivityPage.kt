@@ -413,7 +413,7 @@ class ActivityPage : AppCompatActivity() {
     private fun deleteTask(id: String) {
         try {
             val url =
-                "https://www.flowrow.com/lfh/appapi.php?action=list-gen&category=deletetask" +
+                "https://learnfromhome.app/learn_from_home/appapi.php?action=list-gen&category=deletetask" +
                         "&emp_code=${Utils.userId}&classid=${Utils.classId}&taskid=$id"
             vModel.dTaskLiveData(applicationContext, url).observe(this, {
                 it?.let { resource ->
@@ -538,7 +538,7 @@ class ActivityPage : AppCompatActivity() {
     private fun taskStatusChange(id: String, status: String) {
         try {
             val swipeTaskUrl =
-                "https://flowrow.com/lfh/appapi.php?action=list-gen" +
+                "https://learnfromhome.app/learn_from_home/appapi.php?action=list-gen" +
                         "&category=taskstatus&emp_code=${Utils.userId}&classid=${Utils.classId}" +
                         "&taskid=$id&status=$status"
             vModel.swipeTaskStatus(applicationContext, swipeTaskUrl).observe(this, {

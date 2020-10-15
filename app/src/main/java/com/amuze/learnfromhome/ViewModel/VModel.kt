@@ -1,4 +1,4 @@
-@file:Suppress("PackageName", "PrivatePropertyName")
+@file:Suppress("PackageName", "PrivatePropertyName", "unused")
 
 package com.amuze.learnfromhome.ViewModel
 
@@ -67,7 +67,7 @@ class VModel : ViewModel() {
                     try {
                         val queue = Volley.newRequestQueue(vContext)
                         val url =
-                            "https://www.flowrow.com/lfh/appapi.php?" +
+                            "https://learnfromhome.app/learn_from_home/appapi.php?" +
                                     "action=list-gen&category=adddiscuss&" +
                                     "emp_code=${Utils.userId}&classid=${Utils.classId}&" +
                                     "text=$discussFlag"
@@ -97,7 +97,7 @@ class VModel : ViewModel() {
                 try {
                     val queue = Volley.newRequestQueue(vContext)
                     val url =
-                        "https://www.flowrow.com/lfh/appapi.php?action=list-gen&category=sendchat" +
+                        "https://learnfromhome.app/learn_from_home/appapi.php?action=list-gen&category=sendchat" +
                                 "&emp_code=${Utils.userId}&classid=${Utils.classId}&chat_message=$string"
                     val stringRequest1 = StringRequest(
                         Request.Method.GET,
@@ -781,5 +781,6 @@ class VModel : ViewModel() {
         private lateinit var liveID: String
         private lateinit var courseIDN: String
         private lateinit var spinnerID: String
+        private var APP_URL ="https://www.flowrow.com/lfh/"
     }
 }

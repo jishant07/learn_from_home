@@ -25,6 +25,7 @@ import com.amuze.learnfromhome.R
 import com.amuze.learnfromhome.StudentActivity.MyProfile
 import com.amuze.learnfromhome.StudentActivity.StudentChat
 import com.amuze.learnfromhome.ViewModel.VModel
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.chat_item.view.*
@@ -100,7 +101,7 @@ class CCFragment : Fragment() {
         }
     }
 
-    private class CustomAdapter(private val slist: ArrayList<CStudents>, val context: Context) :
+    class CustomAdapter(private val slist: ArrayList<CStudents>, val context: Context) :
         RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
         override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -131,7 +132,7 @@ class CCFragment : Fragment() {
             holder.bindItems(slist[position])
         }
 
-        class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             @SuppressLint("SetTextI18n")
             fun bindItems(string: CStudents) {
                 val chatheader = itemView.findViewById<TextView>(R.id.chatheader)
@@ -141,7 +142,11 @@ class CCFragment : Fragment() {
                 chatheader.text = string.student_name
                 chatheader1.text = "Roll no : ${string.roll_no}"
                 button.visibility = View.GONE
-                Picasso.get().load(string.image).into(chatimg)
+                //Picasso.get().load(string.image).into(chatimg)
+                Glide.with(context)
+                    .load(string.image)
+                    .error(R.drawable.live5)
+                    .into(chatimg)
             }
         }
     }

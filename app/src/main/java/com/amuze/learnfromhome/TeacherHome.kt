@@ -16,17 +16,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class TeacherHome : AppCompatActivity() {
 
-    private val fragment1: Fragment = TimeTableFragment()
-    private val fragment2: Fragment = TVideosFragment()
-    private val fragment3: Fragment = TLiveFragment()
-    private val fragment4: Fragment = TChatFragment()
-    private val fragment5: Fragment = TActivityFragment()
+    private val fragment1: Fragment = THomeFragment()
+    private val fragment2: Fragment = TChatFragment()
     private val fragmentManager: FragmentManager = supportFragmentManager
 
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
-                R.id.navigation_timetable -> {
+                R.id.navigation_thome -> {
                     val fragmentTransaction =
                         supportFragmentManager.beginTransaction()
                     fragmentTransaction.replace(R.id.fragment_container, fragment1)
@@ -34,35 +31,11 @@ class TeacherHome : AppCompatActivity() {
                     fragmentTransaction.commit()
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_videos -> {
-                    val fragmentTransaction3 =
-                        supportFragmentManager.beginTransaction()
-                    fragmentTransaction3.replace(R.id.fragment_container, fragment2)
-                    fragmentTransaction3.addToBackStack("2")
-                    fragmentTransaction3.commit()
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navigation_live -> {
+                R.id.navigation_tchat -> {
                     val fragmentTransaction4 =
                         supportFragmentManager.beginTransaction()
-                    fragmentTransaction4.replace(R.id.fragment_container, fragment3)
-                    fragmentTransaction4.addToBackStack("3")
-                    fragmentTransaction4.commit()
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navigation_chat -> {
-                    val fragmentTransaction4 =
-                        supportFragmentManager.beginTransaction()
-                    fragmentTransaction4.replace(R.id.fragment_container, fragment4)
-                    fragmentTransaction4.addToBackStack("4")
-                    fragmentTransaction4.commit()
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navigation_activity -> {
-                    val fragmentTransaction4 =
-                        supportFragmentManager.beginTransaction()
-                    fragmentTransaction4.replace(R.id.fragment_container, fragment5)
-                    fragmentTransaction4.addToBackStack("5")
+                    fragmentTransaction4.replace(R.id.fragment_container, fragment2)
+                    fragmentTransaction4.addToBackStack("2")
                     fragmentTransaction4.commit()
                     return@OnNavigationItemSelectedListener true
                 }
@@ -79,11 +52,6 @@ class TeacherHome : AppCompatActivity() {
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.nav_view)
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        val toolbar =
-            findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayShowTitleEnabled(false)
-
         val fragmentTransaction =
             supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, fragment1)
@@ -99,18 +67,6 @@ class TeacherHome : AppCompatActivity() {
                 getVisibleFragment() === fragment2 -> {
                     Log.d("fragment2", "isvisible")
                     bottomNavigationView.menu.getItem(1).isChecked = true
-                }
-                getVisibleFragment() === fragment3 -> {
-                    Log.d("fragment3", "isvisible")
-                    bottomNavigationView.menu.getItem(2).isChecked = true
-                }
-                getVisibleFragment() === fragment4 -> {
-                    Log.d("fragment3", "isvisible")
-                    bottomNavigationView.menu.getItem(3).isChecked = true
-                }
-                getVisibleFragment() === fragment5 -> {
-                    Log.d("fragment3", "isvisible")
-                    bottomNavigationView.menu.getItem(4).isChecked = true
                 }
                 else -> {
                     bottomNavigationView.menu.getItem(0).isChecked = true

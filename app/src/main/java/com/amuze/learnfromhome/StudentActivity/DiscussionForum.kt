@@ -194,7 +194,7 @@ class DiscussionForum : AppCompatActivity() {
                     try {
                         Log.d(TAG, "addDiscussComment:$string::$askid")
                         val queue = Volley.newRequestQueue(applicationContext)
-                        val url = "https://flowrow.com/lfh/appapi.php?" +
+                        val url = "https://learnfromhome.app/learn_from_home/appapi.php?" +
                                 "action=list-gen&category=adddiscusscomment&emp_code=${Utils.userId}&classid=${Utils.classId}&" +
                                 "text=$string&ask_id=$askid"
                         val stringRequest1 = StringRequest(

@@ -2,27 +2,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="14dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginEnd="14dp"
     android:background="@color/background"
     android:orientation="vertical"
     tools:context=".TeacherFragment.TChatFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/opensans_regular"
+        android:text="CHATS"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText" />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabBackground="@drawable/tab_color_selector"
-            app:tabGravity="fill"
-            app:tabIndicatorColor="@color/accent_pink"
-            app:tabIndicatorGravity="stretch"
-            app:tabMode="fixed"
-            app:tabTextAppearance="@style/tabFontStyle"
-             />
-
+            app:tabIndicatorColor="@color/black"
+            app:tabIndicatorHeight="2.5dp"
+            app:tabTextAppearance="@style/tabFontStyle" />
     </RelativeLayout>
 
     <androidx.viewpager.widget.ViewPager

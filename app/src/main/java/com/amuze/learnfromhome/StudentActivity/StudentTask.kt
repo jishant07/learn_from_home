@@ -76,16 +76,16 @@ class StudentTask : AppCompatActivity() {
         sTask_back.setOnClickListener {
             finish()
         }
-        try {
-            stitle = intent.getStringExtra("title")!!
-            desc = intent.getStringExtra("desc")!!
-            flag = intent.getStringExtra("flag")!!
-            time = intent.getStringExtra("dtime")!!
-            color = intent.getStringExtra("color")!!
-            mydate = intent.getStringExtra("date")!!
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+//        try {
+//            stitle = intent.getStringExtra("title")!!
+//            desc = intent.getStringExtra("desc")!!
+//            flag = intent.getStringExtra("flag")!!
+//            time = intent.getStringExtra("dtime")!!
+//            color = intent.getStringExtra("color")!!
+//            mydate = intent.getStringExtra("date")!!
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
         val layoutManager1 =
             LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         recyclerView1.layoutManager = layoutManager1
@@ -360,8 +360,9 @@ class StudentTask : AppCompatActivity() {
     private fun deleteTask(id: String) {
         try {
             val url =
-                "https://www.flowrow.com/lfh/appapi.php?action=list-gen&category=deletetask" +
+                "https://learnfromhome.app/learn_from_home/appapi.php?action=list-gen&category=deletetask" +
                         "&emp_code=${Utils.userId}&classid=${Utils.classId}&taskid=$id"
+            Log.d(TAG, "deleteTask:$url")
             vModel.dTaskLiveData(applicationContext, url).observe(this, {
                 it?.let { resource ->
                     when (resource.status) {
@@ -390,9 +391,10 @@ class StudentTask : AppCompatActivity() {
     private fun taskStatusChange(id: String, status: String) {
         try {
             val swipeTaskUrl =
-                "https://flowrow.com/lfh/appapi.php?action=list-gen" +
+                "https://learnfromhome.app/learn_from_home/appapi.php?action=list-gen" +
                         "&category=taskstatus&emp_code=${Utils.userId}&classid=${Utils.classId}" +
                         "&taskid=$id&status=$status"
+            Log.d(TAG, "taskStatusChange:$swipeTaskUrl")
             vModel.swipeTaskStatus(applicationContext, swipeTaskUrl).observe(this, {
                 it?.let { resource ->
                     when (resource.status) {
@@ -400,7 +402,7 @@ class StudentTask : AppCompatActivity() {
                             apiResponse("taskStatusChange", it.status.toString())
                         }
                         Status.SUCCESS -> {
-                            apiResponse("taskStatusChange", it.data!!)
+                            apiResponse("taskStatusChange", it.data!!.toString())
                             sadapter1.notifyDataSetChanged()
                             finish()
                             overridePendingTransition(0, 0)

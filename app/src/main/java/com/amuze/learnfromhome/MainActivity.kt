@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                         finish()
                     }
                     "tloggedin" -> {
-                        val i = Intent(this, PDFWeb::class.java)
+                        val i = Intent(this, TeacherHome::class.java)
                         startActivity(i)
                         finish()
                     }
